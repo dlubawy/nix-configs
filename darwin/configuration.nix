@@ -1,0 +1,119 @@
+{
+  pkgs,
+  inputs,
+  vars,
+  ...
+}:
+{
+
+  imports = [ inputs.home-manager.darwinModules.home-manager ];
+
+  nixpkgs = {
+    system = "aarch64-darwin";
+    overlays = [ ];
+    config = {
+      allowUnfree = true;
+    };
+  };
+
+  networking = {
+    computerName = "laplace";
+    hostName = "laplace";
+  };
+
+  users.users.${vars.user} = {
+    home = "/Users/${vars.user}";
+    shell = pkgs.zsh;
+  };
+
+  environment = {
+    shells = with pkgs; [ zsh ];
+    variables = {
+      EDITOR = "${vars.editor}";
+      VISUAL = "${vars.editor}";
+    };
+    systemPackages = with pkgs; [ git ];
+  };
+
+  fonts = {
+    fontDir.enable = true;
+    fonts = with pkgs; [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
+  };
+
+  programs = {
+    zsh = {
+      enable = true;
+      enableGlobalCompInit = false;
+    };
+  };
+
+  services = {
+    nix-daemon.enable = true;
+  };
+
+  nix = {
+    package = pkgs.nix;
+    gc = {
+      automatic = true;
+      interval.Day = 7;
+      options = "--delete-older-than 7d";
+    };
+    settings.experimental-features = "nix-command flakes";
+  };
+
+  system = {
+    defaults = {
+      NSGlobalDomain = {
+        "com.apple.swipescrolldirection" = false;
+      };
+
+      SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
+
+      alf = {
+        globalstate = 1;
+        stealthenabled = 1;
+      };
+
+      dock = {
+        autohide = false;
+        largesize = 72;
+        tilesize = 48;
+        magnification = true;
+        mineffect = "genie";
+        orientation = "bottom";
+        showhidden = false;
+        show-recents = false;
+      };
+
+      finder = {
+        QuitMenuItem = false;
+      };
+
+      trackpad = {
+        Clicking = true;
+        TrackpadRightClick = true;
+      };
+    };
+    stateVersion = 4;
+  };
+
+  security.pam.enableSudoTouchIdAuth = true;
+
+  home-manager = {
+    users.${vars.user} = import ../home-manager/home.nix { inherit pkgs vars; };
+
+    useGlobalPkgs = true;
+    useUserPackages = true;
+  };
+
+  homebrew = {
+    enable = true;
+    onActivation = {
+      autoUpdate = false;
+      upgrade = false;
+      cleanup = "zap";
+    };
+    brews = [ ];
+    casks = [ "firefox" ];
+  };
+}
