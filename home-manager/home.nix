@@ -41,6 +41,7 @@
 
   programs = {
     home-manager.enable = true;
+    firefox.enable = if pkgs.stdenv.isDarwin then false else true;
     git = {
       enable = true;
       userEmail = "${vars.email}";
