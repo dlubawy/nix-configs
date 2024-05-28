@@ -33,6 +33,7 @@
       tig
       tree
       wget
+      zoom-us
     ];
 
     stateVersion = "23.11";
@@ -66,6 +67,19 @@
       vimAlias = true;
       vimdiffAlias = true;
       extraLuaPackages = ps: [ ps.magick ];
+    };
+
+    texlive = {
+      enable = true;
+      extraPackages = tpkgs: {
+        inherit (tpkgs)
+          scheme-small
+          moderncv
+          fontawesome5
+          multirow
+          arydshln
+          ;
+      };
     };
 
     starship = import ./programs/starship.nix;
