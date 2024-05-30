@@ -33,7 +33,6 @@
         name = "Andrew Lubawy";
         email = "andrew@andrewlubawy.com";
         user = "drew";
-        editor = "nvim";
       };
     in
     {

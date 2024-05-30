@@ -31,8 +31,8 @@
   environment = {
     shells = with pkgs; [ zsh ];
     variables = {
-      EDITOR = "${vars.editor}";
-      VISUAL = "${vars.editor}";
+      EDITOR = "nvim";
+      VISUAL = "nvim";
     };
     systemPackages = with pkgs; [ git ];
   };
