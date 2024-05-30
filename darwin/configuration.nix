@@ -30,6 +30,9 @@
 
   environment = {
     shells = with pkgs; [ zsh ];
+    shellAliases = {
+      sudoedit = "sudo -e ";
+    };
     variables = {
       EDITOR = "nvim";
       VISUAL = "nvim";
