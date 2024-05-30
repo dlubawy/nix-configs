@@ -1,5 +1,12 @@
-{ pkgs, vars, ... }:
 {
+  pkgs,
+  inputs,
+  vars,
+  ...
+}:
+{
+  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
+
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -25,6 +32,7 @@
       nodejs
       python3
       ripgrep
+      rustup
       spotify
       sqlfluff
       stylua
@@ -62,13 +70,7 @@
       };
     };
 
-    neovim = {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-      vimdiffAlias = true;
-      extraLuaPackages = ps: [ ps.magick ];
-    };
+    nixvim = import ./programs/nixvim/nixvim.nix { inherit pkgs; };
 
     texlive = {
       enable = true;
@@ -86,11 +88,6 @@
     starship = import ./programs/starship.nix;
     tmux = import ./programs/tmux.nix { inherit pkgs; };
     zsh = import ./programs/zsh.nix { inherit pkgs; };
-  };
-
-  xdg.configFile.nvim = {
-    source = ./config/nvim;
-    recursive = true;
   };
 
   # Nicely reload system units when changing configs

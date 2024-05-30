@@ -5,8 +5,10 @@
   ...
 }:
 {
-
-  imports = [ inputs.home-manager.darwinModules.home-manager ];
+  imports = [
+    inputs.home-manager.darwinModules.home-manager
+    inputs.nixvim.nixDarwinModules.nixvim
+  ];
 
   nixpkgs = {
     system = "aarch64-darwin";
@@ -41,6 +43,9 @@
   };
 
   programs = {
+    nixvim = {
+      enable = true;
+    };
     zsh = {
       enable = true;
       enableGlobalCompInit = false;
@@ -100,7 +105,7 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   home-manager = {
-    users.${vars.user} = import ../home-manager/home.nix { inherit pkgs vars; };
+    users.${vars.user} = import ../home-manager/home.nix { inherit pkgs inputs vars; };
 
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -113,7 +118,7 @@
       upgrade = false;
       cleanup = "zap";
     };
-    brews = [ ];
+    brews = [ "gnu-sed" ];
     casks = [ "firefox" ];
   };
 }
