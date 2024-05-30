@@ -21,6 +21,16 @@
   networking = {
     computerName = "laplace";
     hostName = "laplace";
+    knownNetworkServices = [
+      "Wi-Fi"
+      "USB 10/100/1000 LAN"
+    ];
+    dns = [
+      "1.1.1.1"
+      "1.0.0.1"
+      "2606:4700:4700::1111"
+      "2606:4700:4700::1001"
+    ];
   };
 
   users.users.${vars.user} = {
