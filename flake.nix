@@ -41,7 +41,7 @@
           specialArgs = {
             inherit inputs outputs vars;
           };
-          modules = [ ./darwin/configuration.nix ];
+          modules = [ ./darwin ];
         };
       };
     };

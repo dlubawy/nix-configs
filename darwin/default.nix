@@ -118,7 +118,10 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   home-manager = {
-    users.${vars.user} = import ../home-manager/home.nix { inherit pkgs inputs vars; };
+    extraSpecialArgs = {
+      inherit pkgs inputs vars;
+    };
+    users.${vars.user} = import ../home-manager;
 
     useGlobalPkgs = true;
     useUserPackages = true;

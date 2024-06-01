@@ -1,11 +1,17 @@
 {
+  lib,
   pkgs,
   inputs,
   vars,
   ...
 }:
 {
-  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
+  imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+    ./starship.nix
+    ./tmux.nix
+    ./zsh.nix
+  ];
 
   nixpkgs = {
     config = {
@@ -70,8 +76,6 @@
       };
     };
 
-    nixvim = import ./programs/nixvim/nixvim.nix { inherit pkgs; };
-
     texlive = {
       enable = true;
       extraPackages = tpkgs: {
@@ -85,9 +89,13 @@
       };
     };
 
-    starship = import ./programs/starship.nix;
-    tmux = import ./programs/tmux.nix { inherit pkgs; };
-    zsh = import ./programs/zsh.nix { inherit pkgs; };
+    nixvim = lib.mkMerge [
+      (import ../nixvim)
+      {
+        enable = true;
+        defaultEditor = true;
+      }
+    ];
   };
 
   # Nicely reload system units when changing configs

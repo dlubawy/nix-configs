@@ -1,7 +1,13 @@
 { pkgs, ... }:
 {
-  enable = true;
-  defaultEditor = true;
+  imports = [
+    ./files.nix
+    ./config.nix
+    ./keymaps.nix
+    ./autoCmd.nix
+    ./plugins
+  ];
+
   viAlias = true;
   vimAlias = true;
   luaLoader.enable = true;
@@ -55,16 +61,9 @@
     rbql_with_headers = 1;
   };
 
-  files = import ./files.nix;
-
   extraConfigLua = ''
     vim.cmd("hi CursorLine cterm=none ctermbg=0 ctermfg=none")
   '';
-  extraConfigLuaPost = import ./configPost.nix;
-
-  keymaps = import ./keymaps.nix;
-
-  autoCmd = import ./autoCmd.nix;
 
   extraPlugins = with pkgs.vimPlugins; [
     vim-mundo
@@ -81,7 +80,6 @@
 
   plugins = {
     # Coding
-    cmp = import ./plugins/cmp.nix;
     cmp-nvim-lsp.enable = true;
     cmp-buffer.enable = true;
     cmp-path.enable = true;
@@ -98,13 +96,10 @@
       closeIfLastWindow = true;
       filesystem.followCurrentFile.enabled = true;
     };
-    image = import ./plugins/image.nix { inherit pkgs; };
     spectre = {
       enable = true;
       settings.open_cmd = "noswapfile vnew";
     };
-    telescope = import ./plugins/telescope.nix;
-    which-key = import ./plugins/which-key.nix;
     gitsigns.enable = true;
     illuminate = {
       enable = true;
@@ -118,7 +113,6 @@
     markdown-preview.enable = true;
 
     # Formatting
-    conform-nvim = import ./plugins/conform-nvim.nix;
 
     # Linting
     lint = {
@@ -128,11 +122,7 @@
       };
     };
 
-    # lsp
-    lsp = import ./plugins/lsp.nix;
-
     # Neorg
-    neorg = import ./plugins/neorg.nix;
     zen-mode = {
       enable = true;
       settings.plugins.options = {
@@ -154,7 +144,6 @@
       # NOTE: disable treesitter CSV to allow rainbow_csv
       disabledLanguages = [ "csv" ];
     };
-    treesitter-textobjects = import ./plugins/treesitter-textobjects.nix;
     treesitter-context = {
       enable = true;
       settings = {
@@ -166,10 +155,8 @@
 
     # UI
     notify.enable = true;
-    bufferline = import ./plugins/bufferline.nix;
     lualine.enable = true;
     indent-blankline.enable = true;
-    alpha = import ./plugins/alpha.nix;
 
     # Util
     persistence.enable = true;
