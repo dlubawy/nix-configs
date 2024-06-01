@@ -1,6 +1,14 @@
 { ... }:
 {
   extraConfigLuaPost = ''
+    WhichKeyMarkdown = function()
+        local wkl = require("which-key")
+        local buf = vim.api.nvim_get_current_buf()
+        wkl.register({
+            p = { "<cmd>MarkdownPreviewToggle<CR>", "Preview Markdown" },
+        }, { prefix = "<localleader>", buffer = buf })
+    end
+
     WhichKeyNorg = function()
     	local wkl = require("which-key")
     	local buf = vim.api.nvim_get_current_buf()
@@ -20,7 +28,7 @@
     		n = {
     			name = "+note",
     		},
-    	}, { prefix = "<localleader", buffer = buf })
+    	}, { prefix = "<localleader>", buffer = buf })
     end
 
     WhichKeySQL = function()

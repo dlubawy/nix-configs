@@ -12,13 +12,9 @@
       '';
     };
     "ftplugin/markdown.lua" = {
-      keymaps = [
-        {
-          key = "<localleader>p";
-          action = "<cmd>MarkdownPreviewToggle<CR>";
-          options.desc = "Markdown Preview";
-        }
-      ];
+      extraConfigLua = ''
+        WhichKeyMarkdown()
+      '';
     };
   };
 }
