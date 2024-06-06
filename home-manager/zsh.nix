@@ -5,6 +5,10 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     history.size = 10000;
+    localVariables = {
+      ZSH_TMUX_AUTOSTART = true;
+      ZSH_TMUX_AUTOCONNECT = true;
+    };
     oh-my-zsh = {
       enable = true;
       plugins = [
@@ -30,9 +34,6 @@
         "web-search"
       ];
       extraConfig = ''
-        ZSH_TMUX_AUTOSTART=true
-        ZSH_TMUX_AUTOCONNECT=true
-
         bindkey -M viins 'jk' vi-cmd-mode
       '';
     };
@@ -57,6 +58,7 @@
       sudo = "sudo ";
       ":q" = "exit";
       v = "nvim";
+      vimdiff = "nvim -d";
 
       yolo = "kill -9";
       wtf = "ping google.com";
@@ -68,9 +70,6 @@
       quit = "kill -3";
 
       tf = "tail -f";
-
-      venv = "source ./venv/bin/activate";
-      vinit = "virtualenv ./venv";
 
       server = "python -m http.server";
       qrdecode = "zbarimage";

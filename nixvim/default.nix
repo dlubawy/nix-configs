@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ helpers, pkgs, ... }:
 {
   imports = [
     ./files.nix
@@ -65,6 +65,18 @@
     vim.cmd("hi CursorLine cterm=none ctermbg=0 ctermfg=none")
   '';
 
+  extraPackages = with pkgs; [
+    fd
+    fzf
+    gawk
+    gnused
+    imagemagick
+    luajitPackages.magick
+    nodePackages_latest.prettier
+    ripgrep
+    stylua
+  ];
+
   extraPlugins = with pkgs.vimPlugins; [
     vim-mundo
     (pkgs.vimUtils.buildVimPlugin {
@@ -97,7 +109,7 @@
       filesystem.followCurrentFile.enabled = true;
     };
     spectre = {
-      enable = true;
+      enable = if pkgs.stdenv.isDarwin then helpers.enableExceptInTests else true;
       settings.open_cmd = "noswapfile vnew";
     };
     gitsigns.enable = true;
@@ -111,8 +123,7 @@
     todo-comments.enable = true;
     fugitive.enable = true;
     markdown-preview.enable = true;
-
-    # Formatting
+    lastplace.enable = true;
 
     # Linting
     lint = {

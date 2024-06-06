@@ -61,7 +61,9 @@
     };
     zsh = {
       enable = true;
+      enableCompletion = true;
       enableGlobalCompInit = false;
+      enableSyntaxHighlighting = true;
     };
   };
 
@@ -76,7 +78,10 @@
       interval.Day = 7;
       options = "--delete-older-than 7d";
     };
-    settings.experimental-features = "nix-command flakes";
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = "nix-command flakes";
+    };
   };
 
   system = {

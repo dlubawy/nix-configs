@@ -24,30 +24,24 @@
     homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${vars.user}";
 
     packages = with pkgs; [
-      black
-      fd
-      fzf
-      go
-      imagemagick
-      isort
-      luajitPackages.magick
-      nil
-      nixfmt-rfc-style
-      nodePackages_latest.eslint
-      nodePackages_latest.prettier
-      nodejs
+      btop
+      gawk
+      gnupg
+      gnused
+      gnutar
+      p7zip
       python3
       ripgrep
-      rustup
       spotify
-      sqlfluff
-      stylua
-      terraform
-      terragrunt
       tig
       tree
+      unzip
       wget
+      which
+      xz
+      zip
       zoom-us
+      zstd
     ];
 
     stateVersion = "23.11";
@@ -56,10 +50,33 @@
   programs = {
     home-manager.enable = true;
     firefox.enable = if pkgs.stdenv.isDarwin then false else true;
+
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
+
     git = {
       enable = true;
       userEmail = "${vars.email}";
       userName = "${vars.name}";
+      ignores = [
+        # Direnv
+        ".direnv"
+        ".envrc"
+
+        # OS
+        ".DS_Store"
+        "ehthumbs.db"
+        "Icon?"
+        "Thumbs.db"
+
+        # Editor
+        "*~"
+        "*.swp"
+        "*.swo"
+      ];
     };
 
     kitty = {

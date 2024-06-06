@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ helpers, pkgs, ... }:
 {
   plugins.image = {
-    enable = true;
+    enable = helpers.enableExceptInTests;
     backend = "${if pkgs.stdenv.isDarwin then "kitty" else "ueberzug"}";
     integrations = {
       markdown = {
