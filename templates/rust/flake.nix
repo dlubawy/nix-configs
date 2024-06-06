@@ -20,9 +20,9 @@
         {
           default = pkgs.mkShell {
             packages = with pkgs; [ rustup ];
-            shellHook = ''
-              export shell=zsh
-            '';
+            env = {
+              shell = "zsh";
+            };
           };
         }
       );

@@ -23,9 +23,9 @@
               opentofu
               terragrunt
             ];
-            shellHook = ''
-              export shell=zsh
-            '';
+            env = {
+              shell = "zsh";
+            };
           };
         }
       );

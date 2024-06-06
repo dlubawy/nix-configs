@@ -1,5 +1,5 @@
 {
-  description = "A Nix flake based Python environment";
+  description = "An empty Nix flake based environment";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
 
   outputs =
@@ -19,18 +19,13 @@
         { pkgs }:
         {
           default = pkgs.mkShell {
-            venvDir = "venv";
-            packages =
-              with pkgs;
-              [
-                black
-                isort
-                python311
-              ]
-              ++ (with pkgs.python311Packages; [
-                pip
-                venvShellHook
-              ]);
+            packages = with pkgs; [
+              texliveSmall
+              texlivePackages.moderncv
+              texlivePackages.fontawesome5
+              texlivePackages.multirow
+              texlivePackages.arydshln
+            ];
             env = {
               shell = "zsh";
             };

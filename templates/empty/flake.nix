@@ -20,10 +20,10 @@
         {
           default = pkgs.mkShell {
             packages = [ ];
-            env = { };
-            shellHook = ''
-              export shell=zsh
-            '';
+            env = {
+              shell = "zsh";
+            };
+            shellHook = '''';
           };
         }
       );

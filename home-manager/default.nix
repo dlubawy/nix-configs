@@ -93,19 +93,6 @@
       };
     };
 
-    texlive = {
-      enable = true;
-      extraPackages = tpkgs: {
-        inherit (tpkgs)
-          scheme-small
-          moderncv
-          fontawesome5
-          multirow
-          arydshln
-          ;
-      };
-    };
-
     nixvim = lib.mkMerge [
       (import ../nixvim)
       {

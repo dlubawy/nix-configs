@@ -74,9 +74,9 @@
               nil
               nixfmt-rfc-style
             ];
-            shellHook = ''
-              export shell=zsh
-            '';
+            env = {
+              shell = "zsh";
+            };
           };
         }
       );
