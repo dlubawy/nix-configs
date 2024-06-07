@@ -74,6 +74,10 @@
       qrdecode = "zbarimage";
     };
     initExtra = ''
+      fit() {
+          nix flake init --template github:dlubawy/nix-configs/main#"$1"
+      }
+
       # Create a new directory and enter it
       mkd() {
           mkdir -p "$@" && cd "$_";
