@@ -3,6 +3,7 @@
   programs.tmux = {
     enable = true;
     extraConfig = ''
+      set-option -sa terminal-features ',xterm*:RGB'
       set -gq allow-passthrough on
 
       bind | split-window -h -c "#{pane_current_path}"
@@ -40,6 +41,7 @@
       }
     ];
     prefix = "C-Space";
+    terminal = "screen-256color";
     tmuxp.enable = true;
   };
 }

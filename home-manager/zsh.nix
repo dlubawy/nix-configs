@@ -5,6 +5,10 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     history.size = 10000;
+    sessionVariables = {
+      shell = "zsh";
+      _ls_bsd = "${if pkgs.stdenv.isDarwin then "BSD" else ""}";
+    };
     localVariables = {
       ZSH_TMUX_AUTOSTART = true;
       ZSH_TMUX_AUTOCONNECT = true;
@@ -13,19 +17,14 @@
       enable = true;
       plugins = [
         "colored-man-pages"
-        "colorize"
         "common-aliases"
         "emoji"
         "encode64"
         "extract"
         "git"
         "git-auto-fetch"
-        "git-extras"
-        "github"
         "gitignore"
         "history"
-        "jsontools"
-        "postgres"
         "rsync"
         "sudo"
         "tmux"

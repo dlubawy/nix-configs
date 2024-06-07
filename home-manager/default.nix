@@ -11,6 +11,7 @@
     ./starship.nix
     ./tmux.nix
     ./zsh.nix
+    ./alacritty.nix
   ];
 
   nixpkgs = {
@@ -24,14 +25,11 @@
     homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${vars.user}";
 
     packages = with pkgs; [
-      btop
       gawk
-      gnupg
       gnused
       gnutar
       p7zip
       python3
-      ripgrep
       spotify
       tig
       tree
@@ -49,7 +47,10 @@
 
   programs = {
     home-manager.enable = true;
+    btop.enable = true;
     firefox.enable = if pkgs.stdenv.isDarwin then false else true;
+    gpg.enable = true;
+    ripgrep.enable = true;
 
     direnv = {
       enable = true;
@@ -80,7 +81,7 @@
     };
 
     kitty = {
-      enable = true;
+      enable = lib.mkDefault true;
       environment = {
         NIL_PATH = "${pkgs.nil}/bin/nil";
       };
