@@ -42,6 +42,7 @@
     shells = with pkgs; [ zsh ];
     shellAliases = {
       sudoedit = "sudo -e ";
+      laplace = "darwin-rebuild switch --flake github:dlubawy/nix-configs/main#laplace";
     };
     variables = {
       EDITOR = "nvim";
