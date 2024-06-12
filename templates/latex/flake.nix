@@ -17,15 +17,22 @@
     {
       devShells = forEachSupportedSystem (
         { pkgs }:
+        let
+          tex = (
+            pkgs.texlive.combine {
+              inherit (pkgs.texlive)
+                scheme-small
+                moderncv
+                fontawesome5
+                multirow
+                arydshln
+                ;
+            }
+          );
+        in
         {
           default = pkgs.mkShell {
-            packages = with pkgs; [
-              texliveSmall
-              texlivePackages.moderncv
-              texlivePackages.fontawesome5
-              texlivePackages.multirow
-              texlivePackages.arydshln
-            ];
+            packages = [ tex ];
             env = {
               shell = "zsh";
             };

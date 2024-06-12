@@ -93,6 +93,10 @@
           path = ./templates/go;
           description = "Go development environment";
         };
+        latex = {
+          path = ./templates/latex;
+          description = "LaTeX development environment";
+        };
         node = {
           path = ./templates/node;
           description = "Node.js development environment";
