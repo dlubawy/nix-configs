@@ -36,6 +36,7 @@
         enable = true;
         installCargo = false;
         installRustc = false;
+        settings.files.excludeDirs = [ ".direnv" ];
       };
       sqls.enable = true;
       terraformls.enable = true;

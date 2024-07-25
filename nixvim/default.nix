@@ -109,6 +109,7 @@
       filesystem.followCurrentFile.enabled = true;
     };
     spectre = {
+      # NOTE: bypass test on Darwin because Spectre expects gnu-sed from homebrew
       enable = if pkgs.stdenv.isDarwin then helpers.enableExceptInTests else true;
       settings.open_cmd = "noswapfile vnew";
     };

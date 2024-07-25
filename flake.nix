@@ -2,18 +2,32 @@
   description = "Andrew Lubawy's Nix Configs";
 
   inputs = {
+    # Different nixpkgs sources
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
+
+    # System modules
     darwin = {
-      url = "github:LnL7/nix-darwin";
+      url = "github:dlubawy/nix-darwin/develop";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Supporting modules
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:dlubawy/nixvim/develop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    agenix = {
+      url = "github:dlubawy/agenix/armor_support";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -24,30 +38,70 @@
       nixpkgs,
       darwin,
       home-manager,
+      nixos-wsl,
       nixvim,
+      agenix,
       ...
     }@inputs:
     let
       inherit (self) outputs;
-
-      supportedSystems = [
+      systems = [
         "x86_64-linux"
         "aarch64-linux"
         "x86_64-darwin"
         "aarch64-darwin"
       ];
 
-      forEachSupportedSystem =
-        f: nixpkgs.lib.genAttrs supportedSystems (system: f { pkgs = import nixpkgs { inherit system; }; });
+      forAllSystems =
+        f: nixpkgs.lib.genAttrs systems (system: f { pkgs = import nixpkgs { inherit system; }; });
 
+      # User config
       vars = {
         name = "Andrew Lubawy";
         email = "andrew@andrewlubawy.com";
         user = "drew";
+        sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBz5R5RsCSXxzIduOV98T4yASCRbYrKVbzB7iZy9746P";
+        gpgKey = "6EEC861B7641B37D";
+        stateVersion = "24.05";
       };
     in
-    {
+    rec {
+      packages = forAllSystems ({ pkgs }: import ./pkgs pkgs);
+      formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
+
+      overlays = import ./overlays { inherit inputs; };
+      nixosModules = import ./modules/nixos;
+      homeManagerModules = import ./modules/home-manager;
+
+      nixosConfigurations = {
+        # TODO: move Dell laptop from Arch to NixOS
+        # kepler = nixpkgs.lib.nixosSystem {
+        #   system = "x86_64-linux";
+        #   specialArgs = {
+        #     inherit inputs outputs vars;
+        #   };
+        #   modules = [ ./hosts/kepler ];
+        # };
+
+        # WSL
+        syringa = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [ ./hosts/syringa ];
+        };
+        # Raspberry Pi 3+
+        pi = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [ ./hosts/pi ];
+        };
+      };
       darwinConfigurations = {
+        # MacBook M1
         laplace = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = {
@@ -56,8 +110,24 @@
           modules = [ ./darwin ];
         };
       };
+      homeConfigurations = {
+        # Steam Deck
+        "${vars.user}@companioncube" = home-manager.lib.homeManagerConfiguration {
+          extraSpecialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [ ./home-manager ];
+        };
+      };
 
-      checks = forEachSupportedSystem (
+      images = {
+        pi =
+          (nixosConfigurations.pi.extendModules {
+            modules = [ "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
+          }).config.system.build.sdImage;
+      };
+
+      checks = forAllSystems (
         { pkgs }:
         {
           nixvimCheck = nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
@@ -67,18 +137,18 @@
         }
       );
 
-      formatter = forEachSupportedSystem ({ pkgs }: pkgs.nixfmt-rfc-style);
-
-      devShells = forEachSupportedSystem (
+      devShells = forAllSystems (
         { pkgs }:
         {
           default = pkgs.mkShell {
             packages = with pkgs; [
+              inputs.agenix.packages.${system}.default
               nil
               nixfmt-rfc-style
             ];
             env = {
               shell = "zsh";
+              NIL_PATH = "${pkgs.nil}/bin/nil";
             };
           };
         }
@@ -96,6 +166,10 @@
         latex = {
           path = ./templates/latex;
           description = "LaTeX development environment";
+        };
+        nix = {
+          path = ./templates/nix;
+          description = "Nix development environment";
         };
         node = {
           path = ./templates/node;

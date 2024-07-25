@@ -22,11 +22,15 @@ fmt:
 	nix fmt
 
 check:
-	nix flake check
+    ifdef DEBUG
+		nix flake check --show-trace --verbose
+    else
+		nix flake check
+    endif
 
 # Darwin systems
 laplace:
-    ifdef $(DEBUG)
+    ifdef DEBUG
 		darwin-rebuild switch --flake $(GIT_REPO)\#laplace --show-trace --verbose
     else
 		darwin-rebuild switch --flake $(GIT_REPO)\#laplace

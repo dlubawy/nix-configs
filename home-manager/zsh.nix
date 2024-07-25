@@ -54,23 +54,30 @@
       dl = "$HOME/Downloads";
     };
     shellAliases = {
+      # Fix for using sudo with aliases
       sudo = "sudo ";
+
+      # Shortcuts
       ":q" = "exit";
       v = "nvim";
-      vimdiff = "nvim -d";
-
-      yolo = "kill -9";
       wtf = "ping google.com";
+      rg = "rg -S";
+      rgc = "rg -S --color=always";
 
+      # Date/Time Helpers
       timenow = "date +%s";
       week = "date +%V";
       timer = ''echo "Timer started. Stop with Ctrl-D." && date && time cat && date'';
 
+      # Killers
       quit = "kill -3";
+      yolo = "kill -9";
 
-      tf = "tail -f";
-
+      # Common Python cmdline modules
       server = "python -m http.server";
+      jp = "python -m json.tool";
+
+      # Aliases
       qrdecode = "zbarimage";
     };
     initExtra = ''

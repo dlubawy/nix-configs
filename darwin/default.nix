@@ -1,6 +1,8 @@
 {
+  lib,
   pkgs,
   inputs,
+  outputs,
   vars,
   ...
 }:
@@ -12,7 +14,7 @@
 
   nixpkgs = {
     system = "aarch64-darwin";
-    overlays = [ ];
+    overlays = builtins.attrValues outputs.overlays;
     config = {
       allowUnfree = true;
     };
@@ -25,6 +27,7 @@
       "Wi-Fi"
       "USB 10/100/1000 LAN"
     ];
+    # Cloudflare
     dns = [
       "1.1.1.1"
       "1.0.0.1"
@@ -33,9 +36,25 @@
     ];
   };
 
-  users.users.${vars.user} = {
-    home = "/Users/${vars.user}";
-    shell = pkgs.zsh;
+  users = {
+    # System admin
+    users.laplace = {
+      isNormalUser = true;
+      isAdminUser = true;
+      isTokenUser = true;
+      isHidden = true;
+      home = "/Users/laplace";
+      initialPassword = "laplace";
+    };
+    # Regular user
+    users.${vars.user} = {
+      isNormalUser = true;
+      isTokenUser = true;
+      isHidden = false;
+      shell = /bin/zsh;
+      description = "${vars.name}";
+      initialPassword = "${vars.user}";
+    };
   };
 
   environment = {
@@ -47,13 +66,16 @@
     variables = {
       EDITOR = "nvim";
       VISUAL = "nvim";
+
+      HOMEBREW_NO_INSECURE_REDIRECT = "1";
+      HOMEBREW_NO_ANALYTICS = "1";
+      ZSH_DISABLE_COMPFIX = "true";
     };
     systemPackages = with pkgs; [ git ];
   };
 
   fonts = {
-    fontDir.enable = true;
-    fonts = with pkgs; [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
+    packages = with pkgs; [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
   };
 
   programs = {
@@ -63,8 +85,14 @@
     zsh = {
       enable = true;
       enableCompletion = true;
+      enableBashCompletion = true;
       enableGlobalCompInit = false;
       enableSyntaxHighlighting = true;
+
+      # Init brew
+      loginShellInit = ''
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      '';
     };
   };
 
@@ -73,7 +101,6 @@
   };
 
   nix = {
-    package = pkgs.nix;
     gc = {
       automatic = true;
       interval.Day = 7;
@@ -82,20 +109,48 @@
     settings = {
       auto-optimise-store = true;
       experimental-features = "nix-command flakes";
+      trusted-users = [
+        "root"
+        "@admin"
+      ];
+    };
+    linux-builder = {
+      # NOTE: disabled by default to save resources when not in use
+      enable = false;
+      # NOTE: need to pick the arch of the builder here
+      package = pkgs.darwin.linux-builder;
+      # package = pkgs.darwin.linux-builder-x86_64;
+      ephemeral = true;
+      maxJobs = 2;
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
+      config = {
+        virtualisation = {
+          darwin-builder = {
+            diskSize = 30 * 1024;
+            memorySize = 8 * 1024;
+          };
+        };
+      };
     };
   };
 
   system = {
     defaults = {
-      NSGlobalDomain = {
-        "com.apple.swipescrolldirection" = false;
-      };
-
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
 
       alf = {
         globalstate = 1;
         stealthenabled = 1;
+        loggingenabled = 1;
+        allowdownloadsignedenabled = 0;
+        allowsignedenabled = 0;
+      };
+      NSGlobalDomain = {
+        "com.apple.swipescrolldirection" = false;
+        NSDocumentSaveNewDocumentsToCloud = false;
       };
 
       dock = {
@@ -113,6 +168,11 @@
         QuitMenuItem = false;
       };
 
+      screensaver = {
+        askForPassword = true;
+        askForPasswordDelay = 0;
+      };
+
       trackpad = {
         Clicking = true;
         TrackpadRightClick = true;
@@ -121,13 +181,25 @@
     stateVersion = 4;
   };
 
-  security.pam.enableSudoTouchIdAuth = true;
+  security = {
+    # FIXME: this appears broken for the regular user
+    pam.enableSudoTouchIdAuth = true;
+    # Allows standard user to run darwin-rebuild through the admin user
+    # sudo -Hu laplace darwin-rebuild
+    sudo.extraConfig = ''
+      ${vars.user} ALL = (laplace) ALL
+    '';
+  };
 
   home-manager = {
     extraSpecialArgs = {
-      inherit pkgs inputs vars;
+      inherit inputs outputs vars;
+      enableGUI = true;
     };
-    users.${vars.user} = import ../home-manager;
+    users.${vars.user} = lib.mkMerge [
+      (import ../home-manager)
+      { programs.firefox.enable = false; }
+    ];
 
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -140,7 +212,9 @@
       upgrade = false;
       cleanup = "zap";
     };
+    # FIXME: nix package doesn't create gsed bin; should do that ourselves instead of using brew
     brews = [ "gnu-sed" ];
     casks = [ "firefox" ];
+    caskArgs.require_sha = true;
   };
 }

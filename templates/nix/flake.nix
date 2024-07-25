@@ -1,5 +1,5 @@
 {
-  description = "A Nix flake based Rust environment";
+  description = "A Nix flake based environment";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
 
   outputs =
@@ -20,17 +20,12 @@
         {
           default = pkgs.mkShell {
             packages = with pkgs; [
-              (with rustPlatform; [
-                cargo
-                rustc
-                rustLibSrc
-              ])
-              clippy
-              rustfmt
+              nil
+              nixfmt-rfc-style
             ];
             env = {
-              RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
               shell = "zsh";
+              NIL_PATH = "${pkgs.nil}/bin/nil";
             };
           };
         }
