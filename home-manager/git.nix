@@ -16,7 +16,6 @@
     ignores = [
       # Direnv
       ".direnv"
-      ".envrc"
 
       # OS
       ".DS_Store"
