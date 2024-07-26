@@ -3,15 +3,11 @@
   pkgs,
   vars,
   outputs,
-  nixosConfig,
-  darwinConfig,
-  enableGUI ? true,
   ...
-}:
+}@args:
 let
-  useGlobalPkgs =
-    (darwinConfig != null && darwinConfig.home-manager.useGlobalPkgs)
-    || (nixosConfig != null && nixosConfig.home-manager.useGlobalPkgs);
+  useGlobalPkgs = builtins.hasAttr "darwinConfig" args || builtins.hasAttr "nixosConfig" args;
+  enableGUI = if builtins.hasAttr "enableGUI" args then args.enableGUI else true;
 in
 {
   imports =
@@ -32,6 +28,7 @@ in
     ]);
 
   nix = {
+    package = lib.mkIf (!useGlobalPkgs) pkgs.nix;
     gc = {
       automatic = true;
       frequency = "weekly";

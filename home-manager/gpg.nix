@@ -1,9 +1,7 @@
-{
-  lib,
-  pkgs,
-  enableGUI,
-  ...
-}:
+{ lib, pkgs, ... }@args:
+let
+  enableGUI = if builtins.hasAttr "enableGUI" args then args.enableGUI else true;
+in
 {
   programs.gpg = {
     enable = true;

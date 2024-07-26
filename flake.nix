@@ -113,6 +113,7 @@
       homeConfigurations = {
         # Steam Deck
         "${vars.user}@companioncube" = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { system = "x86_64-linux"; };
           extraSpecialArgs = {
             inherit inputs outputs vars;
           };
