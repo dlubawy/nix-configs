@@ -31,6 +31,18 @@ in
       ./qtpass.nix
     ]);
 
+  nix = {
+    gc = {
+      automatic = true;
+      frequency = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = "nix-command flakes";
+    };
+  };
+
   nixpkgs = {
     overlays = lib.mkIf (!useGlobalPkgs) (builtins.attrValues outputs.overlays);
     config = {

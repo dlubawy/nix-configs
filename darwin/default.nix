@@ -6,6 +6,9 @@
   vars,
   ...
 }:
+let
+  systemName = "laplace";
+in
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
@@ -21,8 +24,8 @@
   };
 
   networking = {
-    computerName = "laplace";
-    hostName = "laplace";
+    computerName = "${systemName}";
+    hostName = "${systemName}";
     knownNetworkServices = [
       "Wi-Fi"
       "USB 10/100/1000 LAN"
@@ -38,13 +41,13 @@
 
   users = {
     # System admin
-    users.laplace = {
+    users.${systemName} = {
       isNormalUser = true;
       isAdminUser = true;
       isTokenUser = true;
       isHidden = true;
-      home = "/Users/laplace";
-      initialPassword = "laplace";
+      home = "/Users/${systemName}";
+      initialPassword = "${systemName}";
     };
     # Regular user
     users.${vars.user} = {
@@ -61,7 +64,7 @@
     shells = with pkgs; [ zsh ];
     shellAliases = {
       sudoedit = "sudo -e ";
-      laplace = "darwin-rebuild switch --flake github:dlubawy/nix-configs/main#laplace";
+      ${systemName} = "sudo -Hu ${systemName} darwin-rebuild switch --flake github:dlubawy/nix-configs/main#${systemName}";
     };
     variables = {
       EDITOR = "nvim";
@@ -105,6 +108,7 @@
       automatic = true;
       interval.Day = 7;
       options = "--delete-older-than 7d";
+      user = "${systemName}";
     };
     settings = {
       auto-optimise-store = true;
@@ -185,9 +189,9 @@
     # FIXME: this appears broken for the regular user
     pam.enableSudoTouchIdAuth = true;
     # Allows standard user to run darwin-rebuild through the admin user
-    # sudo -Hu laplace darwin-rebuild
+    # sudo -Hu ${systemName} darwin-rebuild
     sudo.extraConfig = ''
-      ${vars.user} ALL = (laplace) ALL
+      ${vars.user} ALL = (${systemName}) ALL
     '';
   };
 
