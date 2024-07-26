@@ -1,6 +1,6 @@
 GIT_REPO := $(shell git rev-parse --show-toplevel)
 
-.PHONY: update history repl clean gc fmt check laplace
+.PHONY: update history hm-history repl clean hm-clean gc fmt check laplace pi
 
 # Nix commands
 update:
@@ -9,11 +9,17 @@ update:
 history:
 	nix profile history --profile /nix/var/nix/profiles/system
 
+hm-history:
+	nix profile history --profile ~/.local/state/nix/profiles/home-manager
+
 repl:
 	nix repl -f flake:nixpkgs
 
 clean:
 	sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d
+
+hm-clean:
+	nix profile wipe-history --profile ~/.local/state/nix/profiles/home-manager
 
 gc:
 	sudo nix-collect-garbage --delete-old
@@ -31,7 +37,14 @@ check:
 # Darwin systems
 laplace:
     ifdef DEBUG
-		darwin-rebuild switch --flake $(GIT_REPO)\#laplace --show-trace --verbose
+		sudo -u laplace sudo chown -R laplace:staff $(GIT_REPO) && \
+		(sudo -Hu laplace darwin-rebuild switch --flake $(GIT_REPO)\#laplace --show-trace --verbose || true) && \
+		sudo -u laplace sudo chown -R $$(whoami):staff $(GIT_REPO)
     else
-		darwin-rebuild switch --flake $(GIT_REPO)\#laplace
+		sudo -u laplace sudo chown -R laplace:staff $(GIT_REPO) && \
+		(sudo -Hu laplace darwin-rebuild switch --flake $(GIT_REPO)\#laplace || true) && \
+		sudo -u laplace sudo chown -R $$(whoami):staff $(GIT_REPO)
     endif
+
+pi:
+	nix build $(GIT_REPO)\#.images.pi
