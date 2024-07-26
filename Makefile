@@ -47,4 +47,8 @@ laplace:
     endif
 
 pi:
-	nix build $(GIT_REPO)\#.images.pi
+    ifdef DEBUG
+		nix build $(GIT_REPO)\#images.pi --show-trace --verbose
+    else
+		nix build $(GIT_REPO)\#images.pi
+    endif
