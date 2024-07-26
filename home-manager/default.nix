@@ -47,9 +47,6 @@ in
       with pkgs;
       [
         age-plugin-yubikey
-        bat
-        fd
-        fzf
         gawk
         gnused
         gnutar
@@ -57,18 +54,16 @@ in
         p7zip
         python3
         rage
-        ripgrep
         tig
-        tree
         unzip
         wget
         which
         xz
         zip
-        zoxide
         zstd
       ]
       ++ (lib.optionals (enableGUI) [
+        slack
         spotify
         zoom-us
       ]);
@@ -80,7 +75,47 @@ in
     home-manager.enable = true;
     btop.enable = true;
     firefox = lib.mkIf enableGUI { enable = lib.mkDefault true; };
+    bat = {
+      enable = true;
+      config = {
+        theme = "catppuccin-frappe";
+      };
+      themes = {
+        catppuccin-frappe = {
+          src = pkgs.fetchFromGitHub {
+            owner = "catppuccin";
+            repo = "bat";
+            rev = "82e7ca555f805b53d2b377390e4ab38c20282e83";
+            hash = "sha256-/Ob9iCVyjJDBCXlss9KwFQTuxybmSSzYRBZxOT10PZg=";
+          };
+          file = "./themes/Catppuccin Frappe.tmTheme";
+        };
+      };
+    };
+    eza = {
+      enable = true;
+      icons = true;
+    };
+    fd.enable = true;
+    fzf = {
+      enable = true;
+      colors = {
+        "bg+" = "#414559";
+        bg = "#303446";
+        spinner = "#f2d5cf";
+        hl = "#e78284";
+        fg = "#c6d0f5";
+        header = "#e78284";
+        info = "#ca9ee6";
+        pointer = "#f2d5cf";
+        marker = "#f2d5cf";
+        "fg+" = "#c6d0f5";
+        prompt = "#ca9ee6";
+        "hl+" = "#e78284";
+      };
+    };
     ripgrep.enable = true;
+    zoxide.enable = true;
 
     direnv = {
       enable = true;

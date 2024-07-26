@@ -7,7 +7,6 @@
     history.size = 10000;
     sessionVariables = {
       shell = "zsh";
-      _ls_bsd = "${if pkgs.stdenv.isDarwin then "BSD" else ""}";
     };
     localVariables = {
       ZSH_TMUX_AUTOSTART = true;
@@ -56,6 +55,25 @@
     shellAliases = {
       # Fix for using sudo with aliases
       sudo = "sudo ";
+
+      # Remap to newer tool alternatives
+      l = "eza -lhF";
+      ll = "exec_scmb_expand_args ls_with_file_shortcuts";
+      la = "exec_scmb_expand_args ls_with_file_shortcuts -A";
+      ls = "eza";
+      lt = "ls -lhF -s date";
+      lS = "ls -1lhF -s size --no-permissions --total-size --no-user --no-time";
+      lart = "ls -1arF -s date";
+      lrt = "ls -1rF -s date";
+      lsr = "ls -lARhF";
+      lsn = "ls -1";
+      find = "fd";
+      ff = "find --type f";
+      grep = "rg --color=always";
+      sgrep = "grep -L -n -H -C 5 --glob='!{.git,.svn,CVS}'";
+      tree = "ls --tree";
+      cat = "bat";
+      cd = "z";
 
       # Shortcuts
       ":q" = "exit";
@@ -195,7 +213,7 @@
       # `less` with options to preserve color and line numbers, unless the output is
       # small enough for one screen.
       tre() {
-        tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+        eza --tree -a --color=always -I '.git|.direnv|node_modules|bower_components' --group-directories-first | less -FRNX;
       }
 
       # Search for a process
@@ -205,6 +223,100 @@
 
       gitfile() {
         wget https://raw.githubusercontent.com/$1/master/$2;
+      }
+      ls_with_file_shortcuts () {
+        local ll_output
+        local ll_command
+        ll_command=(eza -h --group-directories-first)
+        ll_output="$("''${ll_command[@]}" -l --color=always "$@")"
+        if [[ $shell == "zsh" ]]
+        then
+          [[ -o shwordsplit ]] && SHWORDSPLIT_ON=true
+          setopt shwordsplit
+        fi
+        local IFS=$'\n'
+        local rel_path
+        for arg in "$@"
+        do
+          if [[ -e $arg ]]
+          then
+            if [[ -z $rel_path ]]
+            then
+              if [[ -d $arg ]]
+              then
+                rel_path=$arg
+              else
+                rel_path=.
+              fi
+            elif [[ -d $arg || ( -f $arg && $rel_path != . ) ]]
+            then
+              if [[ -f $arg ]]
+              then
+                arg=$PWD
+              fi
+              printf 'scm_breeze: Cannot list relative to both directories:\n  %s\n  %s\n' "$arg" "$rel_path" >&2
+              printf 'Currently only listing a single directory is supported. See issue #274.\n' >&2
+              return 1
+            fi
+          fi
+        done
+        rel_path=$("''${_abs_path_command[@]}" ''${rel_path:-$PWD})
+        if [ -e "$HOME"/.user_sym ]
+        then
+          rejustify_ls_columns () {
+            ruby -e "o=STDIN.read;re=/^(([^ ]* +){2})(([^ ]* +){3})/; u,g,s=o.lines.map{|l|l[re,3]}.compact.map(&:split).transpose.map{|a|a.map(&:size).max+1}; puts o.lines.map{|l|l.sub(re){|m|\"%s%-#{u}s %-#{g}s%#{s}s \"%[\$1,*\$3.split]}}"
+          }
+          local USER_SYM=$(/bin/cat $HOME/.user_sym)
+          if [ -f "$HOME/.staff_sym" ]
+          then
+            local STAFF_SYM=$(/bin/cat $HOME/.staff_sym)
+            ll_output=$(echo "$ll_output" |
+                \sed -$SED_REGEX_ARG "s/ $USER  staff/ $USER_SYM  $STAFF_SYM /g" |
+                rejustify_ls_columns)
+          else
+            ll_output=$(echo "$ll_output" |
+                \sed -$SED_REGEX_ARG "s/ $USER/ $USER_SYM /g" |
+                rejustify_ls_columns)
+          fi
+        fi
+        if [ "$(echo "$ll_output" | wc -l)" -gt "50" ]
+        then
+          echo -e '\033[33mToo many files to create shortcuts. Running plain ll command...\033[0m' >&2
+          echo "$ll_output"
+          return 1
+        fi
+        echo "$ll_output" | ruby -e "$(
+            \cat <<EOF
+      output = STDIN.read
+      e = 1
+      re = /^(([^ ]* +){8})/
+      output.lines.each_with_index do |line, index|
+        puts line if index == 0
+        next unless line.match(re)
+        puts line.sub(re, "\\\1\033[2;37m[\033[0m#{e}\033[2;37m]\033[0m" << (e < 10 ? "  " : " "))
+        e += 1
+      end
+      EOF
+          )"
+        local e=1
+        local ll_files=""
+        local file=""
+        ll_files="$("''${ll_command[@]}" --color=never "$@")"
+        local IFS=$'\n'
+        for file in $ll_files
+        do
+          file=$rel_path/$file
+          export $git_env_char$e=$("''${_abs_path_command[@]}" "$file")
+          if [[ ''${scmbDebug:-} = true ]]
+          then
+            echo "Set \$$git_env_char$e  => $file"
+          fi
+          let e++
+        done
+        if [[ $shell == "zsh" && -z $SHWORDSPLIT_ON ]]
+        then
+          unsetopt shwordsplit
+        fi
       }
     '';
   };
