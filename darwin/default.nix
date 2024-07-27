@@ -218,8 +218,7 @@ in
       upgrade = false;
       cleanup = "zap";
     };
-    # FIXME: nix package doesn't create gsed bin; should do that ourselves instead of using brew
-    brews = [ "gnu-sed" ];
+    brews = [ ];
     casks = [ "firefox" ];
     caskArgs.require_sha = true;
   };

@@ -14,6 +14,9 @@
     age-plugin-yubikey = prev.age-plugin-yubikey.overrideAttrs (
       _: (import ./age-plugin-yubikey { prev = prev; })
     );
+    vimPlugins = prev.vimPlugins // {
+      nvim-spectre = prev.vimPlugins.nvim-spectre.overrideAttrs { patches = [ ./nvim-spectre.patch ]; };
+    };
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
