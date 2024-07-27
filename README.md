@@ -1,5 +1,11 @@
 # nix-configs
-My personal Nix configurations
+My personal Nix configurations.
+
+## Notes
+These configurations make use of personal preferences. I have forked some tools and made personal edits which may make this unstable:
+* nix-darwin: I added additional user configuration management and fixed some multi-user issues in the system. This was done in a heavy-handed manner and so will likely not be supported upstream. This may change as upstream improves on these issues.
+* nixvim: Needed to fork the `nixos-24.05` branch to get `flake check` working for all systems since upstream has an [import from derivation](https://nix.dev/manual/nix/2.23/language/import-from-derivation) that breaks checks.
+* agenix: Wanted to add armor output support for better git visibility. Also needed to fix `ageBin` for Darwin configuration.
 
 ## Setup
 ### macOS
@@ -11,17 +17,21 @@ This assumes starting from a fresh installation of macOS before initial setup an
     sudo dscl . -delete /Groups/admin GroupMembership <username>
     sudo dscl . -delete /Groups/admin GroupMembers <GeneratedUID>
     ```
-  - To find the GeneratedUID of an account:
+  - To find the `GeneratedUID` of an account:
     ```
     dscl . -read /Users/<username> GeneratedUID
     ```
 * Rename the computer `System Settings -> General -> About -> Name`: `laplace`
 * [Install Nix](https://nix.dev/install-nix#install-nix)
 * [Install Homebrew](https://brew.sh/)
-* Clone this repo: `git clone https://github.com/dlubawy/nix-configs.git`
-* Edit `vars` in `flake.nix` to use your desired name, email, user, and ssh public key
-* As admin user, run the initial `nix --extra-experimental-features 'nix-command flakes' run nix-darwin -- switch --flake .#laplace`
-  - Regular user may subsequently run command with sudo `sudo -Hu laplace darwin-rebuild switch --flake .#laplace`
+* Clone this repo in `/Users/Shared/`: `git clone https://github.com/dlubawy/nix-configs.git /Users/Shared/nix`
+* Enter where the repo was cloned: `cd /Users/Shared/nix`
+* Edit `vars` in `flake.nix` to use your desired name, email, user, and public keys
+* As admin user (`laplace`), run the initial `nix --extra-experimental-features 'nix-command flakes' run nix-darwin -- switch --flake .#laplace`
+  - The normal user may subsequently run the command with sudo `sudo -Hu laplace darwin-rebuild switch --flake .#laplace`
+  - A `make` command is supplied to make this easier: `make laplace`
+  - You may want to change the `shellAlias` for `laplace` to point to your own repo with any changes;
+    Then you may run `laplace` as a command alias for rebuilding from the remote.
 
 ### Templates
 Use any template to create a nix flake based development environment with:

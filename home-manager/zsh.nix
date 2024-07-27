@@ -73,7 +73,7 @@
       sgrep = "grep -L -n -H -C 5 --glob='!{.git,.svn,CVS}'";
       tree = "ls --tree";
       cat = "bat";
-      cd = "z";
+      cd = "exec_scmb_expand_args z";
 
       # Shortcuts
       ":q" = "exit";
