@@ -186,8 +186,10 @@ in
   };
 
   security = {
-    # FIXME: this appears broken for the regular user
-    pam.enableSudoTouchIdAuth = true;
+    pam = {
+      enableSudoTouchIdAuth = true;
+      enablePamReattach = true;
+    };
     # Allows standard user to run darwin-rebuild through the admin user
     # sudo -Hu ${systemName} darwin-rebuild
     sudo.extraConfig = ''
