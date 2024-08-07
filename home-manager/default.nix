@@ -63,6 +63,7 @@ in
         p7zip
         python3
         rage
+        ruby # TODO: move this to a package for scmbreeze
         tig
         unzip
         wget

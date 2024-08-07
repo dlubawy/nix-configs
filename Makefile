@@ -46,9 +46,16 @@ laplace:
 		sudo -u laplace sudo chown -R $$(whoami):staff $(GIT_REPO)
     endif
 
-pi:
+pi-image:
     ifdef DEBUG
 		nix build $(GIT_REPO)\#images.pi --show-trace --verbose
     else
 		nix build $(GIT_REPO)\#images.pi
+    endif
+
+pi:
+    ifdef DEBUG
+		sudo nixos-rebuild switch --flake $(GIT_REPO)\#pi --show-trace --verbose
+    else
+		sudo nixos-rebuild switch --flake $(GIT_REPO)\#pi
     endif

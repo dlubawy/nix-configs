@@ -3,9 +3,9 @@ My personal Nix configurations.
 
 ## Notes
 These configurations make use of personal preferences. I have forked some tools and made personal edits which may make this unstable:
-* nix-darwin: I added additional user configuration management and fixed some multi-user issues in the system. This was done in a heavy-handed manner and so will likely not be supported upstream. This may change as upstream improves on these issues.
-* nixvim: Needed to fork the `nixos-24.05` branch to get `flake check` working for all systems since upstream has an [import from derivation](https://nix.dev/manual/nix/2.23/language/import-from-derivation) that breaks checks.
-* agenix: Wanted to add armor output support for better git visibility. Also needed to fix `ageBin` for Darwin configuration.
+* `nix-darwin`: I added additional user configuration management and fixed some multi-user issues in the system. This was done in a heavy-handed manner and so will likely not be supported upstream. This may change as upstream improves on these issues.
+* `nixvim`: Needed to fork the `nixos-24.05` branch to get `flake check` working for all systems since upstream has an [import from derivation](https://nix.dev/manual/nix/2.23/language/import-from-derivation) that breaks checks.
+* `agenix`: Wanted to add armor output support for better git visibility. Also needed to fix `ageBin` for Darwin configuration.
 
 ## Setup
 ### macOS
@@ -32,6 +32,19 @@ This assumes starting from a fresh installation of macOS before initial setup an
   - A `make` command is supplied to make this easier: `make laplace`
   - You may want to change the `shellAlias` for `laplace` to point to your own repo with any changes;
     Then you may run `laplace` as a command alias for rebuilding from the remote.
+
+### Raspberry Pi
+This assumes a working Nix installation on a separate computer for building manually. Otherwise, one may follow the [ARM installation guide](https://nixos.wiki/wiki/NixOS_on_ARM#Installation) to install on the board first and then follow the instructions given here.
+
+* Clone this repo: `git clone https://github.com/dlubawy/nix-configs.git`
+* Enter where the repo was cloned: `cd nix-configs`
+* Edit `vars` in `flake.nix` to use your desired name, email, user, and public keys
+* Run `make pi-image` to build the initial SD card image or run `make pi` to build the image from an existing installation.
+* Using a 32 GB+ SD card (skip if using an existing pi image)
+  - Insert the SD and figure out the appropriate disk device (`fdisk` on Linux or `diskutil` on macOS)
+  - Run `nix run nixpkgs#zstdcat ./result/sd-image/nixos-sd-image-*.zst | dd of=<disk> status=progress bs=64M`
+  - Insert SD card and boot the Raspberry Pi
+* Login to the user defined previously using username as initial password then change the password with `passwd`
 
 ### Templates
 Use any template to create a nix flake based development environment with:

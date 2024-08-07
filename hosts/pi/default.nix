@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   inputs,
@@ -12,6 +13,10 @@
     ../../nixos
     ./hardware-configuration.nix
   ];
+
+  environment.shellAliases = {
+    pi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#pi";
+  };
 
   home-manager = {
     extraSpecialArgs = {
@@ -75,13 +80,44 @@
     secrets = {
       adguardhome = {
         file = ../../secrets/adguardhome.age;
+        mode = "0444";
       };
     };
   };
 
-  system.activationScripts."adguardhome-secret" = ''
-    secret=$(cat "${config.age.secrets.adguardhome.path}")
-    configFile=/var/lib/AdGuardHome/AdGuardHome.yaml
-    ${pkgs.gnused}/bin/sed -i "s#@adguardhome-password@#$secret#" "$configFile"
-  '';
+  systemd.services.adguardhome.preStart =
+    let
+      cfg = config.services.adguardhome;
+      settingsFormat = pkgs.formats.yaml { };
+      settings =
+        if (cfg.settings != null) then
+          cfg.settings
+          // (
+            if cfg.settings.schema_version < 23 then
+              {
+                bind_host = cfg.host;
+                bind_port = cfg.port;
+              }
+            else
+              { http.address = "${cfg.host}:${toString cfg.port}"; }
+          )
+        else
+          null;
+      configFile = (settingsFormat.generate "AdGuardHome.yaml" settings).overrideAttrs (_: {
+        checkPhase = "${cfg.package}/bin/adguardhome -c $out --check-config";
+      });
+    in
+    lib.mkForce (
+      lib.optionalString (settings != null) ''
+        if    [ -e "$STATE_DIRECTORY/AdGuardHome.yaml" ] \
+           && [ "${toString cfg.mutableSettings}" = "1" ]; then
+          # Writing directly to AdGuardHome.yaml results in empty file
+          ${pkgs.yaml-merge}/bin/yaml-merge "$STATE_DIRECTORY/AdGuardHome.yaml" "${configFile}" "${config.age.secrets.adguardhome.path}" > "$STATE_DIRECTORY/AdGuardHome.yaml.tmp"
+          mv "$STATE_DIRECTORY/AdGuardHome.yaml.tmp" "$STATE_DIRECTORY/AdGuardHome.yaml"
+        else
+          cp --force "${configFile}" "$STATE_DIRECTORY/AdGuardHome.yaml"
+          chmod 600 "$STATE_DIRECTORY/AdGuardHome.yaml"
+        fi
+      ''
+    );
 }
