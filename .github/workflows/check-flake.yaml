@@ -1,0 +1,23 @@
+name: check-flake
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@v13
+    - name: Run check
+      run: make check
+    - run: | # approve the pull request
+       curl --request POST \
+       --url https://api.github.com/repos/${{github.repository}}/pulls/${{github.event.number}}/reviews \
+       --header 'authorization: Bearer ${{ secrets.GH_TOKEN_FOR_UPDATES }}' \
+       --header 'content-type: application/json' \
+       -d '{"event":"APPROVE"}'
