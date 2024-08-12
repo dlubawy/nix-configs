@@ -20,7 +20,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v13
       - name: Run check
         run: make check
-      - if: ${{ github.event.user.login == 'dlubawy-bot' }}
+      - if: ${{ github.event.pull_request.user.login == 'dlubawy-bot' }}
         run: |
           curl -L \
            -X PUT \
