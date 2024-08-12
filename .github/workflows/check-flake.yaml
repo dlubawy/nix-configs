@@ -20,10 +20,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v13
       - name: Run check
         run: make check
-      - name: Debug PR User
-        run: |
-         echo "PR User: ${{ github.event.pull_request.user.login }}"
-      - if: ${{ github.event.pull_request.user.login == 'dlubawy-bot' }}
+      - if: ${{ github.event.pull_request.user.login == 'dlubawy-bot[bot]' }}
         run: |
           curl -L \
            -X PUT \
