@@ -5,23 +5,29 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  check:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-14]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v13
+      - name: Run check
+        run: make check
+  merge:
+    if: ${{ github.event.pull_request.user.login == 'dlubawy-bot[bot]' }}
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
       - uses: tibdex/github-app-token@v1
         id: generate-token
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v13
-      - name: Run check
-        run: make check
-      - if: ${{ github.event.pull_request.user.login == 'dlubawy-bot[bot]' }}
-        run: |
+      - run: |
           curl -L \
            -X PUT \
            -H "Accept: application/vnd.github+json" \

@@ -1,10 +1,12 @@
 { prev, ... }:
 {
+  pname = "age-plugin-yubikey";
+  version = "0.5.0";
   src = prev.fetchFromGitHub {
     owner = "dlubawy";
     repo = "age-plugin-yubikey";
     rev = "combined_encryption";
-    sha256 = "Nwqzuv1tJTQcMzN3YPfpJHd2HVEGybX/cAtUabWv8BU=";
+    sha256 = "CydTjyTUwQ3PboOaXjCfFygxSGaAjsircwWqdcvkeOA=";
   };
   cargoHash = "";
   cargoDeps = prev.rustPlatform.importCargoLock {

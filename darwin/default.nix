@@ -118,10 +118,11 @@ in
         "@admin"
       ];
     };
+    # NOTE: disabled by default to save resources when not in use.
+    # Change package attribute to switch between aarch64 and x86_64 architectures.
+    # Need to build the default linux-builder first before using `config.virtualisation`.
     linux-builder = {
-      # NOTE: disabled by default to save resources when not in use
       enable = false;
-      # NOTE: need to pick the arch of the builder here
       package = pkgs.darwin.linux-builder;
       # package = pkgs.darwin.linux-builder-x86_64;
       ephemeral = true;
