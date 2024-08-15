@@ -1,4 +1,9 @@
-{ helpers, pkgs, ... }:
+{
+  config,
+  helpers,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./files.nix
@@ -65,17 +70,20 @@
     vim.cmd("hi CursorLine cterm=none ctermbg=0 ctermfg=none")
   '';
 
-  extraPackages = with pkgs; [
-    fd
-    fzf
-    gawk
-    gnused
-    imagemagick
-    luajitPackages.magick
-    nodePackages_latest.prettier
-    ripgrep
-    stylua
-  ];
+  extraPackages =
+    with pkgs;
+    [
+      fd
+      fzf
+      gawk
+      gnused
+      nodePackages_latest.prettier
+      ripgrep
+      stylua
+    ]
+    ++ (lib.optionals (pkgs.stdenv.isDarwin) [
+      (pkgs.writeShellScriptBin "gsed" "exec ${pkgs.gnused}/bin/sed \"$@\"")
+    ]);
 
   extraPlugins = with pkgs.vimPlugins; [
     vim-mundo
@@ -109,8 +117,7 @@
       filesystem.followCurrentFile.enabled = true;
     };
     spectre = {
-      # NOTE: bypass test on Darwin because Spectre expects gnu-sed from homebrew
-      enable = if pkgs.stdenv.isDarwin then helpers.enableExceptInTests else true;
+      enable = true;
       settings.open_cmd = "noswapfile vnew";
     };
     gitsigns.enable = true;
@@ -152,6 +159,9 @@
     treesitter = {
       enable = true;
       indent = true;
+      grammarPackages = config.plugins.treesitter.package.passthru.allGrammars ++ [
+        pkgs.tree-sitter-grammars.tree-sitter-norg-meta
+      ];
 
       # NOTE: disable treesitter CSV to allow rainbow_csv
       disabledLanguages = [ "csv" ];

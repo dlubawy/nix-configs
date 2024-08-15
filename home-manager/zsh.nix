@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  home.packages = with pkgs; [ ruby ];
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;

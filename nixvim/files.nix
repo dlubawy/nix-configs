@@ -6,9 +6,10 @@
         WhichKeySQL()
       '';
     };
-    "ftplugin/neorg.lua" = {
+    "ftplugin/norg.lua" = {
       extraConfigLua = ''
-        WhichKeyNeorg()
+        WhichKeyNorg()
+        vim.cmd("Neorg module load core.concealer")
       '';
     };
     "ftplugin/markdown.lua" = {

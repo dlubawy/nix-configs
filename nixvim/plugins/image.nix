@@ -1,5 +1,14 @@
-{ helpers, lib, ... }:
 {
+  pkgs,
+  helpers,
+  lib,
+  ...
+}:
+{
+  extraPackages = with pkgs; [
+    imagemagick
+    luajitPackages.magick
+  ];
   plugins.image = {
     enable = helpers.enableExceptInTests;
     backend = lib.mkDefault "kitty";
