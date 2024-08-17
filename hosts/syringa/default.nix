@@ -1,5 +1,5 @@
-# TODO: need to finish this
 {
+  lib,
   inputs,
   outputs,
   vars,
@@ -10,6 +10,11 @@
     inputs.nixos-wsl.nixosModules.default
     ../../nixos
   ];
+
+  # NOTE: disable so WSL can work
+  boot.initrd.systemd.enable = lib.mkForce false;
+  systemd.sysusers.enable = lib.mkForce false;
+  system.etc.overlay.enable = lib.mkForce false;
 
   wsl = {
     enable = true;
