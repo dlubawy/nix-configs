@@ -11,6 +11,8 @@ pkgs.stdenv.mkDerivation {
     hash = "sha256-zveLNcZN7+L1iw3i9tq8fOgCh7VdMTg8B2PEoJ2fGwQ=";
   };
 
+  meta.platforms = [ "aarch64-linux" ];
+
   buildInputs = with pkgs; [
     pkg-config
     libnl

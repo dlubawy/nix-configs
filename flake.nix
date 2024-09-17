@@ -71,7 +71,10 @@
       };
     in
     rec {
-      packages = forAllSystems ({ pkgs }: import ./pkgs pkgs);
+      # FIXME: need to figure out how to have packages for multiple incompatible systems
+      packages = forAllSystems (
+        { pkgs }: if pkgs.system == "aarch64-linux" then import ./pkgs pkgs else { }
+      );
       formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
 
       overlays = import ./overlays { inherit inputs; };
