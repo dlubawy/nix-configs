@@ -55,7 +55,6 @@
     autoUpgrade = {
       enable = true;
       allowReboot = true;
-      flake = "${vars.flake}";
     };
     etc.overlay.enable = true;
     stateVersion = "${vars.stateVersion}";

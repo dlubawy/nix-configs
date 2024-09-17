@@ -12,6 +12,8 @@
     ./adguardhome.nix
   ];
 
+  system.autoUpgrade.flake = "${vars.flake}#pi";
+
   environment.shellAliases = {
     pi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#pi";
   };

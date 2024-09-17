@@ -50,6 +50,12 @@
     version = "0.2";
   };
 
+  system.autoUpgrade.flake = "${vars.flake}#bpi";
+
+  environment.shellAliases = {
+    pi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#bpi";
+  };
+
   home-manager = {
     extraSpecialArgs = {
       inherit inputs outputs vars;
