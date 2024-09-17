@@ -50,6 +50,19 @@
         identitiesOnly = true;
         identityFile = [ "~/.ssh/id_yubikey.pub" ];
       };
+      "bpi" = {
+        hostname = "192.168.1.1";
+        port = 22;
+        user = "${vars.user}";
+        extraOptions = {
+          ControlMaster = "no";
+          # FIXME: there is an issue with key length on the host when using a YubiKey with SSH.
+          # So we force it to ssh-ed25519, but the root cause should be fixed if possible.
+          HostKeyAlgorithms = "ssh-ed25519";
+        };
+        identitiesOnly = true;
+        identityFile = [ "~/.ssh/id_yubikey.pub" ];
+      };
     };
     serverAliveInterval = 300;
     serverAliveCountMax = 2;
