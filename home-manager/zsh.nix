@@ -262,24 +262,6 @@
           fi
         done
         rel_path=$("''${_abs_path_command[@]}" ''${rel_path:-$PWD})
-        if [ -e "$HOME"/.user_sym ]
-        then
-          rejustify_ls_columns () {
-            ruby -e "o=STDIN.read;re=/^(([^ ]* +){2})(([^ ]* +){3})/; u,g,s=o.lines.map{|l|l[re,3]}.compact.map(&:split).transpose.map{|a|a.map(&:size).max+1}; puts o.lines.map{|l|l.sub(re){|m|\"%s%-#{u}s %-#{g}s%#{s}s \"%[\$1,*\$3.split]}}"
-          }
-          local USER_SYM=$(/bin/cat $HOME/.user_sym)
-          if [ -f "$HOME/.staff_sym" ]
-          then
-            local STAFF_SYM=$(/bin/cat $HOME/.staff_sym)
-            ll_output=$(echo "$ll_output" |
-                \sed -$SED_REGEX_ARG "s/ $USER  staff/ $USER_SYM  $STAFF_SYM /g" |
-                rejustify_ls_columns)
-          else
-            ll_output=$(echo "$ll_output" |
-                \sed -$SED_REGEX_ARG "s/ $USER/ $USER_SYM /g" |
-                rejustify_ls_columns)
-          fi
-        fi
         if [ "$(echo "$ll_output" | wc -l)" -gt "50" ]
         then
           echo -e '\033[33mToo many files to create shortcuts. Running plain ll command...\033[0m' >&2
@@ -290,7 +272,7 @@
             \cat <<EOF
       output = STDIN.read
       e = 1
-      re = /^(([^ ]* +){8})/
+      re = /^(([^ ]* +){7,8})/
       output.lines.each_with_index do |line, index|
         puts line if index == 0
         next unless line.match(re)

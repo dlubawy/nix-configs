@@ -54,6 +54,29 @@ This assumes a working Nix installation on the target platform (`x86_64-linux`).
 * Add [Catppuccin theme for Windows Terminal](https://github.com/catppuccin/windows-terminal/tree/main)
 * Install [FantasqueSansMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases) in Windows and select it as font
 
+### Banana Pi BPI-R3
+This makes use of [nakato/nixos-sbc](https://github.com/nakato/nixos-sbc) for creating the boot image of the router. I am not a network security expert, so this configuration does not guarantee security. I made a best attempt with the skills I posess; all feedback welcome. Goal of the router is to primary segment LAN users through four VLAN: `vl-lan`, `vl-user`, `vl-iot`, and `vl-guest`.
+
+- LAN network acts as a management interface to the router and networks themselves.
+- USER network provides trusted networking that can reach into the IOT and GUEST netwoks but not the reverse.
+- IOT provides a downgraded Wi-Fi security entrypoint and a dedicated 2.4GHz connection for devices that have poor update support.
+- GUEST provides an entrypoint for all devices not registered in the dynamic VLAN configuration for hostapd. *NOTE:* devices on the GUEST network may talk to each other due to hostapd ~ap_isolate~ not working with dynamic VLAN. This is due to MAC address routing bypassing forwarding rules in nftables on the WLAN interface that is dynamically created. GUEST devices will **not** be able to talk outside the VLAN though (except for a set aside subnet into the IOT network).
+
+Installation assumes an assembled Banana Pi BPI-R3 without any additional PCI devices and only an SD card.
+
+* Clone this repo: `git clone https://github.com/dlubawy/nix-configs.git`
+* Enter where the repo was cloned: `cd nix-configs`
+* Edit `vars` in `flake.nix` to use your desired name, email, user, and public keys
+* Change any static network configurations such as DHCP leases and passwords using `agenix`
+* Run `make bpi-image` to build the initial SD card image or run `make bpi` to build the image from an existing installation.
+* Using a 32 GB+ SD card (skip if using an existing bpi image)
+  - Insert the SD and figure out the appropriate disk device (`fdisk` on Linux or `diskutil` on macOS)
+  - Run `nix run nixpkgs#zstdcat ./result/sd-image/nixos-sd-image-*.zst | dd of=<disk> status=progress bs=64M`
+  - Insert SD card and boot the Banana Pi
+* Connect to the BPI using an Ethernet cable to one of the LAN 1--4 ports or use an SPI connection (Wi-Fi cannot start if SPI is connected)
+* Change the initial password with `passwd`
+* Login to Grafana (user: `admin`, password: `admin`) and change the admin password
+
 ### Templates
 Use any template to create a nix flake based development environment with:
 ```

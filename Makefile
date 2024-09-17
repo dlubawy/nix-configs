@@ -53,9 +53,23 @@ pi-image:
 		nix build $(GIT_REPO)\#images.pi
     endif
 
+bpi-image:
+    ifdef DEBUG
+		nix build $(GIT_REPO)\#images.bpi --show-trace --verbose
+    else
+		nix build $(GIT_REPO)\#images.bpi
+    endif
+
 pi:
     ifdef DEBUG
 		sudo nixos-rebuild switch --flake $(GIT_REPO)\#pi --show-trace --verbose
     else
 		sudo nixos-rebuild switch --flake $(GIT_REPO)\#pi
+    endif
+
+bpi:
+    ifdef DEBUG
+		sudo nixos-rebuild switch --flake $(GIT_REPO)\#bpi --show-trace --verbose
+    else
+		sudo nixos-rebuild switch --flake $(GIT_REPO)\#bpi
     endif

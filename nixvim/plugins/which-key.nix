@@ -7,6 +7,9 @@
         "n"
         "v"
       ];
+      z = {
+        name = "+folds";
+      };
       g = {
         name = "+goto";
         R = [
@@ -24,10 +27,6 @@
           ''<cmd>lua require("todo-comments").jump_next()<CR>''
           "Next todo comment"
         ];
-        b = [
-          ''<cmd>BufferLineCycleNext<CR>''
-          "Next buffer"
-        ];
       };
       "[" = {
         name = "+prev";
@@ -36,53 +35,14 @@
           ''<cmd>lua require("todo-comments").jump_prev()<CR>''
           "Previous todo comment"
         ];
-        b = [
-          ''<cmd>BufferLineCyclePrev<CR>''
-          "Prev buffer"
-        ];
       };
-      "<S-l>" = [
-        ''<cmd>BufferLineCycleNext''
-        "Next buffer"
-      ];
-      "<S-h>" = [
-        ''<cmd>BufferLineCyclePrev''
-        "Prev buffer"
-      ];
       "<leader>" = {
-        "," = [
-          ''<cmd>lua require("telescope.builtin").buffers({sort_mru=true, sort_lastused=true})<CR>''
-          "Switch Buffer"
-        ];
         m = [
           "<cmd>MundoToggle<CR>"
           "Mundo Toggle"
         ];
         "<tab>" = {
           name = "+tabs";
-        };
-        b = {
-          name = "+buffer";
-          p = [
-            ''<cmd>BufferLineTogglePin<CR>''
-            "Toggle pin"
-          ];
-          P = [
-            ''<cmd>BufferLineGroupClose ungrouped<CR>''
-            "Delete non-pinned buffers"
-          ];
-          o = [
-            ''<cmd>BufferLineCloseOthers<CR>''
-            "Delete other buffers"
-          ];
-          r = [
-            ''<cmd>BufferLineCloseRight<CR>''
-            "Delete buffers to the right"
-          ];
-          l = [
-            ''<cmd>BufferLineCloseLeft<CR>''
-            "Delete buffers to the left"
-          ];
         };
         c = {
           name = "+code";
@@ -101,22 +61,6 @@
         };
         f = {
           name = "+file/find";
-          b = [
-            ''<cmd>require("telescope.builtin").buffers({sort_mru=true, sort_lastused=true})<CR>''
-            "Buffers"
-          ];
-          c = [
-            ''<cmd>lua require("telescope.builtin").find_files({cwd=vim.fn.stdpath("config")})<CR>''
-            "Find Config File"
-          ];
-          F = [
-            ''<cmd>lua require("telescope.builtin").find_files({cwd=false})<CR>''
-            "Find Files (cwd)"
-          ];
-          R = [
-            ''<cmd>require("telescope.builtin").oldfiles({cwd=vim.loop.cwd()})<CR>''
-            "Recent (cwd)"
-          ];
           n = [
             "<cmd>enew<CR>"
             "New File"
@@ -189,29 +133,16 @@
             ''<cmd>lua require("persistence").load({last=true})<CR>''
             "Restore Last Session"
           ];
-          qq = [
-            ''<cmd>lua require("persistence").stop()<CR>''
-            "Stop Persistence"
-          ];
+          q = {
+            name = "+persistence";
+            q = [
+              ''<cmd>lua require("persistence").stop()<CR>''
+              "Stop Persistence"
+            ];
+          };
         };
         s = {
           name = "+search";
-          d = [
-            ''<cmd>lua require("telescope.builtin").diagnostics({bufnr=0})<CR>''
-            "Document Diagnostics"
-          ];
-          G = [
-            ''<cmd>lua require("telescope.builtin").live_grep({cwd=false})<CR>''
-            "Grep (cwd)"
-          ];
-          w = [
-            ''<cmd>lua require("telescope.builtin").grep_string({word_match="-w"})<CR>''
-            "Word/Selection (root dir)"
-          ];
-          W = [
-            ''<cmd>lua require("telescope.builtin").grep_string({cwd=false, word_match="-w"})<CR>''
-            "Word/Selection (cwd)"
-          ];
           r = [
             ''<cmd>lua require("spectre").open()<CR>''
             "Replace in files (Spectre)"
@@ -230,10 +161,6 @@
         };
         u = {
           name = "+ui";
-          c = [
-            ''<cmd>lua require("telescope.builtin").colorscheme({enable_preview=true})<CR>''
-            "Colorscheme with preview"
-          ];
           n = [
             ''<cmd>lua require("notify").dismiss({silent=true, pending=true})<CR>''
             "Dismiss all Notifications"
@@ -273,24 +200,8 @@
             "Todo/Fix/Fixme (Trouble)"
           ];
         };
-        n = {
-          name = "+neorg";
-          n = [
-            ''<cmd>Neorg<CR>''
-            "Neorg"
-          ];
-          j = [
-            ''<cmd>Neorg journal<CR>''
-            "Neorg journal"
-          ];
-          i = [
-            ''<cmd>Neorg index<CR>''
-            "Neorg index"
-          ];
-          c = [
-            ''<cmd>Neorg capture<CR>''
-            "Neorg capture"
-          ];
+        t = {
+          name = "+tables";
         };
       };
     };

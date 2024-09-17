@@ -20,6 +20,10 @@
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-sbc = {
+      url = "github:nakato/nixos-sbc/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Supporting modules
     nixvim = {
@@ -63,6 +67,7 @@
         sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBz5R5RsCSXxzIduOV98T4yASCRbYrKVbzB7iZy9746P";
         gpgKey = "6EEC861B7641B37D";
         stateVersion = "24.05";
+        flake = "github:dlubawy/nix-configs/main";
       };
     in
     rec {
@@ -99,6 +104,14 @@
           };
           modules = [ ./hosts/pi ];
         };
+        # Banana Pi BPI-R3
+        bpi = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [ ./hosts/bpi ];
+        };
       };
       darwinConfigurations = {
         # MacBook M1
@@ -126,6 +139,7 @@
           (nixosConfigurations.pi.extendModules {
             modules = [ "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
           }).config.system.build.sdImage;
+        bpi = nixosConfigurations.bpi.config.system.build.sdImage;
       };
 
       checks = forAllSystems (

@@ -325,6 +325,27 @@
         "type": "github"
       }
     },
+    "nixos-sbc": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1724739962,
+        "narHash": "sha256-J09d0wh9n6NWfhVT1Zx4uHgCvVbBDHFnl2nUHlPDyLg=",
+        "owner": "nakato",
+        "repo": "nixos-sbc",
+        "rev": "08f44ab82d9bebffdc3e29d4c0e10f3be7f947ce",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nakato",
+        "ref": "main",
+        "repo": "nixos-sbc",
+        "type": "github"
+      }
+    },
     "nixos-wsl": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -429,6 +450,7 @@
         "agenix": "agenix",
         "darwin": "darwin_2",
         "home-manager": "home-manager_2",
+        "nixos-sbc": "nixos-sbc",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "nixpkgs-darwin": "nixpkgs-darwin",

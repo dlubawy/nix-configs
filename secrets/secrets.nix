@@ -1,6 +1,7 @@
 let
   systems = {
     pi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGoYQAIbCdU2DaZienCzSXq2k6zul1UdkRDSOJ7gS5B7";
+    bpi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL/O8PaDlYyOQGmI80RFqObe6xMoZVvbakxLwwKS021R";
   };
   yubiKeys = {
     yubikey = "age1yubikey1dzu5w3mhcfgqe7jqepaz8pv44ckgmujwdvp5vds3xqwlkqvg8e3q3a0d0v";
@@ -11,7 +12,18 @@ let
 in
 {
   "adguardhome.age" = {
-    publicKeys = [ systems.pi ] ++ allYubiKeys;
+    publicKeys = [
+      systems.pi
+      systems.bpi
+    ] ++ allYubiKeys;
+    armor = true;
+  };
+  "wifi-sae.age" = {
+    publicKeys = [ systems.bpi ] ++ allYubiKeys;
+    armor = true;
+  };
+  "wifi-iot-psk.age" = {
+    publicKeys = [ systems.bpi ] ++ allYubiKeys;
     armor = true;
   };
 }

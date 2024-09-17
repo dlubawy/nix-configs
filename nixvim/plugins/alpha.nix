@@ -111,7 +111,47 @@
           }
           {
             on_press = {
-              __raw = ''function() require("telescope.builtin").find_files({cwd=vim.fs.normalize("~/.conf/nix")}) end'';
+              __raw = ''function() require("orgmode").action("agenda.prompt") end'';
+            };
+            opts = {
+              shortcut = "a";
+              position = "center";
+              align_shortcut = "right";
+              cursor = 3;
+              width = 50;
+              hl_shortcut = "Keyword";
+              keymap = [
+                "n"
+                "a"
+                ''<cmd>lua require("orgmode").action("agenda.prompt")<CR>''
+              ];
+            };
+            type = "button";
+            val = "󰕪  Org Agenda";
+          }
+          {
+            on_press = {
+              __raw = ''function() vim.cmd[[call feedkeys(",rf")]] end'';
+            };
+            opts = {
+              shortcut = "r";
+              position = "center";
+              align_shortcut = "right";
+              cursor = 3;
+              width = 50;
+              hl_shortcut = "Keyword";
+              keymap = [
+                "n"
+                "r"
+                ''<cmd>call feedkeys(",rf")<CR>''
+              ];
+            };
+            type = "button";
+            val = "  Org Roam";
+          }
+          {
+            on_press = {
+              __raw = ''function() require("telescope.builtin").find_files({cwd=vim.fs.normalize("~/.config/nix-configs")}) end'';
             };
             opts = {
               shortcut = "c";
@@ -123,7 +163,7 @@
               keymap = [
                 "n"
                 "c"
-                ''<cmd>lua require("telescope.builtin").find_files({cwd=vim.fs.normalize("~/.config/nix")})<CR>''
+                ''<cmd>lua require("telescope.builtin").find_files({cwd=vim.fs.normalize("~/.config/nix-configs")})<CR>''
               ];
             };
             type = "button";

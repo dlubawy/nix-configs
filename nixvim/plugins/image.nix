@@ -16,6 +16,11 @@
       markdown = {
         enabled = true;
         clearInInsertMode = true;
+        filetypes = [
+          "markdown"
+          "vimwiki"
+          "org"
+        ];
       };
       neorg = {
         enabled = true;

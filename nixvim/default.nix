@@ -1,6 +1,6 @@
 {
+  lib,
   config,
-  helpers,
   pkgs,
   ...
 }:
@@ -94,6 +94,15 @@
         repo = "rainbow_csv";
         rev = "6b914b420fd390103d9d98b3d6a67648ebe59274";
         sha256 = "qhwTALQw0rlruAqpWM3UifF9JEEmwlgCsfFZ7MXq0TQ=";
+      };
+    })
+    (pkgs.vimUtils.buildVimPlugin {
+      name = "vim-table-mode";
+      src = pkgs.fetchFromGitHub {
+        owner = "dhruvasagar";
+        repo = "vim-table-mode";
+        rev = "v4.8.1";
+        sha256 = "2p92xLlYYl9HQjFha/qRUwiJCB2MUwbt3ADz0uWyGcw=";
       };
     })
   ];
