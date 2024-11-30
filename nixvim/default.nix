@@ -57,6 +57,10 @@
     # which-key
     timeout = true;
     timeoutlen = 300;
+
+    # orgmode
+    conceallevel = 2;
+    concealcursor = "nc";
   };
 
   globals = {
