@@ -10,7 +10,7 @@
       gopls.enable = true;
       html.enable = true;
       ltex.enable = true;
-      lua-ls = {
+      lua_ls = {
         enable = true;
         settings = {
           Lua = {
@@ -30,9 +30,9 @@
         };
       };
       marksman.enable = true;
-      nil-ls.enable = true;
-      ruff-lsp.enable = true;
-      rust-analyzer = {
+      nil_ls.enable = true;
+      ruff.enable = true;
+      rust_analyzer = {
         enable = true;
         installCargo = false;
         installRustc = false;
@@ -40,7 +40,7 @@
       };
       sqls.enable = true;
       terraformls.enable = true;
-      tsserver.enable = true;
+      ts_ls.enable = true;
     };
   };
 }

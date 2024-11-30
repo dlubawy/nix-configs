@@ -200,25 +200,25 @@ in
   extraPackages = with pkgs; [ pandoc ];
 
   plugins.which-key = {
-    registrations = {
-      "<leader>" = {
-        o = {
-          name = "+orgmode";
-        };
-        r = {
-          name = "+roam";
-          a = {
-            name = "+alias";
-          };
-          o = {
-            name = "+origin";
-          };
-          d = {
-            name = "+dailies";
-          };
-        };
-      };
-    };
+    # registrations = {
+    #   "<leader>" = {
+    #     o = {
+    #       name = "+orgmode";
+    #     };
+    #     r = {
+    #       name = "+roam";
+    #       a = {
+    #         name = "+alias";
+    #       };
+    #       o = {
+    #         name = "+origin";
+    #       };
+    #       d = {
+    #         name = "+dailies";
+    #       };
+    #     };
+    #   };
+    # };
   };
 
   extraPlugins = with pkgs; [

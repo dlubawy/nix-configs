@@ -171,13 +171,13 @@
     # treesitter
     treesitter = {
       enable = true;
-      indent = true;
+      settings = {
+        indent.enable = true;
+        highlight.disable = [ "csv" ];
+      };
       grammarPackages = config.plugins.treesitter.package.passthru.allGrammars ++ [
         pkgs.tree-sitter-grammars.tree-sitter-norg-meta
       ];
-
-      # NOTE: disable treesitter CSV to allow rainbow_csv
-      disabledLanguages = [ "csv" ];
     };
     treesitter-context = {
       enable = true;
@@ -189,6 +189,7 @@
     ts-autotag.enable = true;
 
     # UI
+    web-devicons.enable = true;
     notify.enable = true;
     lualine.enable = true;
     indent-blankline.enable = true;

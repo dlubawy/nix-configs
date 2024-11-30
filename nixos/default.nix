@@ -60,7 +60,7 @@
     stateVersion = "${vars.stateVersion}";
   };
 
-  systemd.sysusers.enable = true;
+  services.userborn.enable = true;
   xdg.portal = {
     configPackages = with pkgs; [ xdg-desktop-portal-hyprland ];
     wlr.enable = true;

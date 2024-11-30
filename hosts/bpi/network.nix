@@ -145,11 +145,9 @@
         bridge = [ "br-lan" ];
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              VLAN = 99;
-              PVID = 99;
-              EgressUntagged = 99;
-            };
+            VLAN = 99;
+            PVID = 99;
+            EgressUntagged = 99;
           }
         ];
         networkConfig.ConfigureWithoutCarrier = true;
@@ -159,11 +157,9 @@
         bridge = [ "br-lan" ];
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              VLAN = 99;
-              PVID = 99;
-              EgressUntagged = 99;
-            };
+            VLAN = 99;
+            PVID = 99;
+            EgressUntagged = 99;
           }
         ];
         networkConfig.ConfigureWithoutCarrier = true;
@@ -196,10 +192,10 @@
           "vl-guest"
         ];
         bridgeVLANs = [
-          { bridgeVLANConfig.VLAN = 99; }
-          { bridgeVLANConfig.VLAN = 20; }
-          { bridgeVLANConfig.VLAN = 30; }
-          { bridgeVLANConfig.VLAN = 40; }
+          { VLAN = 99; }
+          { VLAN = 20; }
+          { VLAN = 30; }
+          { VLAN = 40; }
         ];
         networkConfig = {
           ConfigureWithoutCarrier = true;
@@ -265,10 +261,8 @@
         dhcpServerStaticLeases = [
           {
             # printer
-            dhcpServerStaticLeaseConfig = {
-              Address = "192.168.30.10";
-              MACAddress = "c8:d9:d2:e8:38:6a";
-            };
+            Address = "192.168.30.10";
+            MACAddress = "c8:d9:d2:e8:38:6a";
           }
         ];
       };
