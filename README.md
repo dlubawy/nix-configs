@@ -4,7 +4,6 @@ My personal Nix configurations.
 ## Notes
 These configurations make use of personal preferences. I have forked some tools and made personal edits which may make this unstable:
 * `nix-darwin`: I added additional user configuration management and fixed some multi-user issues in the system. This was done in a heavy-handed manner and so will likely not be supported upstream. This may change as upstream improves on these issues.
-* `nixvim`: Needed to fork the `nixos-24.05` branch to get `flake check` working for all systems since upstream has an [import from derivation](https://nix.dev/manual/nix/2.23/language/import-from-derivation) that breaks checks.
 * `agenix`: Wanted to add armor output support for better git visibility. Also needed to fix `ageBin` for Darwin configuration.
 
 ## Setup
