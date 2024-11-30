@@ -37,11 +37,9 @@
         bridge = [ "br-lan" ];
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              VLAN = 99;
-              PVID = 99;
-              EgressUntagged = 99;
-            };
+            VLAN = 99;
+            PVID = 99;
+            EgressUntagged = 99;
           }
         ];
       };
@@ -53,11 +51,9 @@
         bridge = [ "br-lan" ];
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              VLAN = 20;
-              PVID = 20;
-              EgressUntagged = 20;
-            };
+            VLAN = 20;
+            PVID = 20;
+            EgressUntagged = 20;
           }
         ];
       };
@@ -69,11 +65,9 @@
         bridge = [ "br-lan" ];
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              VLAN = 30;
-              PVID = 30;
-              EgressUntagged = 30;
-            };
+            VLAN = 30;
+            PVID = 30;
+            EgressUntagged = 30;
           }
         ];
       };
@@ -85,11 +79,9 @@
         bridge = [ "br-lan" ];
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              VLAN = 40;
-              PVID = 40;
-              EgressUntagged = 40;
-            };
+            VLAN = 40;
+            PVID = 40;
+            EgressUntagged = 40;
           }
         ];
       };

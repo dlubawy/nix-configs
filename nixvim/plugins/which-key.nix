@@ -2,209 +2,276 @@
 {
   plugins.which-key = {
     enable = true;
-    registrations = {
-      mode = [
-        "n"
-        "v"
+    settings = {
+      spec = [
+        {
+          __unkeyed = [
+            {
+              __unkeyed = "z";
+              group = "folds";
+            }
+            {
+              __unkeyed = "g";
+              group = "goto";
+            }
+            {
+              __unkeyed-1 = "gR";
+              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("lsp_reference")<CR>'';
+              desc = "LSP Reference";
+            }
+            {
+              __unkeyed-1 = "gs";
+              group = "surround";
+            }
+            {
+              __unkeyed = "]";
+              group = "next";
+            }
+            {
+              __unkeyed = "]]";
+              desc = "Next Reference";
+            }
+            {
+              __unkeyed-1 = "]t";
+              __unkeyed-2 = ''<cmd>lua require("todo-comments").jump_next()<CR>'';
+              desc = "Next todo comment";
+            }
+            {
+              __unkeyed = "[";
+              group = "prev";
+            }
+            {
+              __unkeyed = "[[";
+              desc = "Prev Reference";
+            }
+            {
+              __unkeyed-1 = "[t";
+              __unkeyed-2 = ''<cmd>lua require("todo-comments").jump_prev()<CR>'';
+              desc = "Previous todo comment";
+            }
+            {
+              __unkeyed = "<leader>";
+              group = "<leader>";
+            }
+            {
+              __unkeyed-1 = "<leader>m";
+              __unkeyed-2 = "<cmd>MundoToggle<CR>";
+              desc = "Mundo Toggle";
+            }
+            {
+              __unkeyed = "<leader><tab>";
+              group = "tabs";
+            }
+            {
+              __unkeyed = "<leader>c";
+              group = "code";
+            }
+            {
+              __unkeyed-1 = "<leader>cd";
+              __unkeyed-2 = "<cmd>cd %:p:h<CR><cmd>pwd<CR>";
+              desc = "Change Directory";
+            }
+            {
+              __unkeyed-1 = "<leader>cl";
+              __unkeyed-2 = "<cmd>LspInfo<CR>";
+              desc = "LSP Info";
+            }
+            {
+              __unkeyed-1 = "<leader>ca";
+              __unkeyed-2 = "<cmd>lua vim.buf.code_action()<CR>";
+              desc = "Code Action";
+            }
+            {
+              __unkeyed = "<leader>f";
+              group = "file/find";
+            }
+            {
+              __unkeyed-1 = "<leader>fn";
+              __unkeyed-2 = "<cmd>enew<CR>";
+              desc = "New File";
+            }
+            {
+              __unkeyed = "<leader>g";
+              group = "git";
+            }
+            {
+              __unkeyed-1 = "<leader>gS";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").stage_buffer()<CR>'';
+              desc = "Stage Buffer";
+            }
+            {
+              __unkeyed-1 = "<leader>gR";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").reset_buffer()<CR>'';
+              desc = "Reset Buffer";
+            }
+            {
+              __unkeyed-1 = "<leader>gb";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").blame_line({full=true})<CR>'';
+              desc = "Blame Line";
+            }
+            {
+              __unkeyed-1 = "<leader>gd";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").diffthis()<CR>'';
+              desc = "Diff This";
+            }
+            {
+              __unkeyed-1 = "<leader>gD";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").diffthis("~")'';
+              desc = "Diff ~";
+            }
+            {
+              __unkeyed = "<leader>gh";
+              group = "hunks";
+            }
+            {
+              __unkeyed-1 = "<leader>ghs";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").stage_hunk()<CR>'';
+              desc = "Stage Hunk";
+            }
+            {
+              __unkeyed-1 = "<leader>ghr";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").reset_hunk()<CR>'';
+              desc = "Reset Hunk";
+            }
+            {
+              __unkeyed-1 = "<leader>ghu";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").undo_stage_hunk()<CR>'';
+              desc = "Undo Stage Hunk";
+            }
+            {
+              __unkeyed-1 = "<leader>ghp";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").preview_hunk()<CR>'';
+              desc = "Preview Hunk";
+            }
+            {
+              __unkeyed = "<leader>gt";
+              group = "toggle";
+            }
+            {
+              __unkeyed-1 = "<leader>gtb";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").toggle_current_line_blame()<CR>'';
+              desc = "Toggle Line Blame";
+            }
+            {
+              __unkeyed-1 = "<leader>gtd";
+              __unkeyed-2 = ''<cmd>lua require("gitsigns").toggle_deleted()<CR>'';
+              desc = "Toggle Deleted";
+            }
+            {
+              __unkeyed = "<leader>q";
+              group = "quit/session";
+            }
+            {
+              __unkeyed-1 = "<leader>qa";
+              __unkeyed-2 = "<cmd>qa<CR>";
+              desc = "Quit";
+            }
+            {
+              __unkeyed-1 = "<leader>qs";
+              __unkeyed-2 = ''<cmd>lua require("persistence").load()<CR>'';
+              desc = "Restore Session";
+            }
+            {
+              __unkeyed-1 = "<leader>ql";
+              __unkeyed-2 = ''<cmd>lua require("persistence").load({last=true})<CR>'';
+              desc = "Restore Last Session";
+            }
+            {
+              __unkeyed = "<leader>qq";
+              group = "persistence";
+            }
+            {
+              __unkeyed-1 = "<leader>qqq";
+              __unkeyed-2 = ''<cmd>lua require("persistence").stop()<CR>'';
+              desc = "Stop Persistence";
+            }
+            {
+              __unkeyed = "<leader>s";
+              group = "search";
+            }
+            {
+              __unkeyed-1 = "<leader>sr";
+              __unkeyed-2 = ''<cmd>lua require("spectre").open()<CR>'';
+              desc = "Replace in files (Spectre)";
+            }
+            {
+              __unkeyed = "<leader>sn";
+              group = "noice";
+            }
+            {
+              __unkeyed-1 = "<leader>st";
+              __unkeyed-2 = ''<cmd>TodoTelescope<CR>'';
+              desc = "Todo";
+            }
+            {
+              __unkeyed-1 = "<leader>sT";
+              __unkeyed-2 = ''<cmd>TodoTelescope keywords=TODO,FIX,FIXME<CR>'';
+              desc = "Todo/Fix/Fixme";
+            }
+            {
+              __unkeyed = "<leader>u";
+              group = "ui";
+            }
+            {
+              __unkeyed-1 = "<leader>un";
+              __unkeyed-2 = ''<cmd>lua require("notify").dismiss({silent=true, pending=true})<CR>'';
+              desc = "Dismiss all Notifications";
+            }
+            {
+              __unkeyed = "<leader>w";
+              group = "windows";
+            }
+            {
+              __unkeyed = "<leader>x";
+              group = "diagnostics/quickfix";
+            }
+            {
+              __unkeyed-1 = "<leader>xx";
+              __unkeyed-2 = ''<cmd>lua require("trouble").toggle()<CR>'';
+              desc = "Trouble";
+            }
+            {
+              __unkeyed-1 = "<leader>xw";
+              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("workspace_diagnostics")<CR>'';
+              desc = "Workspace Diagnostics";
+            }
+            {
+              __unkeyed-1 = "<leader>xd";
+              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("document_diagnostics")<CR>'';
+              desc = "Document Diagnostics";
+            }
+            {
+              __unkeyed-1 = "<leader>xq";
+              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("quickfix")<CR>'';
+              desc = "Quickfix";
+            }
+            {
+              __unkeyed-1 = "<leader>xl";
+              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("loclist")<CR>'';
+              desc = "Location List";
+            }
+            {
+              __unkeyed-1 = "<leader>xt";
+              __unkeyed-2 = ''<cmd>TodoTrouble<CR>'';
+              desc = "Todo (Trouble)";
+            }
+            {
+              __unkeyed-1 = "<leader>xT";
+              __unkeyed-2 = ''<cmd>TodoTrouble keywords=TODO,FIX,FIXME<CR>'';
+              desc = "Todo/Fix/Fixme (Trouble)";
+            }
+            {
+              __unkeyed = "<leader>t";
+              group = "tables";
+            }
+          ];
+          mode = [
+            "n"
+            "v"
+          ];
+        }
       ];
-      z = {
-        name = "+folds";
-      };
-      g = {
-        name = "+goto";
-        R = [
-          ''<cmd>lua require("trouble").toggle("lsp_reference")<CR>''
-          "LSP Reference"
-        ];
-        s = {
-          name = "+surround";
-        };
-      };
-      "]" = {
-        name = "+next";
-        "]" = "Next Reference";
-        t = [
-          ''<cmd>lua require("todo-comments").jump_next()<CR>''
-          "Next todo comment"
-        ];
-      };
-      "[" = {
-        name = "+prev";
-        "[" = "Prev Reference";
-        t = [
-          ''<cmd>lua require("todo-comments").jump_prev()<CR>''
-          "Previous todo comment"
-        ];
-      };
-      "<leader>" = {
-        m = [
-          "<cmd>MundoToggle<CR>"
-          "Mundo Toggle"
-        ];
-        "<tab>" = {
-          name = "+tabs";
-        };
-        c = {
-          name = "+code";
-          d = [
-            "<cmd>cd %:p:h<CR><cmd>pwd<CR>"
-            "Change Directory"
-          ];
-          l = [
-            "<cmd>LspInfo<CR>"
-            "Lsp Info"
-          ];
-          a = [
-            "<cmd>lua vim.lsp.buf.code_action()<CR>"
-            "Code Action"
-          ];
-        };
-        f = {
-          name = "+file/find";
-          n = [
-            "<cmd>enew<CR>"
-            "New File"
-          ];
-        };
-        g = {
-          name = "+git";
-          S = [
-            ''<cmd>lua require("gitsigns").stage_buffer()<CR>''
-            "Stage Buffer"
-          ];
-          R = [
-            ''<cmd>lua require("gitsigns").reset_buffer()<CR>''
-            "Reset Buffer"
-          ];
-          b = [
-            ''<cmd>lua require("gitsigns").blame_line({full=true})<CR>''
-            "Blame Line"
-          ];
-          d = [
-            ''<cmd>lua require("gitsigns").diffthis()<CR>''
-            "Diff This"
-          ];
-          D = [
-            ''<cmd>lua require("gitsigns").diffthis("~")''
-            "Diff ~"
-          ];
-          h = {
-            name = "+hunks";
-            s = [
-              ''<cmd>lua require("gitsigns").stage_hunk()<CR>''
-              "Stage Hunk"
-            ];
-            r = [
-              ''<cmd>lua require("gitsigns").reset_hunk()<CR>''
-              "Reset Hunk"
-            ];
-            u = [
-              ''<cmd>lua require("gitsigns").undo_stage_hunk()<CR>''
-              "Undo Stage Hunk"
-            ];
-            p = [
-              ''<cmd>lua require("gitsigns").preview_hunk()<CR>''
-              "Preview Hunk"
-            ];
-          };
-          t = {
-            name = "+toggle";
-            b = [
-              ''<cmd>lua require("gitsigns").toggle_current_line_blame()<CR>''
-              "Toggle Line Blame"
-            ];
-            d = [
-              ''<cmd>lua require("gitsigns").toggle_deleted()<CR>''
-              "Toggle Deleted"
-            ];
-          };
-        };
-        q = {
-          name = "+quit/session";
-          a = [
-            "<cmd>qa<CR>"
-            "Quit"
-          ];
-          s = [
-            ''<cmd>lua require("persistence").load()<CR>''
-            "Restore Session"
-          ];
-          l = [
-            ''<cmd>lua require("persistence").load({last=true})<CR>''
-            "Restore Last Session"
-          ];
-          q = {
-            name = "+persistence";
-            q = [
-              ''<cmd>lua require("persistence").stop()<CR>''
-              "Stop Persistence"
-            ];
-          };
-        };
-        s = {
-          name = "+search";
-          r = [
-            ''<cmd>lua require("spectre").open()<CR>''
-            "Replace in files (Spectre)"
-          ];
-          n = {
-            name = "+noice";
-          };
-          t = [
-            ''<cmd>TodoTelescope<CR>''
-            "Todo"
-          ];
-          T = [
-            ''<cmd>TodoTelescope keywords=TODO,FIX,FIXME<CR>''
-            "Todo/Fix/Fixme"
-          ];
-        };
-        u = {
-          name = "+ui";
-          n = [
-            ''<cmd>lua require("notify").dismiss({silent=true, pending=true})<CR>''
-            "Dismiss all Notifications"
-          ];
-        };
-        w = {
-          name = "+windows";
-        };
-        x = {
-          name = "+diagnostics/quickfix";
-          x = [
-            ''<cmd>lua require("trouble").toggle()<CR>''
-            "Trouble"
-          ];
-          w = [
-            ''<cmd>lua require("trouble").toggle("workspace_diagnostics")<CR>''
-            "Workspace Diagnostics"
-          ];
-          d = [
-            ''<cmd>lua require("trouble").toggle("document_diagnostics")<CR>''
-            "Document Diagnostics"
-          ];
-          q = [
-            ''<cmd>lua require("trouble").toggle("quickfix")<CR>''
-            "Quickfix"
-          ];
-          l = [
-            ''<cmd>lua require("trouble").toggle("loclist")<CR>''
-            "Location List"
-          ];
-          t = [
-            ''<cmd>TodoTrouble<CR>''
-            "Todo (Trouble)"
-          ];
-          T = [
-            ''<cmd>TodoTrouble keywords=TODO,FIX,FIXME<CR>''
-            "Todo/Fix/Fixme (Trouble)"
-          ];
-        };
-        t = {
-          name = "+tables";
-        };
-      };
+      plugins.spelling.enabled = true;
     };
-    plugins.spelling.enabled = true;
   };
 }

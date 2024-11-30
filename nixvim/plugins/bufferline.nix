@@ -2,66 +2,80 @@
 {
   plugins.bufferline = {
     enable = true;
-    diagnostics = "nvim_lsp";
-    alwaysShowBufferline = false;
-    offsets = [
-      {
-        filetype = "neo-tree";
-        text = "Neo-tree";
-        highlight = "Directory";
-        text_align = "left";
-      }
-    ];
-  };
-  plugins.which-key = {
-    registrations = {
-      "]" = {
-        name = "+next";
-        b = [
-          ''<cmd>BufferLineCycleNext<CR>''
-          "Next buffer"
+    settings = {
+      options = {
+        always_show_bufferline = false;
+        diagnostics = "nvim_lsp";
+        offsets = [
+          {
+            filetype = "neo-tree";
+            text = "Neo-tree";
+            highlight = "Directory";
+            text_align = "left";
+          }
         ];
-      };
-      "[" = {
-        name = "+prev";
-        b = [
-          ''<cmd>BufferLineCyclePrev<CR>''
-          "Prev buffer"
-        ];
-      };
-      "<S-l>" = [
-        ''<cmd>BufferLineCycleNext''
-        "Next buffer"
-      ];
-      "<S-h>" = [
-        ''<cmd>BufferLineCyclePrev''
-        "Prev buffer"
-      ];
-      "<leader>" = {
-        b = {
-          name = "+buffer";
-          p = [
-            ''<cmd>BufferLineTogglePin<CR>''
-            "Toggle pin"
-          ];
-          P = [
-            ''<cmd>BufferLineGroupClose ungrouped<CR>''
-            "Delete non-pinned buffers"
-          ];
-          o = [
-            ''<cmd>BufferLineCloseOthers<CR>''
-            "Delete other buffers"
-          ];
-          r = [
-            ''<cmd>BufferLineCloseRight<CR>''
-            "Delete buffers to the right"
-          ];
-          l = [
-            ''<cmd>BufferLineCloseLeft<CR>''
-            "Delete buffers to the left"
-          ];
-        };
       };
     };
+  };
+  plugins.which-key = {
+    settings.spec = [
+      {
+        __unkeyed = "]";
+        group = "next";
+      }
+      {
+        __unkeyed-1 = "]b";
+        __unkeyed-2 = ''<cmd>BufferLineCycleNext<CR>'';
+        desc = "Next buffer";
+      }
+      {
+        __unkeyed = "[";
+        group = "prev";
+      }
+      {
+        __unkeyed-1 = "[b";
+        __unkeyed-2 = ''<cmd>BufferLineCyclePrev<CR>'';
+        desc = "Prev buffer";
+      }
+      {
+        __unkeyed-1 = "<S-l>";
+        __unkeyed-2 = ''<cmd>BufferLineCycleNext'';
+        desc = "Next buffer";
+      }
+      {
+        __unkeyed-1 = "<S-h>";
+        __unkeyed-2 = ''<cmd>BufferLineCyclePrev'';
+        desc = "Prev buffer";
+      }
+      {
+        __unkeyed = "<leader>b";
+        group = "buffer";
+      }
+      {
+        __unkeyed-1 = "<leader>bp";
+        __unkeyed-2 = ''<cmd>BufferLineTogglePin<CR>'';
+        desc = "Toggle pin";
+      }
+      {
+        __unkeyed-1 = "<leader>bP";
+        __unkeyed-2 = ''<cmd>BufferLineGroupClose ungrouped<CR>'';
+        desc = "Delete non-pinned buffers";
+      }
+      {
+        __unkeyed-1 = "<leader>bo";
+        __unkeyed-2 = ''<cmd>BufferLineCloseOthers<CR>'';
+        desc = "Delete other buffers";
+      }
+      {
+        __unkeyed-1 = "<leader>br";
+        __unkeyed-2 = ''<cmd>BufferLineCloseRight<CR>'';
+        desc = "Delete buffers to the right";
+      }
+      {
+        __unkeyed-1 = "<leader>bl";
+        __unkeyed-2 = ''<cmd>BufferLineCloseLeft<CR>'';
+        desc = "Delete buffers to the left";
+      }
+    ];
   };
 }

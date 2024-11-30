@@ -104,7 +104,7 @@ in
     };
     eza = {
       enable = true;
-      icons = true;
+      icons = "auto";
     };
     fd.enable = true;
     fzf = {
@@ -135,7 +135,7 @@ in
 
     kitty = lib.mkIf enableGUI {
       enable = lib.mkDefault false;
-      theme = "Catppuccin-Frappe";
+      themeFile = "Catppuccin-Frappe";
       settings = {
         confirm_os_window_close = 0;
         enable_audio_bell = false;
