@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   programs.alacritty = {
-    enable = lib.mkDefault false;
+    enable = lib.mkDefault true;
     settings = {
       env = {
         TERM = "xterm-256color";
