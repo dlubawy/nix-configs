@@ -101,58 +101,69 @@
     };
   };
   plugins.which-key = {
-    # registrations = {
-    #   "<leader>" = {
-    #     "," = [
-    #       ''<cmd>lua require("telescope.builtin").buffers({sort_mru=true, sort_lastused=true})<CR>''
-    #       "Switch Buffer"
-    #     ];
-    #     f = {
-    #       name = "+file/find";
-    #       b = [
-    #         ''<cmd>require("telescope.builtin").buffers({sort_mru=true, sort_lastused=true})<CR>''
-    #         "Buffers"
-    #       ];
-    #       c = [
-    #         ''<cmd>lua require("telescope.builtin").find_files({cwd=vim.fn.stdpath("config")})<CR>''
-    #         "Find Config File"
-    #       ];
-    #       F = [
-    #         ''<cmd>lua require("telescope.builtin").find_files({cwd=false})<CR>''
-    #         "Find Files (cwd)"
-    #       ];
-    #       R = [
-    #         ''<cmd>require("telescope.builtin").oldfiles({cwd=vim.loop.cwd()})<CR>''
-    #         "Recent (cwd)"
-    #       ];
-    #     };
-    #     s = {
-    #       name = "+search";
-    #       d = [
-    #         ''<cmd>lua require("telescope.builtin").diagnostics({bufnr=0})<CR>''
-    #         "Document Diagnostics"
-    #       ];
-    #       G = [
-    #         ''<cmd>lua require("telescope.builtin").live_grep({cwd=false})<CR>''
-    #         "Grep (cwd)"
-    #       ];
-    #       w = [
-    #         ''<cmd>lua require("telescope.builtin").grep_string({word_match="-w"})<CR>''
-    #         "Word/Selection (root dir)"
-    #       ];
-    #       W = [
-    #         ''<cmd>lua require("telescope.builtin").grep_string({cwd=false, word_match="-w"})<CR>''
-    #         "Word/Selection (cwd)"
-    #       ];
-    #     };
-    #     u = {
-    #       name = "+ui";
-    #       c = [
-    #         ''<cmd>lua require("telescope.builtin").colorscheme({enable_preview=true})<CR>''
-    #         "Colorscheme with preview"
-    #       ];
-    #     };
-    #   };
-    # };
+    settings.spec = [
+      {
+        __unkeyed-1 = "<leader>,";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").buffers({sort_mru=true, sort_lastused=true})<CR>'';
+        desc = "Switch Buffer";
+      }
+      {
+        __unkeyed = "<leader>f";
+        group = "file/find";
+      }
+      {
+        __unkeyed-1 = "<leader>fb";
+        __unkeyed-2 = ''<cmd>require("telescope.builtin").buffers({sort_mru=true, sort_lastused=true})<CR>'';
+        desc = "Buffers";
+      }
+      {
+        __unkeyed-1 = "<leader>fc";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").find_files({cwd=vim.fn.stdpath("config")})<CR>'';
+        desc = "Find Config File";
+      }
+      {
+        __unkeyed-1 = "<leader>fF";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").find_files({cwd=false})<CR>'';
+        desc = "Find Files (cwd)";
+      }
+      {
+        __unkeyed-1 = "<leader>fR";
+        __unkeyed-2 = ''<cmd>require("telescope.builtin").oldfiles({cwd=vim.loop.cwd()})<CR>'';
+        desc = "Recent (cwd)";
+      }
+      {
+        __unkeyed = "<leader>s";
+        group = "search";
+      }
+      {
+        __unkeyed-1 = "<leader>sd";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").diagnostics({bufnr=0})<CR>'';
+        desc = "Document Diagnostics";
+      }
+      {
+        __unkeyed-1 = "<leader>sG";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").live_grep({cwd=false})<CR>'';
+        desc = "Grep (cwd)";
+      }
+      {
+        __unkeyed-1 = "<leader>sw";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").grep_string({word_match="-w"})<CR>'';
+        desc = "Word/Selection (root dir)";
+      }
+      {
+        __unkeyed-1 = "<leader>sW";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").grep_string({cwd=false, word_match="-w"})<CR>'';
+        desc = "Word/Selection (cwd)";
+      }
+      {
+        __unkeyed = "<leader>u";
+        group = "ui";
+      }
+      {
+        __unkeyed-1 = "<leader>uc";
+        __unkeyed-2 = ''<cmd>lua require("telescope.builtin").colorscheme({enable_preview=true})<CR>'';
+        desc = "Colorscheme with preview";
+      }
+    ];
   };
 }

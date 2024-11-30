@@ -200,25 +200,28 @@ in
   extraPackages = with pkgs; [ pandoc ];
 
   plugins.which-key = {
-    # registrations = {
-    #   "<leader>" = {
-    #     o = {
-    #       name = "+orgmode";
-    #     };
-    #     r = {
-    #       name = "+roam";
-    #       a = {
-    #         name = "+alias";
-    #       };
-    #       o = {
-    #         name = "+origin";
-    #       };
-    #       d = {
-    #         name = "+dailies";
-    #       };
-    #     };
-    #   };
-    # };
+    settings.spec = [
+      {
+        __unkeyed = "<leader>o";
+        group = "orgmode";
+      }
+      {
+        __unkeyed = "<leader>r";
+        group = "roam";
+      }
+      {
+        __unkeyed = "<leader>ra";
+        group = "alias";
+      }
+      {
+        __unkeyed = "<leader>ro";
+        group = "origin";
+      }
+      {
+        __unkeyed = "<leader>rd";
+        group = "dailies";
+      }
+    ];
   };
 
   extraPlugins = with pkgs; [
