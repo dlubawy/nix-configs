@@ -110,8 +110,8 @@ in
       options = "--delete-older-than 7d";
       user = "${systemName}";
     };
+    optimise.automatic = true;
     settings = {
-      auto-optimise-store = true;
       experimental-features = "nix-command flakes";
       trusted-users = [
         "root"

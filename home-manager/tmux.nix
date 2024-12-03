@@ -40,6 +40,7 @@
         '';
       }
     ];
+    sensibleOnTop = false;
     prefix = "C-Space";
     terminal = "screen-256color";
     tmuxp.enable = true;
