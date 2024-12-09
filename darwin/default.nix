@@ -64,7 +64,8 @@ in
     shells = with pkgs; [ zsh ];
     shellAliases = {
       sudoedit = "sudo -e ";
-      ${systemName} = "sudo -Hu ${systemName} darwin-rebuild switch --flake github:dlubawy/nix-configs/main#${systemName}";
+      ${systemName} =
+        "sudo -Hu ${systemName} darwin-rebuild switch --flake github:dlubawy/nix-configs/main#${systemName}";
     };
     variables = {
       EDITOR = "nvim";
