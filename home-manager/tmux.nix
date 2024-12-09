@@ -24,7 +24,6 @@
     mouse = true;
     newSession = true;
     plugins = [
-      pkgs.tmuxPlugins.sensible
       pkgs.tmuxPlugins.resurrect
       {
         plugin = pkgs.tmuxPlugins.yank;
@@ -41,6 +40,7 @@
       }
     ];
     sensibleOnTop = false;
+    shell = "${pkgs.zsh}/bin/zsh";
     prefix = "C-Space";
     terminal = "screen-256color";
     tmuxp.enable = true;
