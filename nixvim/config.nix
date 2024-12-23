@@ -4,31 +4,21 @@
     WhichKeyMarkdown = function()
         local wkl = require("which-key")
         local buf = vim.api.nvim_get_current_buf()
-        wkl.register({
-            p = { "<cmd>MarkdownPreviewToggle<CR>", "Preview Markdown" },
-        }, { prefix = "<localleader>", buffer = buf })
+        wkl.add({
+            { "<localleader>p", "<cmd>MarkdownPreviewToggle<CR>", buffer = 1, desc = "Preview Markdown" },
+        })
     end
 
     WhichKeyNorg = function()
     	local wkl = require("which-key")
     	local buf = vim.api.nvim_get_current_buf()
-    	wkl.register({
-    		t = {
-    			name = "+todo",
-    		},
-    		i = {
-    			name = "+insert",
-    		},
-    		l = {
-    			name = "+list",
-    		},
-    		m = {
-    			name = "+mode",
-    		},
-    		n = {
-    			name = "+note",
-    		},
-    	}, { prefix = "<localleader>", buffer = buf })
+        wkl.add({
+            { "<localleader>t", group = "+todo" },
+            { "<localleader>i", group = "+insert" },
+            { "<localleader>l", group = "+list" },
+            { "<localleader>m", group = "+mode" },
+            { "<localleader>n", group = "+note" },
+        })
     end
 
     WhichKeySQL = function()
@@ -62,14 +52,14 @@
     	local dbt_json_preview = function()
     		dbt_preview(true)
     	end
-    	wkl.register({
-    		c = { "<cmd>vsplit term://dbt compile -s %:t:r<CR>", "Compile SQL" },
-    		r = { "<cmd>vsplit term://dbt run -s %:t:r<CR>", "Run SQL" },
-    		b = { "<cmd>vsplit term://dbt build -s %:t:r<CR>", "Build SQL" },
-    		p = { dbt_preview, "Preview SQL Run" },
-    		j = { dbt_json_preview, "JSON Preview SQL Run" },
-    		s = { scratch, "Scratchpad" },
-    	}, { prefix = "<localleader>", buffer = buf })
+    	wkl.add({
+            { "<localleader>b", "<cmd>vsplit term://dbt build -s %:t:r<CR>", buffer = buf, desc = "Build SQL" },
+            { "<localleader>c", "<cmd>vsplit term://dbt compile -s %:t:r<CR>", buffer = buf, desc = "Compile SQL" },
+            { "<localleader>j", dbt_preview, buffer = buf, desc = "JSON Preview SQL Run" },
+            { "<localleader>p", dbt_json_preview, buffer = buf, desc = "Preview SQL Run" },
+            { "<localleader>r", "<cmd>vsplit term://dbt run -s %:t:r<CR>", buffer = buf, desc = "Run SQL" },
+            { "<localleader>s", scratch, buffer = buf, desc = "Scratchpad" },
+        })
     end
 
     -- illuminate
