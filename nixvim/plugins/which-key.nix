@@ -67,6 +67,10 @@
               group = "code";
             }
             {
+              __unkeyed = "<leader>cc";
+              group = "CopilotChat";
+            }
+            {
               __unkeyed-1 = "<leader>cd";
               __unkeyed-2 = "<cmd>cd %:p:h<CR><cmd>pwd<CR>";
               desc = "Change Directory";

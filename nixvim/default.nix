@@ -122,6 +122,23 @@
     cmp_luasnip.enable = true;
     nvim-autopairs.enable = true;
     comment.enable = true;
+    copilot-lua = {
+      enable = true;
+      panel.enabled = false;
+      suggestion.enabled = false;
+    };
+    copilot-cmp.enable = true;
+    copilot-chat = {
+      enable = true;
+      settings.model = "claude-3.5-sonnet";
+    };
+    lspkind = {
+      enable = true;
+      symbolMap = {
+        Copilot = "";
+      };
+    };
+    fzf-lua.enable = true;
 
     # Editor
     neo-tree = {
@@ -144,6 +161,7 @@
     todo-comments.enable = true;
     fugitive.enable = true;
     markdown-preview.enable = true;
+    render-markdown.enable = true;
     lastplace.enable = true;
 
     # Linting
