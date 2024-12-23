@@ -221,7 +221,10 @@ in
       cleanup = "zap";
     };
     brews = [ ];
-    casks = [ "firefox" ];
+    casks = [
+      "firefox"
+      "ultimaker-cura"
+    ];
     caskArgs.require_sha = true;
   };
 }
