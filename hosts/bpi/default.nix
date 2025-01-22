@@ -24,36 +24,22 @@
   system.etc.overlay.enable = lib.mkForce false;
   systemd.sysusers.enable = lib.mkForce false;
 
-  # mkBefore is very important here, otherwise it won't be used over linux-firmware files.
-  # hardware.firmware = lib.mkBefore [
-  #   (pkgs.stdenvNoCC.mkDerivation {
-  #     name = "openwrt-mtk-firmware";
-  #     src = pkgs.fetchFromGitHub {
-  #       owner = "openwrt";
-  #       repo = "mt76";
-  #       rev = "master";
-  #       sha256 = "";
-  #     };
-  #     dontPatch = true;
-  #     dontConfigure = true;
-  #     dontBuild = true;
-  #     dontFixup = true;
-  #     installPhase = ''
-  #       mkdir -p $out/lib/firmware/mediatek
-  #       mv firmware/* $out/lib/firmware/mediatek/
-  #     '';
-  #   })
-  # ];
-
   sbc = {
     wireless.wifi.acceptRegulatoryResponsibility = true;
-    version = "0.2";
+    version = "0.3";
   };
+
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 4096;
+    }
+  ];
 
   system.autoUpgrade.flake = "${vars.flake}#bpi";
 
   environment.shellAliases = {
-    pi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#bpi";
+    bpi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#bpi";
   };
 
   home-manager = {

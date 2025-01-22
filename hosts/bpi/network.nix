@@ -221,6 +221,7 @@
           DefaultLeaseTimeSec = "12h";
           MaxLeaseTimeSec = "24h";
           DNS = "192.168.1.1";
+          Router = "192.168.1.1";
           PoolOffset = 100;
           PoolSize = 100;
         };
@@ -238,6 +239,7 @@
           DefaultLeaseTimeSec = "12h";
           MaxLeaseTimeSec = "24h";
           DNS = "192.168.1.1";
+          Router = "192.168.20.1";
           PoolOffset = 100;
           PoolSize = 100;
         };
@@ -255,6 +257,7 @@
           DefaultLeaseTimeSec = "12h";
           MaxLeaseTimeSec = "24h";
           DNS = "192.168.1.1";
+          Router = "192.168.30.1";
           PoolOffset = 100;
           PoolSize = 100;
         };
@@ -279,6 +282,7 @@
           DefaultLeaseTimeSec = "12h";
           MaxLeaseTimeSec = "24h";
           DNS = "192.168.1.1";
+          Router = "192.168.40.1";
           PoolOffset = 100;
           PoolSize = 100;
         };

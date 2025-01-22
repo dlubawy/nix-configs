@@ -1,7 +1,7 @@
 let
   systems = {
     pi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGoYQAIbCdU2DaZienCzSXq2k6zul1UdkRDSOJ7gS5B7";
-    bpi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL/O8PaDlYyOQGmI80RFqObe6xMoZVvbakxLwwKS021R";
+    bpi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHiqMYDcsnho0BDO1n1UXRRoBYt/4NfcaLhn4kSrgN1O";
   };
   yubiKeys = {
     yubikey = "age1yubikey1dzu5w3mhcfgqe7jqepaz8pv44ckgmujwdvp5vds3xqwlkqvg8e3q3a0d0v";

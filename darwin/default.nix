@@ -123,7 +123,7 @@ in
     # Change package attribute to switch between aarch64 and x86_64 architectures.
     # Need to build the default linux-builder first before using `config.virtualisation`.
     linux-builder = {
-      enable = false;
+      enable = true;
       package = pkgs.darwin.linux-builder;
       # package = pkgs.darwin.linux-builder-x86_64;
       ephemeral = true;
@@ -135,8 +135,8 @@ in
       config = {
         virtualisation = {
           darwin-builder = {
-            diskSize = 30 * 1024;
-            memorySize = 8 * 1024;
+            diskSize = 50 * 1024;
+            memorySize = 16 * 1024;
           };
         };
       };

@@ -34,6 +34,13 @@ check:
 		nix flake check
     endif
 
+check-all:
+    ifdef DEBUG
+		nix flake check --all-systems --show-trace --verbose
+    else
+		nix flake check --all-systems
+    endif
+
 # Darwin systems
 laplace:
     ifdef DEBUG
