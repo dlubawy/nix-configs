@@ -108,23 +108,13 @@
           modules = [ ./hosts/pi ];
         };
         # Banana Pi BPI-R3
-        bpi =
-          # NOTE: Idea comes from: https://github.com/polygon/scalpel
-          let
-            base_bpi = nixpkgs.lib.nixosSystem {
-              system = "aarch64-linux";
-              specialArgs = {
-                inherit inputs outputs vars;
-              };
-              modules = [ ./hosts/bpi ];
-            };
-          in
-          base_bpi.extendModules {
-            modules = [ ./secrets/scalpel/bpi.nix ];
-            specialArgs = {
-              prev = base_bpi;
-            };
+        bpi = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs vars;
           };
+          modules = [ ./hosts/bpi ];
+        };
       };
       darwinConfigurations = {
         # MacBook M1
