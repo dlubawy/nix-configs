@@ -9,6 +9,7 @@
     secrets = {
       wifi-sae.file = ../../secrets/wifi-sae.age;
       wifi-iot-psk.file = ../../secrets/wifi-iot-psk.age;
+      wifi-shared-secret.file = ../../secrets/wifi-shared-secret.age;
     };
   };
   environment = {
@@ -109,6 +110,14 @@
               vlan_file = "/etc/hostapd-wlan0.vlan";
               vlan_bridge = "br-vlan";
               multicast_to_unicast = 1;
+              wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
+              nas_identifier = "9adfd2a229a0";
+              mobility_domain = "3143";
+              r0kh = "ff:ff:ff:ff:ff:ff * @wifi-shared-secret@";
+              r1kh = "00:00:00:00:00:00 00:00:00:00:00:00 @wifi-shared-secret@";
+              ft_over_ds = 0;
+              rrm_neighbor_report = 1;
+              rrm_beacon_report = 1;
             };
             ssid = "🎰 VivaLanVegas 🎰";
           };
@@ -160,6 +169,14 @@
               vlan_file = "/etc/hostapd-wlan1.vlan";
               vlan_bridge = "br-vlan";
               multicast_to_unicast = 1;
+              wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
+              nas_identifier = "daef7a02e13c";
+              mobility_domain = "3143";
+              r0kh = "ff:ff:ff:ff:ff:ff * @wifi-shared-secret@";
+              r1kh = "00:00:00:00:00:00 00:00:00:00:00:00 @wifi-shared-secret@";
+              ft_over_ds = 0;
+              rrm_neighbor_report = 1;
+              rrm_beacon_report = 1;
             };
             ssid = "🎰 VivaLanVegas 🎰";
           };

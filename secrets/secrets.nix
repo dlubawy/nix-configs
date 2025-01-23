@@ -26,4 +26,8 @@ in
     publicKeys = [ systems.bpi ] ++ allYubiKeys;
     armor = true;
   };
+  "wifi-shared-secret.age" = {
+    publicKeys = [ systems.bpi ] ++ allYubiKeys;
+    armor = true;
+  };
 }
