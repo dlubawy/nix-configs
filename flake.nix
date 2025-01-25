@@ -91,6 +91,14 @@
         #   modules = [ ./hosts/kepler ];
         # };
 
+        # VM (Nix Build System)
+        nixBuilder = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [ ./hosts/nix-builder ];
+        };
         # WSL
         syringa = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -116,6 +124,7 @@
           modules = [ ./hosts/bpi ];
         };
       };
+
       darwinConfigurations = {
         # MacBook M1
         laplace = darwin.lib.darwinSystem {
@@ -126,6 +135,7 @@
           modules = [ ./darwin ];
         };
       };
+
       homeConfigurations = {
         # Steam Deck
         "${vars.user}@companioncube" = home-manager.lib.homeManagerConfiguration {
