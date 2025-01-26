@@ -3,10 +3,10 @@
   pkgs,
   config,
   inputs,
-  enableGUI,
   ...
 }:
 let
+  enableGUI = config.gui.enable;
   pinEntry = lib.getExe (
     if enableGUI then
       (if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-qt)

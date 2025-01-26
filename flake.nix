@@ -34,6 +34,16 @@
       url = "github:dlubawy/agenix/armor_support";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Overlays
+    nixpkgs-firefox-darwin = {
+      url = "github:bandithedoge/nixpkgs-firefox-darwin";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
   };
 
   outputs =
@@ -45,6 +55,7 @@
       nixos-wsl,
       nixvim,
       agenix,
+      pre-commit-hooks,
       ...
     }@inputs:
     let
@@ -158,6 +169,12 @@
       checks = forAllSystems (
         { pkgs }:
         {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
+            src = ./.;
+            hooks = {
+              nixfmt-rfc-style.enable = true;
+            };
+          };
           nixvimCheck = nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
             pkgs = pkgs;
             module = import ./nixvim;
@@ -169,6 +186,8 @@
         { pkgs }:
         {
           default = pkgs.mkShell {
+            inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
+            buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
               inputs.agenix.packages.${system}.default
               nil

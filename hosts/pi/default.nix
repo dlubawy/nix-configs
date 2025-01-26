@@ -21,8 +21,8 @@
   home-manager = {
     extraSpecialArgs = {
       inherit inputs outputs vars;
-      enableGUI = false;
     };
+    users.${vars.user}.gui.enable = false;
   };
 
   boot.loader.grub.enable = false;

@@ -17,7 +17,7 @@ in
 
   nixpkgs = {
     system = "aarch64-darwin";
-    overlays = builtins.attrValues outputs.overlays;
+    overlays = (builtins.attrValues outputs.overlays) ++ [ inputs.nixpkgs-firefox-darwin.overlay ];
     config = {
       allowUnfree = true;
     };
@@ -202,11 +202,13 @@ in
   home-manager = {
     extraSpecialArgs = {
       inherit inputs outputs vars;
-      enableGUI = true;
     };
     users.${vars.user} = lib.mkMerge [
       (import ../home-manager)
-      { programs.firefox.enable = false; }
+      {
+        gui.enable = true;
+        programs.firefox.package = pkgs.firefox-bin;
+      }
     ];
 
     useGlobalPkgs = true;
@@ -222,7 +224,6 @@ in
     };
     brews = [ ];
     casks = [
-      "firefox"
       "ultimaker-cura"
     ];
     caskArgs.require_sha = true;

@@ -113,19 +113,30 @@
               };
               bssid = "9a:df:d2:a2:29:a0";
               settings = {
+                # Network
                 bridge = "br-lan";
+
+                # VLAN
                 dynamic_vlan = 2;
-                vlan_file = "/etc/hostapd-wlan0.vlan";
-                vlan_bridge = "br-vlan";
                 multicast_to_unicast = 1;
-                wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
-                nas_identifier = "9adfd2a229a0";
+                vlan_bridge = "br-lan";
+                vlan_file = "/etc/hostapd-wlan0.vlan";
+                vlan_naming = 1;
+                vlan_tagged_interface = "wlan0";
+
+                # Roaming
+                bss_transition = 1;
+                ft_over_ds = 0;
                 mobility_domain = "3143";
+                nas_identifier = "9adfd2a229a0";
+                okc = 1;
                 r0kh = "ff:ff:ff:ff:ff:ff * @wifi-shared-secret@";
                 r1kh = "00:00:00:00:00:00 00:00:00:00:00:00 @wifi-shared-secret@";
-                ft_over_ds = 0;
-                rrm_neighbor_report = 1;
+                reassociation_deadline = 20000;
                 rrm_beacon_report = 1;
+                rrm_neighbor_report = 1;
+                wnm_sleep_mode = 1;
+                wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan0 = pkgs.writeShellScript "shared-secret-config-wlan0" sharedSecretConfigScript;
@@ -140,11 +151,16 @@
               };
               bssid = "92:df:d2:a2:29:a0";
               settings = {
+                # Network
                 bridge = "br-lan";
+
+                # VLAN
                 dynamic_vlan = 2;
-                vlan_file = "/etc/hostapd-wlan0-1.vlan";
-                vlan_bridge = "br-vlan";
                 multicast_to_unicast = 1;
+                vlan_bridge = "br-lan";
+                vlan_file = "/etc/hostapd-wlan0-1.vlan";
+                vlan_naming = 1;
+                vlan_tagged_interface = "wlan0-1";
               };
               ssid = "🐰 conejitahouse 🐰";
             };
@@ -170,24 +186,36 @@
             wlan1 = {
               apIsolate = true;
               authentication = {
+                mode = "wpa3-sae";
                 enableRecommendedPairwiseCiphers = true;
                 saePasswordsFile = config.age.secrets.wifi-sae.path;
               };
               bssid = "da:ef:7a:02:e1:3c";
               settings = {
+                # Network
                 bridge = "br-lan";
+
+                # VLAN
                 dynamic_vlan = 2;
-                vlan_file = "/etc/hostapd-wlan1.vlan";
-                vlan_bridge = "br-vlan";
                 multicast_to_unicast = 1;
-                wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
-                nas_identifier = "daef7a02e13c";
+                vlan_bridge = "br-lan";
+                vlan_file = "/etc/hostapd-wlan1.vlan";
+                vlan_naming = 1;
+                vlan_tagged_interface = "wlan1";
+
+                # Roaming
+                bss_transition = 1;
+                ft_over_ds = 0;
                 mobility_domain = "3143";
+                nas_identifier = "daef7a02e13c";
+                okc = 1;
                 r0kh = "ff:ff:ff:ff:ff:ff * @wifi-shared-secret@";
                 r1kh = "00:00:00:00:00:00 00:00:00:00:00:00 @wifi-shared-secret@";
-                ft_over_ds = 0;
-                rrm_neighbor_report = 1;
+                reassociation_deadline = 20000;
                 rrm_beacon_report = 1;
+                rrm_neighbor_report = 1;
+                wnm_sleep_mode = 1;
+                wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan1 = pkgs.writeShellScript "shared-secret-config-wlan1" sharedSecretConfigScript;

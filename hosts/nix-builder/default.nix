@@ -6,8 +6,8 @@
 }:
 {
   imports = [
-    ./hardware-configuration.nix
     ../../nixos
+    ./hardware-configuration.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -32,12 +32,20 @@
   time.timeZone = "America/Los_Angeles";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  services.openssh.enable = true;
+  services = {
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+      };
+    };
+  };
 
   home-manager = {
     extraSpecialArgs = {
       inherit inputs outputs vars;
-      enableGUI = false;
     };
+    users.${vars.user}.gui.enable = false;
   };
 }

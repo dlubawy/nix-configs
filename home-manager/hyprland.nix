@@ -1,7 +1,16 @@
 # TODO: need to migrate old configs over
-{ lib, ... }:
+{ lib, config, ... }:
+let
+  cfg = config.gui.programs.hyprland;
+in
 {
-  wayland.windowManager.hyprland = {
-    enable = lib.mkDefault false;
+  options = {
+    gui.programs.hyprland.enable = lib.mkEnableOption "Enable Hyprland";
+  };
+
+  config = lib.mkIf cfg.enable {
+    wayland.windowManager.hyprland = {
+      enable = true;
+    };
   };
 }
