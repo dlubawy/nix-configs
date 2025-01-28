@@ -115,6 +115,11 @@
               settings = {
                 # Network
                 bridge = "br-lan";
+                bss_load_update_period = 60;
+                chan_util_avg_period = 600;
+                disassoc_low_ack = 1;
+                preamble = 1;
+                uapsd_advertisement_enabled = 1;
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -157,6 +162,11 @@
               settings = {
                 # Network
                 bridge = "br-lan";
+                bss_load_update_period = 60;
+                chan_util_avg_period = 600;
+                disassoc_low_ack = 1;
+                preamble = 1;
+                uapsd_advertisement_enabled = 1;
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -198,6 +208,11 @@
               settings = {
                 # Network
                 bridge = "br-lan";
+                bss_load_update_period = 60;
+                chan_util_avg_period = 600;
+                disassoc_low_ack = 1;
+                preamble = 1;
+                uapsd_advertisement_enabled = 1;
 
                 # VLAN
                 dynamic_vlan = 2;
