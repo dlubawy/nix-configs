@@ -11,6 +11,7 @@
     inputs.nixos-sbc.nixosModules.default
     inputs.nixos-sbc.nixosModules.boards.bananapi.bpir3
     ../../nixos
+    ./kernel
     ./network.nix
     ./adguardhome.nix
     ./hostapd.nix
@@ -23,6 +24,34 @@
   boot.initrd.systemd.enable = lib.mkForce false;
   system.etc.overlay.enable = lib.mkForce false;
   systemd.sysusers.enable = lib.mkForce false;
+
+  nix = {
+    buildMachines = [
+      {
+        hostName = "nix-builder";
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+        ];
+        protocol = "ssh-ng";
+        maxJobs = 1;
+        speedFactor = 2;
+        supportedFeatures = [
+          "nixos-test"
+          "benchmark"
+          "big-parallel"
+          "kvm"
+        ];
+        mandatoryFeatures = [ ];
+      }
+    ];
+    distributedBuilds = true;
+    settings = {
+      cores = 2;
+      max-jobs = 2;
+      builders-use-substitutes = true;
+    };
+  };
 
   sbc = {
     wireless.wifi.acceptRegulatoryResponsibility = true;

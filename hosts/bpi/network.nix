@@ -77,15 +77,14 @@
       "10-sfp1" = {
         matchConfig.OriginalName = "eth1";
         linkConfig = {
-          Description = "SFP 2.5 Gb WAN Port";
           Name = "sfp1";
+          Description = "SFP 2.5 Gb WAN Port";
         };
       };
       "10-sfp2" = {
-        matchConfig.OriginalName = "lan4";
+        matchConfig.OriginalName = "sfp2";
         linkConfig = {
           Description = "SFP 2.5 Gb LAN Port";
-          Name = "sfp2";
         };
       };
     };
@@ -201,10 +200,10 @@
           ConfigureWithoutCarrier = true;
           BindCarrier = [
             "sfp2"
-            "lan0"
             "lan1"
             "lan2"
             "lan3"
+            "lan4"
           ];
         };
       };

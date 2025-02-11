@@ -17,6 +17,8 @@
 
   nix = {
     settings = {
+      cores = 8;
+      max-jobs = 1;
       trusted-users = [
         "root"
         "@wheel"

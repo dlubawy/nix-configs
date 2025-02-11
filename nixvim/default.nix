@@ -126,6 +126,9 @@
       enable = true;
       panel.enabled = false;
       suggestion.enabled = false;
+      filetypes = {
+        "*" = false;
+      };
     };
     copilot-cmp.enable = true;
     copilot-chat = {
