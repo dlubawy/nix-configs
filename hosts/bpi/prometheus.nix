@@ -99,6 +99,17 @@
           }
         ];
       }
+      {
+        job_name = "loki_metrics";
+        static_configs = [
+          {
+            targets = [
+              "${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}"
+              "${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.promtail.configuration.server.http_listen_port}"
+            ];
+          }
+        ];
+      }
     ];
   };
 }

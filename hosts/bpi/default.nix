@@ -15,6 +15,7 @@
     ./network.nix
     ./adguardhome.nix
     ./hostapd.nix
+    ./loki.nix
     ./prometheus.nix
     ./grafana
   ];

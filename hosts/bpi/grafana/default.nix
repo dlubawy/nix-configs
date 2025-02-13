@@ -45,6 +45,12 @@
             url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}";
             uid = "PBFA97CFB590B2093";
           }
+          {
+            name = "Loki";
+            type = "loki";
+            url = "http://${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
+            uid = "FECRLA1BDO9OGF";
+          }
         ];
       };
     };
@@ -57,6 +63,21 @@
     };
     "grafana-dashboards/dhcp_server.json" = {
       source = ./dhcp_server.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana-dashboards/ssh.json" = {
+      source = ./ssh.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana-dashboards/promtail_monitoring.json" = {
+      source = ./promtail_monitoring.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana-dashboards/sudo_logs.json" = {
+      source = ./sudo_logs.json;
       group = "grafana";
       user = "grafana";
     };
