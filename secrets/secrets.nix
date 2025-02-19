@@ -30,4 +30,12 @@ in
     publicKeys = [ systems.bpi ] ++ allYubiKeys;
     armor = true;
   };
+  "tailscale.age" = {
+    publicKeys = [ systems.bpi ] ++ allYubiKeys;
+    armor = true;
+  };
+  "grafana-contact-points.age" = {
+    publicKeys = [ systems.bpi ] ++ allYubiKeys;
+    armor = true;
+  };
 }

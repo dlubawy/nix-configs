@@ -1,0 +1,76 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: 1m
+    folder: Alerts
+    interval: 1m
+    rules:
+      - uid: ced46ynzr9ywwf
+        title: New DHCP lease
+        condition: NewClients
+        data:
+          - refId: NewClientsList
+            relativeTimeRange:
+              from: 3600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              adhocFilters: []
+              datasource:
+                type: prometheus
+                uid: PBFA97CFB590B2093
+              disableTextWrap: false
+              editorMode: code
+              exemplar: false
+              expr: |-
+                (count by(client_id, hostname) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""})) unless (count by(client_id, hostname) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""}[24h] offset 15m)) > bool 0) or
+                (count by(client_id) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""})) unless (count by(client_id) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""}[24h] offset 15m)) > bool 0)
+              format: table
+              fullMetaSearch: false
+              includeNullMetadata: true
+              instant: true
+              interval: ""
+              intervalMs: 15000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: NewClientsList
+              useBackend: false
+          - refId: NewClients
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: NewClientsList
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: NewClients
+              type: threshold
+        dashboardUid: bdy36esut6wowf
+        panelId: 1
+        noDataState: OK
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: bdy36esut6wowf
+          __panelId__: "1"
+          summary: A new DHCP lease was detected.
+        isPaused: false
+        notification_settings:
+          receiver: Telegram

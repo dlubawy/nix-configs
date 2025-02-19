@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
   environment.systemPackages = with pkgs; [ ldns ];
@@ -10,49 +15,63 @@
       enable = true;
       allowPing = false;
       checkReversePath = true;
-      extraInputRules = lib.strings.concatStringsSep "\n" [
+      extraInputRules = lib.strings.concatLines [
         ''iifname { "br-wan" } counter drop comment "Drop all unsolicited traffic from WAN"''
-        ''iifname { "vl-user", "vl-iot", "vl-guest" } ip daddr { 192.168.1.1 } tcp dport 53 accept comment "Allow DNS lookup from local networks"''
-        ''iifname { "vl-user", "vl-iot", "vl-guest" } ip daddr { 192.168.1.1 } udp dport 53 accept comment "Allow DNS lookup from local networks"''
       ];
-      extraForwardRules = lib.strings.concatStringsSep "\n" [
+      extraForwardRules = lib.strings.concatLines [
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
-        ''iifname { "vl-guest" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests to access curated subnet"''
+        ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
         ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
         ''iifname { "vl-iot" } oifname { "vl-lan", "vl-user", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject IoT forwarding outside itself"''
-        ''iifname { "vl-guest" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject guest forwarding to all internal networks"''
+        ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject guest and tailscale forwarding to all internal networks"''
       ];
       filterForward = true;
       trustedInterfaces = [ "vl-lan" ];
       interfaces = {
-        "vl-lan" = {
-          allowedTCPPorts = [ 53 ];
-          allowedUDPPorts = [ 53 ];
-        };
         "vl-user" = {
-          allowedTCPPorts = [ 5355 ];
+          allowedTCPPorts = [
+            53
+            5355
+          ];
           allowedUDPPorts = [
+            53
             67
             5353
             5355
           ];
         };
         "vl-iot" = {
-          allowedTCPPorts = [ 5355 ];
+          allowedTCPPorts = [
+            53
+            5355
+          ];
           allowedUDPPorts = [
+            53
             67
             5353
             5355
           ];
         };
         "vl-guest" = {
-          allowedTCPPorts = [ 5355 ];
+          allowedTCPPorts = [
+            53
+            5355
+          ];
           allowedUDPPorts = [
+            53
             67
             5353
             5355
           ];
+        };
+        "${config.services.tailscale.interfaceName}" = {
+          allowedTCPPorts = [
+            53
+            80
+            443
+          ];
+          allowedUDPPorts = [ 53 ];
         };
       };
     };
@@ -65,6 +84,7 @@
         "vl-user"
         "vl-iot"
         "vl-guest"
+        "${config.services.tailscale.interfaceName}"
       ];
     };
     useDHCP = false;

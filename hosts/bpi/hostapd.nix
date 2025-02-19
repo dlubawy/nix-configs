@@ -140,12 +140,15 @@
                 reassociation_deadline = 20000;
                 rrm_beacon_report = 1;
                 rrm_neighbor_report = 1;
-                rsn_preauth = 1;
-                rsn_preauth_interfaces = "br-lan";
                 time_advertisement = 2;
                 time_zone = "America/Los_Angeles";
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
+
+                # NOTE: Need to disable otherwise macOS reauths from cache with VLAN ID 0
+                disable_pmksa_caching = 1;
+                rsn_preauth = 0;
+                rsn_preauth_interfaces = "br-lan";
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan0 = pkgs.writeShellScript "shared-secret-config-wlan0" sharedSecretConfigScript;
@@ -233,12 +236,15 @@
                 reassociation_deadline = 20000;
                 rrm_beacon_report = 1;
                 rrm_neighbor_report = 1;
-                rsn_preauth = 1;
-                rsn_preauth_interfaces = "br-lan";
                 time_advertisement = 2;
                 time_zone = "America/Los_Angeles";
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
+
+                # NOTE: Need to disable otherwise macOS reauths from cache with VLAN ID 0
+                disable_pmksa_caching = 1;
+                rsn_preauth = 0;
+                rsn_preauth_interfaces = "br-lan";
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan1 = pkgs.writeShellScript "shared-secret-config-wlan1" sharedSecretConfigScript;

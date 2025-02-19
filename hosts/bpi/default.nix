@@ -1,5 +1,6 @@
 {
   lib,
+  config,
   inputs,
   outputs,
   vars,
@@ -87,6 +88,14 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
+  age = {
+    secrets = {
+      tailscale = {
+        file = ../../secrets/tailscale.age;
+      };
+    };
+  };
+
   services = {
     openssh = {
       enable = true;
@@ -101,6 +110,18 @@
         KbdInteractiveAuthentication = false;
       };
       openFirewall = false;
+    };
+
+    tailscale = {
+      enable = true;
+      authKeyFile = config.age.secrets.tailscale.path;
+      disableTaildrop = true;
+      useRoutingFeatures = "server";
+      extraUpFlags = [
+        "--advertise-tags=tag:router"
+        "--advertise-routes=192.168.1.1/32,192.168.30.0/24"
+        "--advertise-exit-node"
+      ];
     };
   };
 }

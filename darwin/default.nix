@@ -30,13 +30,6 @@ in
       "Wi-Fi"
       "USB 10/100/1000 LAN"
     ];
-    # Cloudflare
-    dns = [
-      "1.1.1.1"
-      "1.0.0.1"
-      "2606:4700:4700::1111"
-      "2606:4700:4700::1001"
-    ];
   };
 
   users = {
@@ -102,6 +95,10 @@ in
 
   services = {
     nix-daemon.enable = true;
+    tailscale = {
+      enable = true;
+      overrideLocalDns = true;
+    };
   };
 
   nix = {
