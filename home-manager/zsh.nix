@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   home.packages = with pkgs; [ ruby ];
   programs.zsh = {
@@ -31,7 +31,7 @@
         "urltools"
         "vi-mode"
         "web-search"
-      ];
+      ] ++ (lib.optionals (!pkgs.stdenv.isDarwin) [ "systemd" ]);
       extraConfig = ''
         bindkey -M viins 'jk' vi-cmd-mode
       '';
