@@ -24,17 +24,12 @@
   "description": "Dashboard for NixOS router with installed Prometheus node exporter.",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": 18153,
   "graphTooltip": 1,
+  "id": 20,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -43,15 +38,6 @@
       },
       "id": 308,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Overview",
       "type": "row"
     },
@@ -123,7 +109,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -183,7 +169,6 @@
         "x": 4,
         "y": 1
       },
-      "hideTimeOverride": false,
       "id": 16,
       "maxDataPoints": 100,
       "options": {
@@ -201,7 +186,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -283,7 +268,6 @@
         "x": 8,
         "y": 1
       },
-      "hideTimeOverride": false,
       "id": 310,
       "maxDataPoints": 100,
       "options": {
@@ -301,7 +285,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -390,7 +374,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -475,7 +459,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -561,7 +545,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -645,7 +629,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -714,6 +698,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -725,7 +710,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -798,6 +783,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -809,7 +795,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -877,6 +863,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -888,7 +875,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -954,7 +941,6 @@
         "x": 6,
         "y": 5
       },
-      "hideTimeOverride": true,
       "id": 15,
       "maxDataPoints": 100,
       "options": {
@@ -962,6 +948,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -973,7 +960,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -1042,6 +1029,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1053,7 +1041,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -1122,6 +1110,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "sum"
@@ -1133,7 +1122,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -1206,6 +1195,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1217,7 +1207,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -1289,6 +1279,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1300,7 +1291,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -1372,6 +1363,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1383,7 +1375,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -1403,10 +1395,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1415,15 +1403,6 @@
       },
       "id": 265,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "CPU Memory",
       "type": "row"
     },
@@ -1446,6 +1425,7 @@
             "axisPlacement": "auto",
             "axisSoftMax": 100,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 40,
             "gradientMode": "none",
@@ -1798,7 +1778,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -1896,6 +1876,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 40,
             "gradientMode": "none",
@@ -2329,7 +2310,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -2417,6 +2398,7 @@
             "axisSoftMax": 100,
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 40,
             "gradientMode": "none",
@@ -2643,7 +2625,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -2776,6 +2758,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 40,
             "gradientMode": "none",
@@ -3147,7 +3130,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -3271,10 +3254,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -3283,15 +3262,6 @@
       },
       "id": 266,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Memory Detail Meminfo",
       "type": "row"
     },
@@ -3312,6 +3282,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -3638,7 +3609,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -3685,6 +3656,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -4030,7 +4002,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -4077,6 +4049,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -4403,7 +4376,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -4478,6 +4451,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -4833,7 +4807,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -4892,6 +4866,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -5218,7 +5193,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -5265,6 +5240,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -5620,7 +5596,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -5667,6 +5643,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -6007,7 +5984,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -6069,6 +6046,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -6395,7 +6373,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -6430,6 +6408,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -6782,7 +6761,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -6829,6 +6808,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -7155,7 +7135,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -7190,6 +7170,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -7545,7 +7526,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -7580,6 +7561,7 @@
             "axisLabel": "Bytes",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -7906,7 +7888,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -7938,10 +7920,6 @@
     },
     {
       "collapsed": true,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -8413,24 +8391,11 @@
           "type": "timeseries"
         }
       ],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "System Detail",
       "type": "row"
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -8439,15 +8404,6 @@
       },
       "id": 285,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "WiFi",
       "type": "row"
     },
@@ -8503,6 +8459,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -8514,7 +8471,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -8583,7 +8540,6 @@
         "x": 4,
         "y": 90
       },
-      "hideTimeOverride": false,
       "id": 286,
       "maxDataPoints": 100,
       "options": {
@@ -8601,7 +8557,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -8674,7 +8630,6 @@
         "x": 8,
         "y": 90
       },
-      "hideTimeOverride": false,
       "id": 288,
       "maxDataPoints": 100,
       "options": {
@@ -8692,7 +8647,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -8729,6 +8684,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -8793,7 +8749,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -8839,6 +8795,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -8903,7 +8860,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.4.7",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -8938,6 +8895,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -9004,7 +8962,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -9013,7 +8971,7 @@
           },
           "editorMode": "code",
           "expr": "node_wifi_station_transmit_bits_per_second{instance=~\"$node:$port\",job=~\"$job\"}/1e6",
-          "legendFormat": "{{device}}",
+          "legendFormat": "{{mac_address}} # {{device}}",
           "range": true,
           "refId": "A"
         }
@@ -9038,6 +8996,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -9106,7 +9065,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -9140,6 +9099,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -9206,7 +9166,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -9241,6 +9201,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -9307,7 +9268,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -9326,10 +9287,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -9338,15 +9295,6 @@
       },
       "id": 294,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Network Traffic",
       "type": "row"
     },
@@ -9367,6 +9315,7 @@
             "axisLabel": "Bytes out (-) / in (+)",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -9614,7 +9563,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -9665,6 +9614,7 @@
             "axisLabel": "Packets out (-) / in (+)",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
@@ -9912,7 +9862,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -9959,6 +9909,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -10026,7 +9977,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -10060,6 +10011,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -10127,7 +10079,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -10161,6 +10113,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -10228,7 +10181,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -10260,6 +10213,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -10327,7 +10281,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -10359,6 +10313,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 16,
             "gradientMode": "opacity",
@@ -10428,7 +10383,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "11.3.3",
       "targets": [
         {
           "datasource": {
@@ -10497,8 +10452,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -10556,10 +10510,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -10568,15 +10518,6 @@
       },
       "id": 272,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Network Traffic Detail",
       "type": "row"
     },
@@ -10628,8 +10569,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -10862,8 +10802,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -11096,8 +11035,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -11318,8 +11256,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -11552,8 +11489,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -11775,8 +11711,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -12009,8 +11944,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -12186,8 +12120,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -12364,8 +12297,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -12453,10 +12385,6 @@
     },
     {
       "collapsed": true,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "dmox1T-Gk"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -12674,21 +12602,13 @@
           "type": "timeseries"
         }
       ],
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "dmox1T-Gk"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Node Exporter",
       "type": "row"
     }
   ],
+  "preload": false,
   "refresh": "5s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [
     "prometheus"
   ],
@@ -12696,7 +12616,6 @@
     "list": [
       {
         "current": {
-          "selected": false,
           "text": "router_metrics",
           "value": "router_metrics"
         },
@@ -12705,10 +12624,8 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "",
-        "hide": 0,
         "includeAll": false,
         "label": "Job",
-        "multi": false,
         "name": "job",
         "options": [],
         "query": {
@@ -12717,16 +12634,11 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "query"
       },
       {
         "current": {
-          "selected": false,
           "text": "bpi",
           "value": "bpi"
         },
@@ -12735,10 +12647,8 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "",
-        "hide": 0,
         "includeAll": false,
         "label": "Host:",
-        "multi": false,
         "name": "name",
         "options": [],
         "query": {
@@ -12747,16 +12657,11 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "query"
       },
       {
         "current": {
-          "selected": false,
           "text": "192.168.1.1",
           "value": "192.168.1.1"
         },
@@ -12768,7 +12673,6 @@
         "hide": 2,
         "includeAll": false,
         "label": "Host:",
-        "multi": false,
         "name": "node",
         "options": [],
         "query": {
@@ -12777,16 +12681,11 @@
         },
         "refresh": 1,
         "regex": "/([^:]+):.*/",
-        "skipUrlSync": false,
         "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "query"
       },
       {
         "current": {
-          "selected": false,
           "text": "9100",
           "value": "9100"
         },
@@ -12795,10 +12694,8 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "",
-        "hide": 0,
         "includeAll": false,
         "label": "Port",
-        "multi": false,
         "name": "port",
         "options": [],
         "query": {
@@ -12807,12 +12704,8 @@
         },
         "refresh": 1,
         "regex": "/[^:]+:(.*)/",
-        "skipUrlSync": false,
         "sort": 3,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "query"
       }
     ]
   },
@@ -12820,34 +12713,10 @@
     "from": "now-3h",
     "to": "now"
   },
-  "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
-    ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
-  },
+  "timepicker": {},
   "timezone": "browser",
   "title": "Router",
   "uid": "fLi0yXAWk",
-  "version": 18,
+  "version": 1,
   "weekStart": ""
 }
