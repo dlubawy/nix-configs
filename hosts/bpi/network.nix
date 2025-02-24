@@ -32,11 +32,13 @@
         "vl-user" = {
           allowedTCPPorts = [
             53
+            853
             5355
           ];
           allowedUDPPorts = [
             53
             67
+            853
             5353
             5355
           ];
@@ -44,11 +46,13 @@
         "vl-iot" = {
           allowedTCPPorts = [
             53
+            853
             5355
           ];
           allowedUDPPorts = [
             53
             67
+            853
             5353
             5355
           ];
@@ -56,11 +60,13 @@
         "vl-guest" = {
           allowedTCPPorts = [
             53
+            853
             5355
           ];
           allowedUDPPorts = [
             53
             67
+            853
             5353
             5355
           ];
@@ -71,8 +77,12 @@
             53
             80
             443
+            853
           ];
-          allowedUDPPorts = [ 53 ];
+          allowedUDPPorts = [
+            53
+            853
+          ];
         };
       };
     };

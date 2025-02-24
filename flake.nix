@@ -77,6 +77,7 @@
         user = "drew";
         sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBz5R5RsCSXxzIduOV98T4yASCRbYrKVbzB7iZy9746P";
         gpgKey = "6EEC861B7641B37D";
+        homeDomain = "home.andrewlubawy.com";
         stateVersion = "24.05";
         flake = "github:dlubawy/nix-configs/main";
       };

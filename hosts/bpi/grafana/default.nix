@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, vars, ... }:
 {
   age = {
     secrets = {
@@ -8,77 +8,57 @@
     };
   };
 
-  services = {
-    nginx = {
-      enable = true;
-      virtualHosts = {
-        "grafana.home" = {
-          listen = [
-            {
-              addr = "192.168.1.1";
-              port = 80;
-            }
-          ];
-          locations."/" = {
-            proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
-            proxyWebsockets = true;
-            recommendedProxySettings = true;
-          };
-        };
+  services.grafana = {
+    enable = true;
+    settings = {
+      analytics.reporting_enabled = false;
+      server = {
+        http_port = 3001;
+        domain = "${vars.homeDomain}";
+        root_url = "https://%(domain)s/grafana/";
       };
     };
-    grafana = {
+    provision = {
       enable = true;
-      settings = {
-        analytics.reporting_enabled = false;
-        server = {
-          http_port = 3001;
-          domain = "grafana.home";
-          root_url = "http://grafana.home";
-        };
-      };
-      provision = {
-        enable = true;
 
-        alerting = {
-          rules.path = "/etc/grafana/alerting.yaml";
-          policies.settings.policies = [
-            {
-              orgId = 1;
-              receiver = "Telegram";
-              group_by = [
-                "grafana_folder"
-                "alertname"
-              ];
-            }
-          ];
-        };
-
-        dashboards.settings.providers = [
+      alerting = {
+        rules.path = "/etc/grafana/alerting.yaml";
+        policies.settings.policies = [
           {
-            name = "my dashboards";
-            options.path = "/etc/grafana/dashboards";
-          }
-        ];
-
-        datasources.settings.datasources = [
-          {
-            name = "Prometheus";
-            type = "prometheus";
-            url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}";
-            uid = "PBFA97CFB590B2093";
-          }
-          {
-            name = "Loki";
-            type = "loki";
-            url = "http://${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
-            uid = "FECRLA1BDO9OGF";
-            jsonData = {
-              manageAlerts = false;
-            };
+            orgId = 1;
+            receiver = "Telegram";
+            group_by = [
+              "grafana_folder"
+              "alertname"
+            ];
           }
         ];
       };
+
+      dashboards.settings.providers = [
+        {
+          name = "my dashboards";
+          options.path = "/etc/grafana/dashboards";
+        }
+      ];
+
+      datasources.settings.datasources = [
+        {
+          name = "Prometheus";
+          type = "prometheus";
+          url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}";
+          uid = "PBFA97CFB590B2093";
+        }
+        {
+          name = "Loki";
+          type = "loki";
+          url = "http://${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
+          uid = "FECRLA1BDO9OGF";
+          jsonData = {
+            manageAlerts = false;
+          };
+        }
+      ];
     };
   };
   environment.etc = {

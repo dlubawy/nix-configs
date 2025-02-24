@@ -9,16 +9,17 @@
 {
   imports = [
     inputs.agenix.nixosModules.default
-    inputs.nixos-sbc.nixosModules.default
     inputs.nixos-sbc.nixosModules.boards.bananapi.bpir3
+    inputs.nixos-sbc.nixosModules.default
     ../../nixos
-    ./kernel
-    ./network.nix
     ./adguardhome.nix
-    ./hostapd.nix
-    ./loki.nix
-    ./prometheus.nix
     ./grafana
+    ./hostapd.nix
+    ./kernel
+    ./loki.nix
+    ./network.nix
+    ./nginx.nix
+    ./prometheus.nix
   ];
 
   # Disable incompatible configs
@@ -92,6 +93,27 @@
     secrets = {
       tailscale = {
         file = ../../secrets/tailscale.age;
+      };
+      cloudflare-dns-token = {
+        file = ../../secrets/cloudflare-dns-token.age;
+      };
+    };
+  };
+
+  security = {
+    acme = {
+      acceptTerms = true;
+      defaults = {
+        email = "${vars.email}";
+        dnsResolver = "1.1.1.1:53";
+      };
+      certs = {
+        "${vars.homeDomain}" = {
+          dnsProvider = "cloudflare";
+          credentialFiles = {
+            CLOUDFLARE_DNS_API_TOKEN_FILE = config.age.secrets.cloudflare-dns-token.path;
+          };
+        };
       };
     };
   };

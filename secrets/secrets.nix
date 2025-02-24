@@ -38,4 +38,8 @@ in
     publicKeys = [ systems.bpi ] ++ allYubiKeys;
     armor = true;
   };
+  "cloudflare-dns-token.age" = {
+    publicKeys = [ systems.bpi ] ++ allYubiKeys;
+    armor = true;
+  };
 }
