@@ -117,9 +117,11 @@
                 bridge = "br-lan";
                 bss_load_update_period = 60;
                 chan_util_avg_period = 600;
-                disassoc_low_ack = 1;
+                disassoc_low_ack = 0;
                 preamble = 1;
                 uapsd_advertisement_enabled = 1;
+                sae_confirm_immediate = 1;
+                ieee80211w = lib.mkForce 2;
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -167,7 +169,6 @@
                 bridge = "br-lan";
                 bss_load_update_period = 60;
                 chan_util_avg_period = 600;
-                disassoc_low_ack = 1;
                 preamble = 1;
                 uapsd_advertisement_enabled = 1;
 
@@ -179,13 +180,12 @@
                 vlan_naming = 1;
                 vlan_tagged_interface = "wlan0-1";
               };
-              ssid = "🐰 conejitahouse 🐰";
+              ssid = "conejitahouse";
             };
           };
           wifi4 = {
             enable = true;
             capabilities = [
-              "HT40+"
               "LDPC"
               "SHORT-GI-20"
               "SHORT-GI-40"
@@ -193,6 +193,13 @@
               "RX-STBC1"
               "MAX-AMSDU-7935"
             ];
+          };
+          wifi6 = {
+            enable = true;
+            multiUserBeamformer = true;
+            operatingChannelWidth = "20or40";
+            singleUserBeamformee = true;
+            singleUserBeamformer = true;
           };
         };
         wlan1 = {
@@ -216,6 +223,8 @@
                 disassoc_low_ack = 1;
                 preamble = 1;
                 uapsd_advertisement_enabled = 1;
+                sae_confirm_immediate = 1;
+                ieee80211w = lib.mkForce 2;
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -241,7 +250,7 @@
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
 
-                # NOTE: Need to disable otherwise macOS reauths from cache with VLAN ID 0
+                # NOTE: Need to disable otherwise clients reauth from cache with VLAN ID 0
                 disable_pmksa_caching = 1;
                 rsn_preauth = 0;
                 rsn_preauth_interfaces = "br-lan";

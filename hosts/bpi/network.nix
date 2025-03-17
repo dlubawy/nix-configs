@@ -293,9 +293,14 @@
         };
         dhcpServerStaticLeases = [
           {
-            # printer
+            # Printer
             Address = "192.168.30.10";
             MACAddress = "c8:d9:d2:e8:38:6a";
+          }
+          {
+            # TV
+            Address = "192.168.30.11";
+            MACAddress = "c2:08:44:c7:48:a9";
           }
         ];
       };
