@@ -82,7 +82,7 @@
             }
             {
               __unkeyed-1 = "<leader>ca";
-              __unkeyed-2 = "<cmd>lua vim.buf.code_action()<CR>";
+              __unkeyed-2 = "<cmd>lua vim.lsp.buf.code_action()<CR>";
               desc = "Code Action";
             }
             {
@@ -231,27 +231,27 @@
             }
             {
               __unkeyed-1 = "<leader>xx";
-              __unkeyed-2 = ''<cmd>lua require("trouble").toggle()<CR>'';
+              __unkeyed-2 = ''<cmd>Trouble diagnostics toggle<CR>'';
               desc = "Trouble";
             }
             {
               __unkeyed-1 = "<leader>xw";
-              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("workspace_diagnostics")<CR>'';
+              __unkeyed-2 = ''<cmd>Trouble diagnostics_workspace toggle<CR>'';
               desc = "Workspace Diagnostics";
             }
             {
               __unkeyed-1 = "<leader>xd";
-              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("document_diagnostics")<CR>'';
+              __unkeyed-2 = ''<cmd>Trouble diagnostics_document toggle<CR>'';
               desc = "Document Diagnostics";
             }
             {
               __unkeyed-1 = "<leader>xq";
-              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("quickfix")<CR>'';
+              __unkeyed-2 = ''<cmd>Trouble qflist toggle<CR>'';
               desc = "Quickfix";
             }
             {
               __unkeyed-1 = "<leader>xl";
-              __unkeyed-2 = ''<cmd>lua require("trouble").toggle("loclist")<CR>'';
+              __unkeyed-2 = ''<cmd>Trouble loclist toggle<CR>'';
               desc = "Location List";
             }
             {

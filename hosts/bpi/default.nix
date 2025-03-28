@@ -68,7 +68,10 @@
     }
   ];
 
-  system.autoUpgrade.flake = "${vars.flake}#bpi";
+  system.autoUpgrade = {
+    dates = "Sat *-*-* 00:00:00";
+    flake = "${vars.flake}#bpi";
+  };
 
   environment.shellAliases = {
     bpi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#bpi";

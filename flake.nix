@@ -68,7 +68,16 @@
       ];
 
       forAllSystems =
-        f: nixpkgs.lib.genAttrs systems (system: f { pkgs = import nixpkgs { inherit system; }; });
+        f:
+        nixpkgs.lib.genAttrs systems (
+          system:
+          f {
+            pkgs = import nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          }
+        );
 
       # User config
       vars = {
@@ -83,10 +92,7 @@
       };
     in
     rec {
-      # FIXME: need to figure out how to have packages for multiple incompatible systems
-      packages = forAllSystems (
-        { pkgs }: if pkgs.system == "aarch64-linux" then import ./pkgs pkgs else { }
-      );
+      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system) pkgs);
       formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
 
       overlays = import ./overlays { inherit inputs; };

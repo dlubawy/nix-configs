@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   inputs,
   outputs,
@@ -53,10 +54,10 @@
 
   system = {
     autoUpgrade = {
-      enable = true;
-      dates = "weekly";
-      allowReboot = true;
-      rebootWindow = {
+      enable = lib.mkDefault true;
+      dates = lib.mkDefault "weekly";
+      allowReboot = lib.mkDefault true;
+      rebootWindow = lib.mkDefault {
         lower = "01:00";
         upper = "05:00";
       };

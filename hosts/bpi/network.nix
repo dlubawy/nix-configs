@@ -273,6 +273,12 @@
           PoolOffset = 100;
           PoolSize = 100;
         };
+        dhcpServerStaticLeases = [
+          {
+            Address = "192.168.20.10";
+            MACAddress = "8c:3b:4a:a7:9d:89";
+          }
+        ];
       };
       "35-vl-iot" = {
         matchConfig.Name = "vl-iot";

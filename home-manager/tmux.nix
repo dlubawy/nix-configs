@@ -18,7 +18,10 @@
       bind-key -T copy-mode-vi v send-keys -X begin-selection
 
       bind-key x kill-pane
+
+      set-option -g focus-events on
     '';
+    escapeTime = 10;
     historyLimit = 10000;
     keyMode = "vi";
     mouse = true;

@@ -28,63 +28,94 @@
       *  wlan1.#  br-lan
     '';
   };
-  systemd.network = {
-    networks = {
-      "30-wl-lan" = {
-        matchConfig = {
-          Name = "*.99";
-          Type = "wlan";
+  systemd = {
+    network = {
+      networks = {
+        "30-wl-lan" = {
+          matchConfig = {
+            Name = "*.99";
+            Type = "wlan";
+          };
+          bridge = [ "br-lan" ];
+          bridgeVLANs = [
+            {
+              VLAN = 99;
+              PVID = 99;
+              EgressUntagged = 99;
+            }
+          ];
         };
-        bridge = [ "br-lan" ];
-        bridgeVLANs = [
-          {
-            VLAN = 99;
-            PVID = 99;
-            EgressUntagged = 99;
-          }
-        ];
+        "30-wl-user" = {
+          matchConfig = {
+            Name = "*.20";
+            Type = "wlan";
+          };
+          bridge = [ "br-lan" ];
+          bridgeVLANs = [
+            {
+              VLAN = 20;
+              PVID = 20;
+              EgressUntagged = 20;
+            }
+          ];
+        };
+        "30-wl-iot" = {
+          matchConfig = {
+            Name = "*.30";
+            Type = "wlan";
+          };
+          bridge = [ "br-lan" ];
+          bridgeVLANs = [
+            {
+              VLAN = 30;
+              PVID = 30;
+              EgressUntagged = 30;
+            }
+          ];
+        };
+        "30-wl-guest" = {
+          matchConfig = {
+            Name = "*.40";
+            Type = "wlan";
+          };
+          bridge = [ "br-lan" ];
+          bridgeVLANs = [
+            {
+              VLAN = 40;
+              PVID = 40;
+              EgressUntagged = 40;
+            }
+          ];
+        };
       };
-      "30-wl-user" = {
-        matchConfig = {
-          Name = "*.20";
-          Type = "wlan";
+    };
+    # NOTE: Flush the PMKSA caches due to not storing VLAN ID info correctly; it always returns ID 0
+    timers = {
+      "scheduled-reboot" = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "Mon..Thu,Sun *-*-* 04:00:00";
+          Unit = "reboot.target";
         };
-        bridge = [ "br-lan" ];
-        bridgeVLANs = [
-          {
-            VLAN = 20;
-            PVID = 20;
-            EgressUntagged = 20;
-          }
-        ];
       };
-      "30-wl-iot" = {
-        matchConfig = {
-          Name = "*.30";
-          Type = "wlan";
+      "flush-pmksa" = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnBootSec = "1m";
+          OnUnitActiveSec = "1m";
+          Unit = "flush-pmksa.service";
         };
-        bridge = [ "br-lan" ];
-        bridgeVLANs = [
-          {
-            VLAN = 30;
-            PVID = 30;
-            EgressUntagged = 30;
-          }
-        ];
       };
-      "30-wl-guest" = {
-        matchConfig = {
-          Name = "*.40";
-          Type = "wlan";
-        };
-        bridge = [ "br-lan" ];
-        bridgeVLANs = [
-          {
-            VLAN = 40;
-            PVID = 40;
-            EgressUntagged = 40;
-          }
-        ];
+    };
+    services."flush-pmksa" = {
+      script = ''
+        ${pkgs.hostapd}/bin/hostapd_cli -p /run/hostapd -s /run/hostapd -i wlan0 pmksa_flush
+        ${pkgs.hostapd}/bin/hostapd_cli -p /run/hostapd -s /run/hostapd -i wlan0-1 pmksa_flush
+        ${pkgs.hostapd}/bin/hostapd_cli -p /run/hostapd -s /run/hostapd -i wlan1 pmksa_flush
+      '';
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
       };
     };
   };
@@ -117,7 +148,6 @@
                 bridge = "br-lan";
                 bss_load_update_period = 60;
                 chan_util_avg_period = 600;
-                disassoc_low_ack = 0;
                 preamble = 1;
                 uapsd_advertisement_enabled = 1;
                 sae_confirm_immediate = 1;
@@ -136,7 +166,6 @@
                 ft_over_ds = 0;
                 mobility_domain = "3143";
                 nas_identifier = "9adfd2a229a0";
-                okc = 1;
                 r0kh = "ff:ff:ff:ff:ff:ff * @wifi-shared-secret@";
                 r1kh = "00:00:00:00:00:00 00:00:00:00:00:00 @wifi-shared-secret@";
                 reassociation_deadline = 20000;
@@ -147,8 +176,8 @@
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
 
-                # NOTE: Need to disable otherwise macOS reauths from cache with VLAN ID 0
-                disable_pmksa_caching = 1;
+                # NOTE: PMKSA is needed for Apple devices to auth but preauth should be disabled because cache return VLAN ID 0 every time
+                disable_pmksa_caching = 0;
                 rsn_preauth = 0;
                 rsn_preauth_interfaces = "br-lan";
               };
@@ -220,7 +249,6 @@
                 bridge = "br-lan";
                 bss_load_update_period = 60;
                 chan_util_avg_period = 600;
-                disassoc_low_ack = 1;
                 preamble = 1;
                 uapsd_advertisement_enabled = 1;
                 sae_confirm_immediate = 1;
@@ -239,7 +267,6 @@
                 ft_over_ds = 0;
                 mobility_domain = "3143";
                 nas_identifier = "daef7a02e13c";
-                okc = 1;
                 r0kh = "ff:ff:ff:ff:ff:ff * @wifi-shared-secret@";
                 r1kh = "00:00:00:00:00:00 00:00:00:00:00:00 @wifi-shared-secret@";
                 reassociation_deadline = 20000;
@@ -250,8 +277,8 @@
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
 
-                # NOTE: Need to disable otherwise clients reauth from cache with VLAN ID 0
-                disable_pmksa_caching = 1;
+                # NOTE: PMKSA is needed for Apple devices to auth but preauth should be disabled because cache return VLAN ID 0 every time
+                disable_pmksa_caching = 0;
                 rsn_preauth = 0;
                 rsn_preauth_interfaces = "br-lan";
               };

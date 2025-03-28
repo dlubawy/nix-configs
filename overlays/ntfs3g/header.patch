@@ -1,0 +1,35 @@
+--- a/src/lowntfs-3g.c
++++ b/src/lowntfs-3g.c
+@@ -27,8 +27,8 @@
+
+ #include "config.h"
+
+-#include <fuse.h>
+-#include <fuse_lowlevel.h>
++#include <fuse/fuse.h>
++#include <fuse/fuse_lowlevel.h>
+
+ #if !defined(FUSE_VERSION) || (FUSE_VERSION < 26)
+ #error "***********************************************************"
+--- a/src/ntfs-3g.c
++++ b/src/ntfs-3g.c
+@@ -27,7 +27,7 @@
+
+ #include "config.h"
+
+-#include <fuse.h>
++#include <fuse/fuse.h>
+
+ #if !defined(FUSE_VERSION) || (FUSE_VERSION < 26)
+ #error "***********************************************************"
+--- a/src/ntfs-3g_common.c
++++ b/src/ntfs-3g_common.c
+@@ -45,7 +45,7 @@
+ #endif
+
+ #include <getopt.h>
+-#include <fuse.h>
++#include <fuse/fuse.h>
+
+ #include "compat.h"
+ #include "inode.h"

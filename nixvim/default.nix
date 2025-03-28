@@ -160,7 +160,6 @@
       largeFileCutoff = 2000;
       largeFileOverrides.providers = [ "lsp" ];
     };
-    trouble.enable = true;
     todo-comments.enable = true;
     fugitive.enable = true;
     markdown-preview.enable = true;
