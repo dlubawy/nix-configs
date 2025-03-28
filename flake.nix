@@ -17,11 +17,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
+      url = "github:nix-community/NixOS-WSL/2411.6.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-sbc = {
-      url = "github:nakato/nixos-sbc/main";
+      url = "github:nakato/nixos-sbc/114b2e495a5a59b3d077e73a0a60c6945c5cf32e";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
