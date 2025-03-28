@@ -76,6 +76,10 @@ Installation assumes an assembled Banana Pi BPI-R3 without any additional PCI de
 * Change the initial password with `passwd`
 * Login to Grafana (user: `admin`, password: `admin`) and change the admin password
 
+#### Notes
+- Linux kernel: needs a custom linux kernel patch to get 2.5G SFP module working.
+- hostapd: there is a bug with hostapd that breaks VLAN interface assignment when using a PMKSA cache. This cache is required for 5G and Apple device authentication to work, so a patch is applied to effectively disable the cache without removing the PMKID handling and other cache logic.
+
 ### Templates
 Use any template to create a nix flake based development environment with:
 ```

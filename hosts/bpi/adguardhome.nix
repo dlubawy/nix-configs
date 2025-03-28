@@ -101,6 +101,9 @@
           "https://dns.quad9.net/dns-query"
           "[/local/]127.0.0.53:53"
         ];
+        fallback_dns = [
+          "https://dns.google/dns-query"
+        ];
         bootstrap_dns = [
           "8.8.8.8"
           "8.8.4.4"
@@ -109,7 +112,6 @@
         ];
         local_ptr_upstreams = [
           "127.0.0.53:53"
-          "[/168.192.in-addr.arpa/]127.0.0.53:53"
         ];
         enable_dnssec = true;
       };
