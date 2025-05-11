@@ -33,7 +33,7 @@
     "scheduled-reboot" = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "Mon..Thu,Sun *-*-* 04:00:00";
+        OnCalendar = "Mon..Fri,Sun *-*-* 04:00:00";
         Unit = "reboot.target";
       };
     };

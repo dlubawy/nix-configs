@@ -81,7 +81,7 @@
       fzf
       gawk
       gnused
-      nodePackages_latest.prettier
+      nodePackages.prettier
       ripgrep
       stylua
     ]

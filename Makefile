@@ -1,6 +1,11 @@
 GIT_REPO := $(shell git rev-parse --show-toplevel)
+HOSTNAME := $(shell hostname)
 
-.PHONY: update history hm-history repl clean hm-clean gc fmt check laplace pi
+.PHONY: all test update history hm-history repl clean hm-clean gc fmt check laplace pi bpi
+
+all: check $(HOSTNAME)
+
+test: check-all
 
 # Nix commands
 update:

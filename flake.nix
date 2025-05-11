@@ -179,7 +179,83 @@
           pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
             src = ./.;
             hooks = {
-              nixfmt-rfc-style.enable = true;
+              trufflehog = {
+                enable = true;
+                name = "🔒 Security · Detect hardcoded secrets";
+              };
+              nixfmt-rfc-style = {
+                enable = true;
+                name = "🔍 Code Quality · ❄️ Nix · Format";
+                after = [ "trufflehog" ];
+              };
+              check-yaml = {
+                enable = true;
+                name = "✅ Data & Config Validation · YAML · Lint";
+                after = [ "nixfmt-rfc-style" ];
+              };
+              mdformat = {
+                enable = true;
+                name = "📝 Docs · Markdown · Format";
+                after = [ "check-yaml" ];
+              };
+              checkmake = {
+                enable = true;
+                name = "🐮 Makefile · Lint";
+                after = [ "mdformat" ];
+              };
+              check-case-conflicts = {
+                enable = true;
+                name = "📁 Filesystem · Check case sensitivity";
+                after = [ "checkmake" ];
+              };
+              check-symlinks = {
+                enable = true;
+                name = "📁 Filesystem · Check symlinks";
+                after = [ "checkmake" ];
+              };
+              check-merge-conflicts = {
+                enable = true;
+                name = "🌳 Git Quality · Detect conflict markers";
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              forbid-new-submodules = {
+                enable = true;
+                name = "🌳 Git Quality · Prevent submodule creation";
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              no-commit-to-branch = {
+                enable = true;
+                name = "🌳 Git Quality · Protect main branch";
+                settings.branch = [ "main" ];
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              check-added-large-files = {
+                enable = true;
+                name = "🌳 Git Quality · Block large file commits";
+                args = [ "--maxkb=5000" ];
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              commitizen = {
+                enable = true;
+                name = "🌳 Git Quality · Validate commit message";
+                stages = [ "commit-msg" ];
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
             };
           };
           nixvimCheck = nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
