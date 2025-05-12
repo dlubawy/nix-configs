@@ -31,7 +31,8 @@ in
         env = {
           TERM = "xterm-256color";
         };
-        bell.command = {
+        # TODO: Add bell for linux systems
+        bell.command = lib.mkIf pkgs.stdenv.isDarwin {
           program = bell.program;
           args = bell.args;
         };
