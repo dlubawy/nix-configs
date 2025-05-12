@@ -70,7 +70,7 @@ This makes use of [nakato/nixos-sbc](https://github.com/nakato/nixos-sbc) for cr
 - LAN network acts as a management interface to the router and networks themselves.
 - USER network provides trusted networking that can reach into the IOT and GUEST networks but not the reverse.
 - IOT provides a downgraded Wi-Fi security entry point and a dedicated 2.4GHz connection for devices that have poor update support.
-- GUEST provides an entry point for all devices not registered in the dynamic VLAN configuration for hostapd. *NOTE:* devices on the GUEST network may talk to each other due to hostapd ~ap_isolate~ not working with dynamic VLAN. This is due to MAC address routing bypassing forwarding rules in nftables on the WLAN interface that is dynamically created. GUEST devices will **not** be able to talk outside the VLAN though (except for a set aside subnet into the IOT network).
+- GUEST provides an entry point for all devices not registered in the dynamic VLAN configuration for hostapd. *NOTE:* devices on the GUEST network may talk to each other due to hostapd `ap_isolate` not working with dynamic VLAN. This is due to MAC address routing bypassing forwarding rules in nftables on the WLAN interface that is dynamically created. GUEST devices will **not** be able to talk outside the VLAN though (except for a set aside subnet into the IOT network).
 
 Installation assumes an assembled Banana Pi BPI-R3 without any additional PCI devices and only an SD card.
 
