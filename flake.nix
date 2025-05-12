@@ -1,5 +1,12 @@
-{
+rec {
   description = "Andrew Lubawy's Nix Configs";
+
+  nixConfig = {
+    extra-substituters = [
+      "https://dlubawy.cachix.org"
+    ];
+    extra-trusted-public-keys = [ "dlubawy.cachix.org-1:MdCmtrdwBMg8BLku2j4ZSfrzi68SwRKs2aZx7wDOWFc=" ];
+  };
 
   inputs = {
     # Different nixpkgs sources
@@ -89,6 +96,7 @@
         homeDomain = "home.andrewlubawy.com";
         stateVersion = "24.05";
         flake = "github:dlubawy/nix-configs/main";
+        inherit nixConfig;
       };
     in
     rec {
@@ -98,13 +106,6 @@
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       homeManagerModules = import ./modules/home-manager;
-
-      nixConfig = {
-        extra-substituters = [
-          "https://dlubawy.cachix.org"
-        ];
-        extra-trusted-public-keys = [ "dlubawy.cachix.org-1:MdCmtrdwBMg8BLku2j4ZSfrzi68SwRKs2aZx7wDOWFc=" ];
-      };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
