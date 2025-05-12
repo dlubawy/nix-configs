@@ -23,7 +23,7 @@ jobs:
       - name: Run flake check
         run: nix develop --command make check
   merge:
-    if: ${{ github.event.pull_request.user.login == 'dlubawy-bot[bot]' }}
+    if: ${{ github.event.pull_request.user.login == 'dlubawy-bot[bot]' &&  && github.repository == 'dlubawy/nix-configs' }}
     needs: check
     runs-on: ubuntu-latest
     steps:
