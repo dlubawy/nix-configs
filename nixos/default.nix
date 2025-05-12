@@ -82,8 +82,8 @@
     optimise.automatic = true;
     settings = {
       experimental-features = "nix-command flakes";
-      substituters = vars.extra-substituters;
-      trusted-public-keys = vars.extra-trusted-public-keys;
+      substituters = vars.nixConfig.extra-substituters;
+      trusted-public-keys = vars.nixConfig.extra-trusted-public-keys;
     };
   };
 
