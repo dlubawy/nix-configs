@@ -43,7 +43,7 @@ rec {
     };
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix/master";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Overlays
@@ -190,15 +190,6 @@ rec {
               trufflehog = {
                 enable = true;
                 name = "🔒 Security · Detect hardcoded secrets";
-                entry =
-                  # FIXME: https://github.com/cachix/git-hooks.nix/issues/584
-                  let
-                    script = pkgs.writeShellScript "precommit-trufflehog" ''
-                      set -e
-                      ${pkgs.trufflehog}/bin/trufflehog git "file://$(git rev-parse --show-toplevel)" --since-commit HEAD --only-verified --fail --no-update
-                    '';
-                  in
-                  builtins.toString script;
               };
               nixfmt-rfc-style = {
                 enable = true;
