@@ -117,6 +117,8 @@ in
     optimise.automatic = true;
     settings = {
       experimental-features = "nix-command flakes";
+      substituters = outputs.nixConfig.extra-substituters;
+      trusted-public-keys = outputs.nixConfig.extra-trusted-public-keys;
       trusted-users = [
         "root"
         "@admin"

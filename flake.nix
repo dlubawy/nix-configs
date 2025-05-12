@@ -99,6 +99,13 @@
       nixosModules = import ./modules/nixos;
       homeManagerModules = import ./modules/home-manager;
 
+      nixConfig = {
+        extra-substituters = [
+          "https://dlubawy.cachix.org"
+        ];
+        extra-trusted-public-keys = [ "dlubawy.cachix.org-1:MdCmtrdwBMg8BLku2j4ZSfrzi68SwRKs2aZx7wDOWFc=" ];
+      };
+
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
         # kepler = nixpkgs.lib.nixosSystem {

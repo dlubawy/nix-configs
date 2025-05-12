@@ -1,0 +1,33 @@
+name: Cache 📝
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.nix"
+      - "**.age"
+      - "flake.lock"
+
+concurrency:
+  group: ci-${{ github.ref }}-cache
+  cancel-in-progress: true
+
+jobs:
+  cache:
+    name: Cache 📝
+    strategy:
+      matrix:
+        include:
+          image: ubuntu-24.04-arm
+          derivation: ".#nixosConfiguration.bpi.config.system.build.toplevel"
+    runs-on: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: DeterminateSystems/nix-installer-action@21a544727d0c62386e78b4befe52d19ad12692e3
+      - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad
+        with:
+          name: dlubawy
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      - name: Build derivation
+        run: nix build ${{ matrix.derivation }}
