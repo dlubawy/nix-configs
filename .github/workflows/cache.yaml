@@ -20,7 +20,7 @@ jobs:
       matrix:
         include:
           - image: ubuntu-24.04-arm
-            derivation: ".#nixosConfiguration.bpi.config.system.build.toplevel"
+            derivation: ".#nixosConfigurations.bpi.config.system.build.toplevel"
     runs-on: ${{ matrix.image }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
