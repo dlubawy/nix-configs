@@ -1,5 +1,12 @@
-{
+rec {
   description = "Andrew Lubawy's Nix Configs";
+
+  nixConfig = {
+    extra-substituters = [
+      "https://dlubawy.cachix.org"
+    ];
+    extra-trusted-public-keys = [ "dlubawy.cachix.org-1:MdCmtrdwBMg8BLku2j4ZSfrzi68SwRKs2aZx7wDOWFc=" ];
+  };
 
   inputs = {
     # Different nixpkgs sources
@@ -36,7 +43,7 @@
     };
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     # Overlays
@@ -89,6 +96,7 @@
         homeDomain = "home.andrewlubawy.com";
         stateVersion = "24.05";
         flake = "github:dlubawy/nix-configs/main";
+        inherit nixConfig;
       };
     in
     rec {
@@ -98,13 +106,6 @@
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       homeManagerModules = import ./modules/home-manager;
-
-      nixConfig = {
-        extra-substituters = [
-          "https://dlubawy.cachix.org"
-        ];
-        extra-trusted-public-keys = [ "dlubawy.cachix.org-1:MdCmtrdwBMg8BLku2j4ZSfrzi68SwRKs2aZx7wDOWFc=" ];
-      };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
@@ -189,6 +190,15 @@
               trufflehog = {
                 enable = true;
                 name = "🔒 Security · Detect hardcoded secrets";
+                entry =
+                  # FIXME: https://github.com/cachix/git-hooks.nix/issues/584
+                  let
+                    script = pkgs.writeShellScript "precommit-trufflehog" ''
+                      set -e
+                      ${pkgs.trufflehog}/bin/trufflehog git "file://$(git rev-parse --show-toplevel)" --since-commit HEAD --only-verified --fail --no-update
+                    '';
+                  in
+                  builtins.toString script;
               };
               nixfmt-rfc-style = {
                 enable = true;

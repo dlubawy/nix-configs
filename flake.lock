@@ -524,7 +524,7 @@
         "flake-compat": "flake-compat_3",
         "gitignore": "gitignore_2",
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-unstable"
         ]
       },
       "locked": {
