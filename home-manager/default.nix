@@ -48,8 +48,8 @@ in
       };
       settings = {
         experimental-features = "nix-command flakes";
-        substituters = outputs.nixConfig.extra-substituters;
-        trusted-public-keys = outputs.nixConfig.extra-trusted-public-keys;
+        substituters = lib.mkIf (!useGlobalPkgs) outputs.nixConfig.extra-substituters;
+        trusted-public-keys = lib.mkIf (!useGlobalPkgs) outputs.nixConfig.extra-trusted-public-keys;
       };
     };
 

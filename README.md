@@ -1,3 +1,6 @@
+[![Cache 📝](https://github.com/dlubawy/nix-configs/actions/workflows/cache.yaml/badge.svg)](https://github.com/dlubawy/nix-configs/actions/workflows/cache.yaml)
+[![Update ⬆️](https://github.com/dlubawy/nix-configs/actions/workflows/update.yaml/badge.svg)](https://github.com/dlubawy/nix-configs/actions/workflows/update.yaml)
+
 # nix-configs
 
 My personal Nix configurations.
