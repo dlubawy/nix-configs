@@ -2,10 +2,9 @@ name: Format 🔎
 
 on:
   push:
-  pull_request:
 
 concurrency:
-  group: ci-${{ github.head_ref || github.ref }}-format
+  group: ci-${{ github.ref }}-format
   cancel-in-progress: true
 
 jobs:
