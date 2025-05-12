@@ -1,4 +1,5 @@
 [![Cache 📝](https://github.com/dlubawy/nix-configs/actions/workflows/cache.yaml/badge.svg)](https://github.com/dlubawy/nix-configs/actions/workflows/cache.yaml)
+[![Format 🔎](https://github.com/dlubawy/nix-configs/actions/workflows/format.yaml/badge.svg)](https://github.com/dlubawy/nix-configs/actions/workflows/format.yaml)
 [![Update ⬆️](https://github.com/dlubawy/nix-configs/actions/workflows/update.yaml/badge.svg)](https://github.com/dlubawy/nix-configs/actions/workflows/update.yaml)
 
 # nix-configs
