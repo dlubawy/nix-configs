@@ -100,7 +100,12 @@
       qrdecode = "zbarimage";
     };
     initExtra = ''
-      build-cachix() {
+      cachix-push-flake() {
+          nix flake archive --json \
+          | jq -r '.path,(.inputs|to_entries[].value.path)' \
+          | ${pkgs.cachix}/bin/cachix push "$1"
+      }
+      cachix-push-build() {
           nix build --no-link --print-out-paths "$1" | ${pkgs.cachix}/bin/cachix push "$2"
       }
 
