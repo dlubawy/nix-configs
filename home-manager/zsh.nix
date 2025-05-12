@@ -100,6 +100,10 @@
       qrdecode = "zbarimage";
     };
     initExtra = ''
+      build-cachix() {
+          nix build --no-link --print-out-paths "$1" | ${pkgs.cachix}/bin/cachix push "$2"
+      }
+
       fit() {
           nix flake init --template github:dlubawy/nix-configs/main#"$1"
       }

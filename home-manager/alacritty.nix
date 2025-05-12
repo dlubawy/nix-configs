@@ -1,6 +1,23 @@
-{ lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   cfg = config.gui.programs.alacritty;
+  bell = {
+    program = if pkgs.stdenv.isDarwin then "osascript" else "${pkgs.pipewire}/bin/pw-cat";
+    args =
+      if pkgs.stdenv.isDarwin then
+        [
+          "-e"
+          "beep"
+        ]
+      else
+        [ ];
+  };
+
 in
 {
   options = {
@@ -13,6 +30,11 @@ in
       settings = {
         env = {
           TERM = "xterm-256color";
+        };
+        # TODO: Add bell for linux systems
+        bell.command = lib.mkIf pkgs.stdenv.isDarwin {
+          program = bell.program;
+          args = bell.args;
         };
         colors = {
           primary = {

@@ -149,11 +149,19 @@
         __unkeyed-1 = "<leader>sw";
         __unkeyed-2 = ''<cmd>lua require("telescope.builtin").grep_string({word_match="-w"})<CR>'';
         desc = "Word/Selection (root dir)";
+        mode = [
+          "n"
+          "v"
+        ];
       }
       {
         __unkeyed-1 = "<leader>sW";
         __unkeyed-2 = ''<cmd>lua require("telescope.builtin").grep_string({cwd=false, word_match="-w"})<CR>'';
         desc = "Word/Selection (cwd)";
+        mode = [
+          "n"
+          "v"
+        ];
       }
       {
         __unkeyed = "<leader>u";

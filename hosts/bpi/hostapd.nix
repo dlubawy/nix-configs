@@ -89,35 +89,6 @@
         };
       };
     };
-    # NOTE: Flush the PMKSA caches due to not storing VLAN ID info correctly; it always returns ID 0
-    timers = {
-      "scheduled-reboot" = {
-        wantedBy = [ "timers.target" ];
-        timerConfig = {
-          OnCalendar = "Mon..Thu,Sun *-*-* 04:00:00";
-          Unit = "reboot.target";
-        };
-      };
-      "flush-pmksa" = {
-        wantedBy = [ "timers.target" ];
-        timerConfig = {
-          OnBootSec = "1m";
-          OnUnitActiveSec = "1m";
-          Unit = "flush-pmksa.service";
-        };
-      };
-    };
-    services."flush-pmksa" = {
-      script = ''
-        ${pkgs.hostapd}/bin/hostapd_cli -p /run/hostapd -s /run/hostapd -i wlan0 pmksa_flush
-        ${pkgs.hostapd}/bin/hostapd_cli -p /run/hostapd -s /run/hostapd -i wlan0-1 pmksa_flush
-        ${pkgs.hostapd}/bin/hostapd_cli -p /run/hostapd -s /run/hostapd -i wlan1 pmksa_flush
-      '';
-      serviceConfig = {
-        Type = "oneshot";
-        User = "root";
-      };
-    };
   };
   services.hostapd =
     let
@@ -176,10 +147,9 @@
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
 
-                # NOTE: PMKSA is needed for Apple devices to auth but preauth should be disabled because cache return VLAN ID 0 every time
-                disable_pmksa_caching = 0;
+                # NOTE: we effectively disabled PMKSA caching through a hostapd patch so rsn_preauth/okc won't work
                 rsn_preauth = 0;
-                rsn_preauth_interfaces = "br-lan";
+                okc = 0;
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan0 = pkgs.writeShellScript "shared-secret-config-wlan0" sharedSecretConfigScript;
@@ -277,10 +247,9 @@
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
 
-                # NOTE: PMKSA is needed for Apple devices to auth but preauth should be disabled because cache return VLAN ID 0 every time
-                disable_pmksa_caching = 0;
+                # NOTE: we effectively disabled PMKSA caching through a hostapd patch so rsn_preauth/okc won't work
                 rsn_preauth = 0;
-                rsn_preauth_interfaces = "br-lan";
+                okc = 0;
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan1 = pkgs.writeShellScript "shared-secret-config-wlan1" sharedSecretConfigScript;
