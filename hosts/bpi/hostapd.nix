@@ -44,6 +44,7 @@
               EgressUntagged = 99;
             }
           ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
         "30-wl-user" = {
           matchConfig = {
@@ -58,6 +59,7 @@
               EgressUntagged = 20;
             }
           ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
         "30-wl-iot" = {
           matchConfig = {
@@ -72,6 +74,7 @@
               EgressUntagged = 30;
             }
           ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
         "30-wl-guest" = {
           matchConfig = {
@@ -86,6 +89,7 @@
               EgressUntagged = 40;
             }
           ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
       };
     };

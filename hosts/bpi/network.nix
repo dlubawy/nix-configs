@@ -229,13 +229,16 @@
         ];
         networkConfig = {
           ConfigureWithoutCarrier = true;
-          BindCarrier = [
-            "sfp2"
-            "lan1"
-            "lan2"
-            "lan3"
-            "lan4"
-          ];
+          BindCarrier =
+            [
+              "sfp2"
+              "lan1"
+              "lan2"
+              "lan3"
+              "lan4"
+            ]
+            ++ (lib.attrNames config.services.hostapd.radios.wlan0.networks)
+            ++ (lib.attrNames config.services.hostapd.radios.wlan1.networks);
         };
       };
       "35-vl-lan" = {
