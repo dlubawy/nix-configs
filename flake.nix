@@ -196,6 +196,15 @@ rec {
                 name = "🔍 Code Quality · ❄️ Nix · Format";
                 after = [ "trufflehog" ];
               };
+              flake-checker = {
+                enable = true;
+                name = "✅ Data & Config Validation · ❄️ Nix · Flake checker";
+                args = [
+                  "--check-supported"
+                  "false"
+                ];
+                after = [ "nixfmt-rfc-style" ];
+              };
               check-yaml = {
                 enable = true;
                 name = "✅ Data & Config Validation · YAML · Lint";
@@ -204,7 +213,10 @@ rec {
               mdformat = {
                 enable = true;
                 name = "📝 Docs · Markdown · Format";
-                after = [ "check-yaml" ];
+                after = [
+                  "flake-checker"
+                  "check-yaml"
+                ];
               };
               checkmake = {
                 enable = true;
