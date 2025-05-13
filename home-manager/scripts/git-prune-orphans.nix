@@ -10,7 +10,7 @@ in
       ${gitBin} fetch -p
       read -a remotes -r < <(${gitBin} branch -r | ${awkBin} -F'/' '{$1=""; gsub(/ /, "/", $0); print substr($0, 2)}' | tr '\n' ' ')
       read -a branches -r < <(${gitBin} branch --format "%(refname:short)" | tr '\n' ' ')
-      read -a orphans -r < <(echo "''${remotes[@]}" "''${branches[@]}" | tr ' ' '\n' | sort | uniq -u | tr '\n' ' ')
+      read -a orphans -r < <(echo "''${remotes[@]}" "''${remotes[@]}" "''${branches[@]}" | tr ' ' '\n' | sort | uniq -u | tr '\n' ' ')
       for orphan in "''${orphans[@]}"; do
         if [[ "$orphan" == "develop" ]] || [[ "$orphan" == "main" ]]; then
           continue
