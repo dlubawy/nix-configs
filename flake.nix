@@ -253,6 +253,7 @@ rec {
                 enable = true;
                 name = "🌳 Git Quality · Protect main branch";
                 settings.branch = [ "main" ];
+                stages = [ "pre-push" ];
                 after = [
                   "check-symlinks"
                   "check-case-conflicts"
