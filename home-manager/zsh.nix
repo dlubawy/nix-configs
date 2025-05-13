@@ -82,6 +82,7 @@
       wtf = "ping google.com";
       rg = "rg -S";
       rgc = "rg -S --color=always";
+      gpo = "git_prune_orphans";
 
       # Date/Time Helpers
       timenow = "date +%s";
