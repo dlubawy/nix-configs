@@ -31,9 +31,116 @@
           pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
             src = ./.;
             hooks = {
-              nixfmt-rfc-style.enable = true;
-              eslint.enable = true;
-              prettier.enable = true;
+              trufflehog = {
+                enable = true;
+                name = "🔒 Security · Detect hardcoded secrets";
+              };
+              nixfmt-rfc-style = {
+                enable = true;
+                name = "🔍 Code Quality · ❄️ Nix · Format";
+                after = [ "trufflehog" ];
+              };
+              eslint = {
+                enable = true;
+                name = "🔍 Code Quality ·  🟨 JavaScript · Lint";
+                after = [ "trufflehog" ];
+              };
+              flake-checker = {
+                enable = true;
+                name = "✅ Data & Config Validation · ❄️ Nix · Flake checker";
+                args = [
+                  "--check-supported"
+                  "false"
+                ];
+                after = [
+                  "nixfmt-rfc-style"
+                  "eslint"
+                ];
+              };
+              check-yaml = {
+                enable = true;
+                name = "✅ Data & Config Validation · YAML · Lint";
+                after = [
+                  "nixfmt-rfc-style"
+                  "eslint"
+                ];
+              };
+              prettier = {
+                enable = true;
+                name = "📝 Docs · All · Prettier";
+                after = [
+                  "flake-checker"
+                  "check-yaml"
+                ];
+              };
+              mdformat = {
+                enable = true;
+                name = "📝 Docs · Markdown · Format";
+                after = [
+                  "flake-checker"
+                  "check-yaml"
+                ];
+              };
+              check-case-conflicts = {
+                enable = true;
+                name = "📁 Filesystem · Check case sensitivity";
+                after = [
+                  "mdformat"
+                  "prettier"
+                ];
+              };
+              check-symlinks = {
+                enable = true;
+                name = "📁 Filesystem · Check symlinks";
+                after = [
+                  "mdformat"
+                  "prettier"
+                ];
+              };
+              check-merge-conflicts = {
+                enable = true;
+                name = "🌳 Git Quality · Detect conflict markers";
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              forbid-new-submodules = {
+                enable = true;
+                name = "🌳 Git Quality · Prevent submodule creation";
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              no-commit-to-branch = {
+                enable = true;
+                name = "🌳 Git Quality · Protect main branch";
+                settings.branch = [ "main" ];
+                stages = [ "pre-push" ];
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              check-added-large-files = {
+                enable = true;
+                name = "🌳 Git Quality · Block large file commits";
+                args = [ "--maxkb=5000" ];
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
+              commitizen = {
+                enable = true;
+                name = "🌳 Git Quality · Validate commit message";
+                stages = [ "commit-msg" ];
+                after = [
+                  "check-symlinks"
+                  "check-case-conflicts"
+                ];
+              };
             };
           };
         }

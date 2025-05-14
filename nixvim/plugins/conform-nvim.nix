@@ -29,8 +29,9 @@
           "trim_newlines"
         ];
         python = [
-          "isort"
-          "black"
+          "ruff_fix"
+          "ruff_format"
+          "ruff_organize_imports"
           "trim_newlines"
         ];
         rust = [ "rustfmt" ];
