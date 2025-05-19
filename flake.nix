@@ -45,6 +45,10 @@ rec {
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-topology = {
+      url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Overlays
     nixpkgs-firefox-darwin = {
@@ -63,6 +67,7 @@ rec {
       nixvim,
       agenix,
       pre-commit-hooks,
+      nix-topology,
       ...
     }@inputs:
     let
@@ -82,6 +87,7 @@ rec {
             pkgs = import nixpkgs {
               inherit system;
               config.allowUnfree = true;
+              overlays = [ nix-topology.overlays.default ];
             };
           }
         );
@@ -180,6 +186,17 @@ rec {
           }).config.system.build.sdImage;
         bpi = nixosConfigurations.bpi.config.system.build.sdImage;
       };
+
+      topology = forAllSystems (
+        { pkgs }:
+        import nix-topology {
+          inherit pkgs;
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [ ./modules/topology ];
+        }
+      );
 
       checks = forAllSystems (
         { pkgs }:

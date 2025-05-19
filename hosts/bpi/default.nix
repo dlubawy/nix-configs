@@ -20,6 +20,7 @@
     ./network.nix
     ./nginx.nix
     ./prometheus.nix
+    ./topology.nix
   ];
 
   # Disable incompatible configs

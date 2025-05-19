@@ -66,6 +66,8 @@ This assumes a working Nix installation on the target platform (`x86_64-linux`).
 
 ### Banana Pi BPI-R3
 
+![Network Topology](./assets/network-topology.svg)
+
 This makes use of [nakato/nixos-sbc](https://github.com/nakato/nixos-sbc) for creating the boot image of the router. I am not a network security expert, so this configuration does not guarantee security. I made the best attempt with the skills I possess; all feedback welcome. Goal of the router is to primary segment LAN users through four VLAN: `vl-lan`, `vl-user`, `vl-iot`, and `vl-guest`.
 
 - LAN network acts as a management interface to the router and networks themselves.
