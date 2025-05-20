@@ -1,6 +1,13 @@
 { ... }:
 {
   files = {
+    "ftplugin/nix.lua" = {
+      extraConfigLua = ''
+        vim.o.shiftwidth = 2
+        vim.o.softtabstop = 2
+        vim.o.expandtab = true
+      '';
+    };
     "ftplugin/sql.lua" = {
       extraConfigLua = ''
         WhichKeySQL()
