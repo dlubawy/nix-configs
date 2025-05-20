@@ -1,5 +1,7 @@
 GIT_REPO := $(shell git rev-parse --show-toplevel)
 HOSTNAME := $(shell hostname)
+SYSTEM := $(shell nix eval -f flake:nixpkgs 'system')
+USER := $(shell whoami)
 
 .PHONY: all test update history hm-history repl clean hm-clean gc fmt check laplace pi bpi
 
@@ -46,16 +48,19 @@ check-all:
 		nix flake check --all-systems
     endif
 
+topology:
+	nix build .#topology.$(SYSTEM).config.output
+
 # Darwin systems
 laplace:
     ifdef DEBUG
 		sudo -u laplace sudo chown -R laplace:staff $(GIT_REPO) && \
 		(sudo -Hu laplace darwin-rebuild switch --flake $(GIT_REPO)\#laplace --show-trace --verbose || true) && \
-		sudo -u laplace sudo chown -R $$(whoami):staff $(GIT_REPO)
+		sudo -u laplace sudo chown -R $(USER):staff $(GIT_REPO)
     else
 		sudo -u laplace sudo chown -R laplace:staff $(GIT_REPO) && \
 		(sudo -Hu laplace darwin-rebuild switch --flake $(GIT_REPO)\#laplace || true) && \
-		sudo -u laplace sudo chown -R $$(whoami):staff $(GIT_REPO)
+		sudo -u laplace sudo chown -R $(USER):staff $(GIT_REPO)
     endif
 
 pi-image:

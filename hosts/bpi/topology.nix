@@ -13,8 +13,13 @@ with config.lib.topology;
       };
       laptop = mkDevice "Laptop" {
         interfaceGroups = [ [ "wifi" ] ];
-        connections.wifi = mkConnectionRev "bpi" "wlan1.20";
-        interfaces.wifi.addresses = [ "192.168.20.10" ];
+        interfaces.wifi = {
+          addresses = [ "192.168.20.10" ];
+          physicalConnections = [
+            (mkConnection "bpi" "wlan0.20")
+            (mkConnection "bpi" "wlan1.20")
+          ];
+        };
         icon = "devices.laptop";
       };
       printer = mkDevice "🖨️ Printer" {
@@ -24,10 +29,49 @@ with config.lib.topology;
       };
       tv = mkDevice "📺 TV" {
         interfaceGroups = [ [ "wifi" ] ];
-        connections.wifi = mkConnection "bpi" "wlan1.30";
-        interfaces.wifi.addresses = [ "192.168.30.11" ];
+        interfaces.wifi = {
+          addresses = [ "192.168.30.11" ];
+          physicalConnections = [
+            (mkConnection "bpi" "wlan0.30")
+            (mkConnection "bpi" "wlan1.30")
+          ];
+        };
       };
-
+      iot = mkDevice "🤖 IoT Devices" {
+        interfaceGroups = [ [ "wifi" ] ];
+        connections.wifi = mkConnection "bpi" "wlan0-1.30";
+        interfaces.wifi = {
+          addresses = [ "dhcp" ];
+        };
+      };
+      guests = mkDevice "⚠️ Guest Devices" {
+        interfaceGroups = [ [ "wifi" ] ];
+        interfaces.wifi = {
+          addresses = [ "dhcp" ];
+          physicalConnections = [
+            (mkConnection "bpi" "wlan0.40")
+            (mkConnection "bpi" "wlan1.40")
+          ];
+        };
+      };
+      phone = mkDevice "📱 Phone" {
+        interfaceGroups = [
+          [ "wifi" ]
+          [ "vpn" ]
+        ];
+        connections.vpn = mkConnection "tailscale" "lan";
+        interfaces.vpn = {
+          virtual = true;
+          addresses = [ "dhcp" ];
+        };
+        interfaces.wifi = {
+          addresses = [ "dhcp" ];
+          physicalConnections = [
+            (mkConnection "bpi" "wlan0.20")
+            (mkConnection "bpi" "wlan1.20")
+          ];
+        };
+      };
     };
 
     networks = {
@@ -47,10 +91,6 @@ with config.lib.topology;
         name = "Guest Network";
         cidrv4 = "192.168.40.1/24";
       };
-      tailscale = {
-        name = "Tailscale Network";
-        cidrv4 = "100.64.0.0/10";
-      };
     };
 
     self = {
@@ -65,6 +105,7 @@ with config.lib.topology;
         lan4 = { };
 
         "wlan0.20" = { };
+        "wlan0.30" = { };
         "wlan0.40" = { };
         "wlan0-1.30" = { };
         "wlan1.20" = { };
@@ -72,11 +113,9 @@ with config.lib.topology;
         "wlan1.40" = { };
 
         tailscale0 = {
-          network = "tailscale";
           addresses = [ "dhcp" ];
           virtual = true;
-          icon = "interfaces.tailscale";
-          renderer.hidePhysicalConnections = true;
+          physicalConnections = [ (mkConnection "tailscale" "lan") ];
         };
 
         vl-lan = {
