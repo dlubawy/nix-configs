@@ -1,7 +1,7 @@
 {
   description = "A Nix flake based OpenTofu environment";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";

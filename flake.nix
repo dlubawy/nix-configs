@@ -339,9 +339,9 @@ rec {
           path = ./templates/nix;
           description = "Nix development environment";
         };
-        node = {
-          path = ./templates/node;
-          description = "Node.js development environment";
+        deno = {
+          path = ./templates/deno;
+          description = "Deno development environment";
         };
         python = {
           path = ./templates/python;
