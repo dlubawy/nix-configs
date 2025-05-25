@@ -311,6 +311,30 @@ rec {
             buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
               inputs.agenix.packages.${system}.default
+              (writeScriptBin "sync-flake-inputs" ''
+                gitRoot="$(${pkgs.git}/bin/git rev-parse --show-toplevel)"
+                if [ -z "$gitRoot" ]; then
+                  echo "Not a git project"
+                  exit 1
+                fi
+
+                version="$1"
+                if [ -z "$version" ]; then
+                  version="$(${pkgs.gnugrep}/bin/grep --color=never -o 'release-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
+                  if [ -z "$version" ]; then
+                    echo "Could not determine root flake version"
+                    exit 1
+                  fi
+                fi
+
+                for template in "$gitRoot"/templates/*; do
+                  pushd "$template"
+                  ${pkgs.gnused}/bin/sed -i "s/release-[0-9]\+.[0-9]\+/release-''${version/*-}/g" ./flake.nix
+                  cp ../../flake.lock ./flake.lock
+                  nix flake lock
+                  popd
+                done
+              '')
               nil
               nixfmt-rfc-style
             ];
