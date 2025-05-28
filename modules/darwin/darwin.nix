@@ -7,9 +7,6 @@
   vars,
   ...
 }:
-let
-  systemName = config.systemName;
-in
 {
   imports = [
     inputs.nixvim.nixDarwinModules.nixvim
@@ -17,220 +14,224 @@ in
 
   options = {
     systemName = lib.mkOption {
-      type = "string";
+      type = lib.types.string;
       description = "System name for deriving admin username and computer hostname";
     };
   };
 
-  config = {
-    nixpkgs = {
-      system = "aarch64-darwin";
-      overlays = (builtins.attrValues outputs.overlays) ++ [ inputs.nixpkgs-firefox-darwin.overlay ];
-      config = {
-        allowUnfree = true;
-      };
-    };
-
-    networking = {
-      computerName = "${systemName}";
-      hostName = "${systemName}";
-      knownNetworkServices = [
-        "Wi-Fi"
-        "USB 10/100/1000 LAN"
-      ];
-    };
-
-    users = {
-      # System admin
-      users.${systemName} = {
-        isNormalUser = true;
-        isAdminUser = true;
-        isTokenUser = true;
-        isHidden = true;
-        home = "/Users/${systemName}";
-        initialPassword = "${systemName}";
-      };
-      # Regular user
-      users.${vars.user} = {
-        isNormalUser = true;
-        isTokenUser = true;
-        isHidden = false;
-        shell = /bin/zsh;
-        description = "${vars.name}";
-        initialPassword = "${vars.user}";
-      };
-    };
-
-    environment = {
-      shells = with pkgs; [ zsh ];
-      shellAliases = {
-        sudoedit = "sudo -e ";
-        ${systemName} =
-          "sudo -Hu ${systemName} darwin-rebuild switch --flake github:dlubawy/nix-configs/main#${systemName}";
-      };
-      variables = {
-        EDITOR = "nvim";
-        VISUAL = "nvim";
-
-        HOMEBREW_NO_INSECURE_REDIRECT = "1";
-        HOMEBREW_NO_ANALYTICS = "1";
-        ZSH_DISABLE_COMPFIX = "true";
-      };
-      systemPackages = with pkgs; [
-        e2fsprogs
-        fuse-ext2
-        fuse-t
-        git
-        ntfs3g
-      ];
-    };
-
-    fonts = {
-      packages = with pkgs; [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
-    };
-
-    programs = {
-      nixvim = {
-        enable = true;
-      };
-      zsh = {
-        enable = true;
-        enableCompletion = true;
-        enableBashCompletion = true;
-        enableGlobalCompInit = false;
-        enableSyntaxHighlighting = true;
-
-        # Init brew
-        loginShellInit = ''
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-        '';
-      };
-    };
-
-    services = {
-      nix-daemon.enable = true;
-      tailscale = {
-        enable = true;
-        overrideLocalDns = true;
-      };
-    };
-
-    nix = {
-      gc = {
-        automatic = true;
-        interval.Day = 7;
-        options = "--delete-older-than 7d";
-        user = "${systemName}";
-      };
-      optimise.automatic = true;
-      settings = {
-        experimental-features = "nix-command flakes";
-        substituters = vars.nixConfig.extra-substituters;
-        trusted-public-keys = vars.nixConfig.extra-trusted-public-keys;
-        trusted-users = [
-          "root"
-          "@admin"
-        ];
-      };
-      # NOTE: disabled by default to save resources when not in use.
-      # Change package attribute to switch between aarch64 and x86_64 architectures.
-      # Need to build the default linux-builder first before using `config.virtualisation`.
-      linux-builder = {
-        enable = true;
-        package = pkgs.darwin.linux-builder;
-        # package = pkgs.darwin.linux-builder-x86_64;
-        ephemeral = true;
-        maxJobs = 2;
-        systems = [
-          "aarch64-linux"
-          "x86_64-linux"
-        ];
+  config =
+    let
+      systemName = config.systemName;
+    in
+    {
+      nixpkgs = {
+        system = "aarch64-darwin";
+        overlays = (builtins.attrValues outputs.overlays) ++ [ inputs.nixpkgs-firefox-darwin.overlay ];
         config = {
-          virtualisation = {
-            darwin-builder = {
-              diskSize = 50 * 1024;
-              memorySize = 16 * 1024;
+          allowUnfree = true;
+        };
+      };
+
+      networking = {
+        computerName = "${systemName}";
+        hostName = "${systemName}";
+        knownNetworkServices = [
+          "Wi-Fi"
+          "USB 10/100/1000 LAN"
+        ];
+      };
+
+      users = {
+        # System admin
+        users.${systemName} = {
+          isNormalUser = true;
+          isAdminUser = true;
+          isTokenUser = true;
+          isHidden = true;
+          home = "/Users/${systemName}";
+          initialPassword = "${systemName}";
+        };
+        # Regular user
+        users.${vars.user} = {
+          isNormalUser = true;
+          isTokenUser = true;
+          isHidden = false;
+          shell = /bin/zsh;
+          description = "${vars.name}";
+          initialPassword = "${vars.user}";
+        };
+      };
+
+      environment = {
+        shells = with pkgs; [ zsh ];
+        shellAliases = {
+          sudoedit = "sudo -e ";
+          "${systemName}" =
+            "sudo -Hu ${systemName} darwin-rebuild switch --flake github:dlubawy/nix-configs/main#${systemName}";
+        };
+        variables = {
+          EDITOR = "nvim";
+          VISUAL = "nvim";
+
+          HOMEBREW_NO_INSECURE_REDIRECT = "1";
+          HOMEBREW_NO_ANALYTICS = "1";
+          ZSH_DISABLE_COMPFIX = "true";
+        };
+        systemPackages = with pkgs; [
+          e2fsprogs
+          fuse-ext2
+          fuse-t
+          git
+          ntfs3g
+        ];
+      };
+
+      fonts = {
+        packages = with pkgs; [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
+      };
+
+      programs = {
+        nixvim = {
+          enable = true;
+        };
+        zsh = {
+          enable = true;
+          enableCompletion = true;
+          enableBashCompletion = true;
+          enableGlobalCompInit = false;
+          enableSyntaxHighlighting = true;
+
+          # Init brew
+          loginShellInit = ''
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+          '';
+        };
+      };
+
+      services = {
+        nix-daemon.enable = true;
+        tailscale = {
+          enable = true;
+          overrideLocalDns = true;
+        };
+      };
+
+      nix = {
+        gc = {
+          automatic = true;
+          interval.Day = 7;
+          options = "--delete-older-than 7d";
+          user = "${systemName}";
+        };
+        optimise.automatic = true;
+        settings = {
+          experimental-features = "nix-command flakes";
+          substituters = vars.nixConfig.extra-substituters;
+          trusted-public-keys = vars.nixConfig.extra-trusted-public-keys;
+          trusted-users = [
+            "root"
+            "@admin"
+          ];
+        };
+        # NOTE: disabled by default to save resources when not in use.
+        # Change package attribute to switch between aarch64 and x86_64 architectures.
+        # Need to build the default linux-builder first before using `config.virtualisation`.
+        linux-builder = {
+          enable = true;
+          package = pkgs.darwin.linux-builder;
+          # package = pkgs.darwin.linux-builder-x86_64;
+          ephemeral = true;
+          maxJobs = 2;
+          systems = [
+            "aarch64-linux"
+            "x86_64-linux"
+          ];
+          config = {
+            virtualisation = {
+              darwin-builder = {
+                diskSize = 50 * 1024;
+                memorySize = 16 * 1024;
+              };
             };
           };
         };
       };
-    };
 
-    system = {
-      defaults = {
-        SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
+      system = {
+        defaults = {
+          SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
 
-        alf = {
-          globalstate = 1;
-          stealthenabled = 1;
-          loggingenabled = 1;
-          allowdownloadsignedenabled = 0;
-          allowsignedenabled = 0;
+          alf = {
+            globalstate = 1;
+            stealthenabled = 1;
+            loggingenabled = 1;
+            allowdownloadsignedenabled = 0;
+            allowsignedenabled = 0;
+          };
+          NSGlobalDomain = {
+            "com.apple.swipescrolldirection" = false;
+            NSDocumentSaveNewDocumentsToCloud = false;
+          };
+
+          dock = {
+            autohide = false;
+            largesize = 72;
+            tilesize = 48;
+            magnification = true;
+            mineffect = "genie";
+            orientation = "bottom";
+            showhidden = false;
+            show-recents = false;
+          };
+
+          finder = {
+            QuitMenuItem = false;
+          };
+
+          screensaver = {
+            askForPassword = true;
+            askForPasswordDelay = 0;
+          };
+
+          trackpad = {
+            Clicking = true;
+            TrackpadRightClick = true;
+          };
         };
-        NSGlobalDomain = {
-          "com.apple.swipescrolldirection" = false;
-          NSDocumentSaveNewDocumentsToCloud = false;
-        };
+        stateVersion = 4;
+      };
 
-        dock = {
-          autohide = false;
-          largesize = 72;
-          tilesize = 48;
-          magnification = true;
-          mineffect = "genie";
-          orientation = "bottom";
-          showhidden = false;
-          show-recents = false;
+      security = {
+        pam = {
+          enableSudoTouchIdAuth = true;
+          enablePamReattach = true;
         };
+        # Allows standard user to run darwin-rebuild through the admin user
+        # sudo -Hu ${systemName} darwin-rebuild
+        sudo.extraConfig = ''
+          ${vars.user} ALL = (${systemName}) ALL
+        '';
+      };
 
-        finder = {
-          QuitMenuItem = false;
-        };
-
-        screensaver = {
-          askForPassword = true;
-          askForPasswordDelay = 0;
-        };
-
-        trackpad = {
-          Clicking = true;
-          TrackpadRightClick = true;
+      home-manager = {
+        users.${vars.user} = {
+          gui.enable = true;
+          programs.firefox.package = pkgs.firefox-bin;
         };
       };
-      stateVersion = 4;
-    };
 
-    security = {
-      pam = {
-        enableSudoTouchIdAuth = true;
-        enablePamReattach = true;
-      };
-      # Allows standard user to run darwin-rebuild through the admin user
-      # sudo -Hu ${systemName} darwin-rebuild
-      sudo.extraConfig = ''
-        ${vars.user} ALL = (${systemName}) ALL
-      '';
-    };
-
-    home-manager = {
-      users.${vars.user} = {
-        gui.enable = true;
-        programs.firefox.package = pkgs.firefox-bin;
+      homebrew = {
+        enable = true;
+        onActivation = {
+          autoUpdate = false;
+          upgrade = false;
+          cleanup = "zap";
+        };
+        brews = [ ];
+        casks = [
+          "ultimaker-cura"
+        ];
+        caskArgs.require_sha = true;
       };
     };
-
-    homebrew = {
-      enable = true;
-      onActivation = {
-        autoUpdate = false;
-        upgrade = false;
-        cleanup = "zap";
-      };
-      brews = [ ];
-      casks = [
-        "ultimaker-cura"
-      ];
-      caskArgs.require_sha = true;
-    };
-  };
 }
