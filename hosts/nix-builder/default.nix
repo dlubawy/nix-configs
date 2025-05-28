@@ -6,7 +6,6 @@
 }:
 {
   imports = [
-    ../../nixos
     ./hardware-configuration.nix
   ];
 
@@ -44,10 +43,5 @@
     };
   };
 
-  home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs vars;
-    };
-    users.${vars.user}.gui.enable = false;
-  };
+  home-manager.users.${vars.user}.gui.enable = false;
 }

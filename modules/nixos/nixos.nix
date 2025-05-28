@@ -8,7 +8,6 @@
 }:
 {
   imports = [
-    inputs.home-manager.nixosModules.home-manager
     inputs.nix-topology.nixosModules.default
     inputs.nixvim.nixosModules.nixvim
   ];
@@ -86,14 +85,5 @@
       substituters = vars.nixConfig.extra-substituters;
       trusted-public-keys = vars.nixConfig.extra-trusted-public-keys;
     };
-  };
-
-  home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs vars;
-    };
-    users.${vars.user} = import ../home-manager;
-    useUserPackages = true;
-    useGlobalPkgs = true;
   };
 }

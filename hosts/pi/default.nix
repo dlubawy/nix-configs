@@ -7,7 +7,6 @@
 {
   imports = [
     inputs.agenix.nixosModules.default
-    ../../nixos
     ./hardware-configuration.nix
     ./adguardhome.nix
   ];
@@ -18,12 +17,7 @@
     pi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#pi";
   };
 
-  home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs vars;
-    };
-    users.${vars.user}.gui.enable = false;
-  };
+  home-manager.users.${vars.user}.gui.enable = false;
 
   boot.loader.grub.enable = false;
   boot.loader.generic-extlinux-compatible.enable = true;

@@ -11,7 +11,6 @@
     inputs.agenix.nixosModules.default
     inputs.nixos-sbc.nixosModules.boards.bananapi.bpir3
     inputs.nixos-sbc.nixosModules.default
-    ../../nixos
     ./adguardhome.nix
     ./grafana
     ./hostapd.nix
@@ -89,12 +88,7 @@
     bpi = "sudo nixos-rebuild switch --flake github:dlubawy/nix-configs/main#bpi";
   };
 
-  home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs vars;
-    };
-    users.${vars.user}.gui.enable = false;
-  };
+  home-manager.users.${vars.user}.gui.enable = false;
 
   networking = {
     hostName = "bpi";

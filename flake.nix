@@ -104,6 +104,30 @@ rec {
         flake = "github:dlubawy/nix-configs/main";
         inherit nixConfig;
       };
+
+      mkSystem =
+        {
+          name,
+          system,
+        }:
+        let
+          inherit (nixpkgs) lib;
+          isDarwin = lib.strings.hasSuffix "darwin" system;
+          systemBuilder = if isDarwin then darwin.lib.darwinSystem else lib.nixosSystem;
+          systemModule = if isDarwin then self.darwinModules.default else self.nixosModules.default;
+          homeModule = if isDarwin then self.homeManagerModules.darwin else self.homeManagerModules.nixos;
+        in
+        systemBuilder {
+          inherit system;
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [
+            systemModule
+            homeModule
+            ./hosts/${name}
+          ];
+        };
     in
     rec {
       packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system) pkgs);
@@ -111,6 +135,7 @@ rec {
 
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
+      darwinModules = import ./modules/darwin;
       homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {
@@ -124,47 +149,32 @@ rec {
         # };
 
         # VM (Nix Build System)
-        nixBuilder = nixpkgs.lib.nixosSystem {
+        nixBuilder = mkSystem {
+          name = "nix-builder";
           system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/nix-builder ];
         };
         # WSL
-        syringa = nixpkgs.lib.nixosSystem {
+        syringa = mkSystem {
+          name = "syringa";
           system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/syringa ];
         };
         # Raspberry Pi 3+
-        pi = nixpkgs.lib.nixosSystem {
+        pi = mkSystem {
+          name = "pi";
           system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/pi ];
         };
         # Banana Pi BPI-R3
-        bpi = nixpkgs.lib.nixosSystem {
+        bpi = mkSystem {
+          name = "bpi";
           system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/bpi ];
         };
       };
 
       darwinConfigurations = {
         # MacBook M1
-        laplace = darwin.lib.darwinSystem {
+        laplace = mkSystem {
+          name = "laplace";
           system = "aarch64-darwin";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./darwin ];
         };
       };
 
@@ -175,7 +185,7 @@ rec {
           extraSpecialArgs = {
             inherit inputs outputs vars;
           };
-          modules = [ ./home-manager ];
+          modules = [ self.homeManagerModules.default ];
         };
       };
 
@@ -297,8 +307,8 @@ rec {
             };
           };
           nixvimCheck = nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
-            pkgs = pkgs;
-            module = import ./nixvim;
+            inherit pkgs;
+            module = import ./modules/nixvim;
           };
         }
       );

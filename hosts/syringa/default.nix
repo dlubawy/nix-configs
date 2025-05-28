@@ -8,7 +8,6 @@
 {
   imports = [
     inputs.nixos-wsl.nixosModules.default
-    ../../nixos
   ];
 
   # NOTE: disable so WSL can work
@@ -21,10 +20,5 @@
     defaultUser = "${vars.user}";
   };
 
-  home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs vars;
-    };
-    users.${vars.user}.gui.enable = false;
-  };
+  home-manager.users.${vars.user}.gui.enable = false;
 }
