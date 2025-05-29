@@ -1,4 +1,7 @@
-{ vars, ... }:
+{ config, vars, ... }:
+let
+  username = config.home.username;
+in
 {
   programs.ssh = {
     enable = true;
@@ -41,7 +44,7 @@
       "rpi" = {
         hostname = "192.168.0.34";
         port = 22;
-        user = "${vars.user}";
+        user = "${username}";
         extraOptions = {
           ControlMaster = "no";
           # FIXME: there is an issue with key length on the host when using a YubiKey with SSH.
@@ -54,7 +57,7 @@
       "bpi" = {
         hostname = "192.168.1.1";
         port = 22;
-        user = "${vars.user}";
+        user = "${username}";
         extraOptions = {
           ControlMaster = "no";
           # FIXME: there is an issue with key length on the host when using a YubiKey with SSH.
@@ -67,10 +70,5 @@
     };
     serverAliveInterval = 300;
     serverAliveCountMax = 2;
-  };
-
-  home.file.".ssh/id_yubikey.pub" = {
-    enable = true;
-    text = vars.sshKey;
   };
 }

@@ -92,16 +92,11 @@ rec {
           }
         );
 
-      # User config
       vars = {
-        name = "Andrew Lubawy";
-        email = "andrew@andrewlubawy.com";
-        user = "drew";
-        sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBz5R5RsCSXxzIduOV98T4yASCRbYrKVbzB7iZy9746P";
-        gpgKey = "6EEC861B7641B37D";
-        homeDomain = "home.andrewlubawy.com";
+        darwinStateVersion = 4;
         stateVersion = "24.05";
         flake = "github:dlubawy/nix-configs/main";
+        admin = (import ./users/drew.nix).nix-configs.users.drew;
         inherit nixConfig;
       };
 
@@ -136,7 +131,7 @@ rec {
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       darwinModules = import ./modules/darwin;
-      homeManagerModules = import ./modules/home-manager;
+      homeManagerModules = import ./modules/home-manager { inherit inputs; };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
@@ -147,21 +142,10 @@ rec {
         #   };
         #   modules = [ ./hosts/kepler ];
         # };
-
-        # VM (Nix Build System)
-        nixBuilder = mkSystem {
-          name = "nix-builder";
-          system = "x86_64-linux";
-        };
         # WSL
         syringa = mkSystem {
           name = "syringa";
           system = "x86_64-linux";
-        };
-        # Raspberry Pi 3+
-        pi = mkSystem {
-          name = "pi";
-          system = "aarch64-linux";
         };
         # Banana Pi BPI-R3
         bpi = mkSystem {
@@ -180,12 +164,15 @@ rec {
 
       homeConfigurations = {
         # Steam Deck
-        "${vars.user}@companioncube" = home-manager.lib.homeManagerConfiguration {
+        "drew@companioncube" = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { system = "x86_64-linux"; };
           extraSpecialArgs = {
             inherit inputs outputs vars;
           };
-          modules = [ self.homeManagerModules.default ];
+          modules = [
+            self.homeManagerModules.default
+            ./users/drew.nix
+          ];
         };
       };
 

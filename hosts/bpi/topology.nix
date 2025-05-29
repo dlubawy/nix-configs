@@ -1,9 +1,11 @@
 {
   lib,
   config,
-  vars,
   ...
 }:
+let
+  homeDomain = config.homeDomain;
+in
 with config.lib.topology;
 {
   topology = {
@@ -148,9 +150,9 @@ with config.lib.topology;
       services = {
         loki.hidden = true;
         prometheus.hidden = true;
-        adguardhome.info = "${vars.homeDomain}/adguard";
-        grafana.info = lib.mkForce "${vars.homeDomain}/grafana";
-        nginx.info = "${vars.homeDomain}";
+        adguardhome.info = "${homeDomain}/adguard";
+        grafana.info = lib.mkForce "${homeDomain}/grafana";
+        nginx.info = "${homeDomain}";
       };
     };
   };

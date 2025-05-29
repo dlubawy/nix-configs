@@ -20,6 +20,7 @@ in
     ./ssh.nix
     ./starship.nix
     ./tmux.nix
+    ./user.nix
     ./zsh.nix
     ./hyprland.nix
     ./qtpass.nix
@@ -61,8 +62,6 @@ in
     };
 
     home = {
-      username = "${vars.user}";
-      homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${vars.user}";
       preferXdgDirectories = true;
 
       packages =

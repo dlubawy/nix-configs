@@ -10,11 +10,12 @@
 {
   imports = [
     inputs.nixvim.nixDarwinModules.nixvim
+    ./users.nix
   ];
 
   options = {
     systemName = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "System name for deriving admin username and computer hostname";
     };
   };
@@ -51,15 +52,6 @@
           home = "/Users/${systemName}";
           initialPassword = "${systemName}";
         };
-        # Regular user
-        users.${vars.user} = {
-          isNormalUser = true;
-          isTokenUser = true;
-          isHidden = false;
-          shell = /bin/zsh;
-          description = "${vars.name}";
-          initialPassword = "${vars.user}";
-        };
       };
 
       environment = {
@@ -67,7 +59,7 @@
         shellAliases = {
           sudoedit = "sudo -e ";
           "${systemName}" =
-            "sudo -Hu ${systemName} darwin-rebuild switch --flake github:dlubawy/nix-configs/main#${systemName}";
+            "sudo -Hu ${systemName} darwin-rebuild switch --flake ${vars.flake}#${systemName}";
         };
         variables = {
           EDITOR = "nvim";
@@ -133,8 +125,8 @@
             "@admin"
           ];
         };
-        # NOTE: disabled by default to save resources when not in use.
-        # Change package attribute to switch between aarch64 and x86_64 architectures.
+
+        # NOTE: Change package attribute to switch between aarch64 and x86_64 architectures.
         # Need to build the default linux-builder first before using `config.virtualisation`.
         linux-builder = {
           enable = true;
@@ -198,25 +190,13 @@
             TrackpadRightClick = true;
           };
         };
-        stateVersion = 4;
+        stateVersion = vars.darwinStateVersion;
       };
 
       security = {
         pam = {
           enableSudoTouchIdAuth = true;
           enablePamReattach = true;
-        };
-        # Allows standard user to run darwin-rebuild through the admin user
-        # sudo -Hu ${systemName} darwin-rebuild
-        sudo.extraConfig = ''
-          ${vars.user} ALL = (${systemName}) ALL
-        '';
-      };
-
-      home-manager = {
-        users.${vars.user} = {
-          gui.enable = true;
-          programs.firefox.package = pkgs.firefox-bin;
         };
       };
 

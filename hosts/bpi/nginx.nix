@@ -4,6 +4,9 @@
   vars,
   ...
 }:
+let
+  homeDomain = config.homeDomain;
+in
 {
   users.users.nginx.extraGroups = [ "acme" ];
   services.nginx = {
@@ -13,19 +16,19 @@
         listenAddresses = [
           "192.168.1.1"
         ];
-        globalRedirect = "${vars.homeDomain}/adguard";
+        globalRedirect = "${homeDomain}/adguard";
       };
 
       "grafana.home" = {
         listenAddresses = [
           "192.168.1.1"
         ];
-        globalRedirect = "${vars.homeDomain}/grafana";
+        globalRedirect = "${homeDomain}/grafana";
       };
 
-      "${vars.homeDomain}" = {
+      "${homeDomain}" = {
         forceSSL = true;
-        useACMEHost = "${vars.homeDomain}";
+        useACMEHost = "${homeDomain}";
         listenAddresses = [
           "192.168.1.1"
         ];

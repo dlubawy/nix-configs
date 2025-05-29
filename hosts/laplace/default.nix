@@ -1,4 +1,5 @@
 { ... }:
 {
+  imports = [ ../../users ];
   systemName = "laplace";
 }
