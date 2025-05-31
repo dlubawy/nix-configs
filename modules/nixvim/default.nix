@@ -124,10 +124,12 @@
     comment.enable = true;
     copilot-lua = {
       enable = true;
-      panel.enabled = false;
-      suggestion.enabled = false;
-      filetypes = {
-        "*" = false;
+      settings = {
+        panel.enabled = false;
+        suggestion.enabled = false;
+        filetypes = {
+          "*" = false;
+        };
       };
     };
     copilot-cmp.enable = true;
