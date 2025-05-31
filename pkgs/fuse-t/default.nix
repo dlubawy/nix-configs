@@ -8,7 +8,6 @@
   fetchFromGitHub,
   cmake,
   libiconv,
-  DiskArbitration,
 }:
 
 let
@@ -31,7 +30,6 @@ let
       p7zip
       libtapi
     ];
-    propagatedBuildInputs = [ DiskArbitration ];
 
     unpackPhase = ''
       7z x $src
@@ -96,10 +94,9 @@ let
     # TODO: remove `.out` after https://github.com/NixOS/nixpkgs/pull/346043 is merged to `master`
     buildInputs = [
       libiconv.out
-      DiskArbitration
     ];
 
-    propagatedBuildInputs = [ DiskArbitration ];
+    propagatedBuildInputs = [ ];
 
     # Removes a lot of warning spam
     # `warning: 'pthread_setugid_np' is deprecated: Use of per-thread security contexts is error-prone and discouraged.`
