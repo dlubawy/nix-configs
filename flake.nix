@@ -15,9 +15,11 @@ rec {
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
 
     # System modules
+    # FIXME: Change back to darwin branch after upgrade to 25.05
+    # changed to nixpkgs branch to bypass issue with nodejs
     darwin = {
       url = "github:dlubawy/nix-darwin/develop";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
