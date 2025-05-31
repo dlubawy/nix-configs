@@ -12,8 +12,8 @@
   ];
   plugins.image = {
     enable = helpers.enableExceptInTests;
-    backend = lib.mkDefault "ueberzug";
     settings = {
+      backend = lib.mkDefault "ueberzug";
       integrations = {
         markdown = {
           enabled = true;
