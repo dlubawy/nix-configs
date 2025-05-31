@@ -1,4 +1,7 @@
-{ config, vars, ... }:
+{ config, ... }:
+let
+  homeDomain = config.homeDomain;
+in
 {
   age = {
     secrets = {
@@ -14,7 +17,7 @@
       analytics.reporting_enabled = false;
       server = {
         http_port = 3001;
-        domain = "${vars.homeDomain}";
+        domain = "${homeDomain}";
         root_url = "https://%(domain)s/grafana/";
       };
     };

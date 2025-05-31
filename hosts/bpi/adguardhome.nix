@@ -2,9 +2,11 @@
   lib,
   config,
   pkgs,
-  vars,
   ...
 }:
+let
+  homeDomain = config.homeDomain;
+in
 {
   age = {
     secrets = {
@@ -54,14 +56,14 @@
 
     serviceConfig.LoadCredential =
       let
-        certDir = config.security.acme.certs."${vars.homeDomain}".directory;
+        certDir = config.security.acme.certs."${homeDomain}".directory;
       in
       [
         "cert.pem:${certDir}/cert.pem"
         "key.pem:${certDir}/key.pem"
       ];
 
-    requires = [ "acme-finished-${vars.homeDomain}.target" ];
+    requires = [ "acme-finished-${homeDomain}.target" ];
   };
 
   services.adguardhome = {
@@ -81,7 +83,7 @@
         in
         {
           enabled = true;
-          server_name = "${vars.homeDomain}";
+          server_name = "${homeDomain}";
           force_https = false;
           allow_unencrypted_doh = true;
           port_https = 0;
@@ -150,7 +152,7 @@
       filtering = {
         rewrites = [
           {
-            domain = "${vars.homeDomain}";
+            domain = "${homeDomain}";
             answer = "192.168.1.1";
           }
           {

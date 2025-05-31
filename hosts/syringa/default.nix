@@ -1,14 +1,13 @@
 {
   lib,
+  config,
   inputs,
-  outputs,
-  vars,
   ...
 }:
 {
   imports = [
     inputs.nixos-wsl.nixosModules.default
-    ../../nixos
+    ../../users
   ];
 
   # NOTE: disable so WSL can work
@@ -16,15 +15,18 @@
   systemd.sysusers.enable = lib.mkForce false;
   system.etc.overlay.enable = lib.mkForce false;
 
-  wsl = {
-    enable = true;
-    defaultUser = "${vars.user}";
-  };
-
-  home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs vars;
+  wsl =
+    let
+      username = (builtins.head (lib.attrNames config.nix-configs.users));
+    in
+    {
+      enable = true;
+      defaultUser = "${username}";
     };
-    users.${vars.user}.gui.enable = false;
-  };
+
+  home-manager.users = (
+    lib.concatMapAttrs (name: value: {
+      ${name}.gui.enable = false;
+    }) config.nix-configs.users
+  );
 }

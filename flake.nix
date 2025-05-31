@@ -15,9 +15,11 @@ rec {
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
 
     # System modules
+    # FIXME: Change back to darwin branch after upgrade to 25.05
+    # changed to nixpkgs branch to bypass issue with nodejs
     darwin = {
       url = "github:dlubawy/nix-darwin/develop";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
@@ -45,6 +47,10 @@ rec {
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-topology = {
+      url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Overlays
     nixpkgs-firefox-darwin = {
@@ -63,6 +69,7 @@ rec {
       nixvim,
       agenix,
       pre-commit-hooks,
+      nix-topology,
       ...
     }@inputs:
     let
@@ -82,22 +89,42 @@ rec {
             pkgs = import nixpkgs {
               inherit system;
               config.allowUnfree = true;
+              overlays = [ nix-topology.overlays.default ];
             };
           }
         );
 
-      # User config
       vars = {
-        name = "Andrew Lubawy";
-        email = "andrew@andrewlubawy.com";
-        user = "drew";
-        sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBz5R5RsCSXxzIduOV98T4yASCRbYrKVbzB7iZy9746P";
-        gpgKey = "6EEC861B7641B37D";
-        homeDomain = "home.andrewlubawy.com";
+        darwinStateVersion = 4;
         stateVersion = "24.05";
         flake = "github:dlubawy/nix-configs/main";
+        admin = (import ./users/drew.nix).nix-configs.users.drew;
         inherit nixConfig;
       };
+
+      mkSystem =
+        {
+          name,
+          system,
+        }:
+        let
+          inherit (nixpkgs) lib;
+          isDarwin = lib.strings.hasSuffix "darwin" system;
+          systemBuilder = if isDarwin then darwin.lib.darwinSystem else lib.nixosSystem;
+          systemModule = if isDarwin then self.darwinModules.default else self.nixosModules.default;
+          homeModule = if isDarwin then self.homeManagerModules.darwin else self.homeManagerModules.nixos;
+        in
+        systemBuilder {
+          inherit system;
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [
+            systemModule
+            homeModule
+            ./hosts/${name}
+          ];
+        };
     in
     rec {
       packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system) pkgs);
@@ -105,7 +132,8 @@ rec {
 
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
-      homeManagerModules = import ./modules/home-manager;
+      darwinModules = import ./modules/darwin;
+      homeManagerModules = import ./modules/home-manager { inherit inputs; };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
@@ -116,60 +144,37 @@ rec {
         #   };
         #   modules = [ ./hosts/kepler ];
         # };
-
-        # VM (Nix Build System)
-        nixBuilder = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/nix-builder ];
-        };
         # WSL
-        syringa = nixpkgs.lib.nixosSystem {
+        syringa = mkSystem {
+          name = "syringa";
           system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/syringa ];
-        };
-        # Raspberry Pi 3+
-        pi = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/pi ];
         };
         # Banana Pi BPI-R3
-        bpi = nixpkgs.lib.nixosSystem {
+        bpi = mkSystem {
+          name = "bpi";
           system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./hosts/bpi ];
         };
       };
 
       darwinConfigurations = {
         # MacBook M1
-        laplace = darwin.lib.darwinSystem {
+        laplace = mkSystem {
+          name = "laplace";
           system = "aarch64-darwin";
-          specialArgs = {
-            inherit inputs outputs vars;
-          };
-          modules = [ ./darwin ];
         };
       };
 
       homeConfigurations = {
         # Steam Deck
-        "${vars.user}@companioncube" = home-manager.lib.homeManagerConfiguration {
+        "drew@companioncube" = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { system = "x86_64-linux"; };
           extraSpecialArgs = {
             inherit inputs outputs vars;
           };
-          modules = [ ./home-manager ];
+          modules = [
+            self.homeManagerModules.default
+            ./users/drew.nix
+          ];
         };
       };
 
@@ -180,6 +185,17 @@ rec {
           }).config.system.build.sdImage;
         bpi = nixosConfigurations.bpi.config.system.build.sdImage;
       };
+
+      topology = forAllSystems (
+        { pkgs }:
+        import nix-topology {
+          inherit pkgs;
+          specialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [ ./modules/topology ];
+        }
+      );
 
       checks = forAllSystems (
         { pkgs }:
@@ -280,8 +296,8 @@ rec {
             };
           };
           nixvimCheck = nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
-            pkgs = pkgs;
-            module = import ./nixvim;
+            inherit pkgs;
+            module = import ./modules/nixvim;
           };
         }
       );
@@ -294,6 +310,30 @@ rec {
             buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
               inputs.agenix.packages.${system}.default
+              (writeScriptBin "sync-flake-inputs" ''
+                gitRoot="$(${pkgs.git}/bin/git rev-parse --show-toplevel)"
+                if [ -z "$gitRoot" ]; then
+                  echo "Not a git project"
+                  exit 1
+                fi
+
+                version="$1"
+                if [ -z "$version" ]; then
+                  version="$(${pkgs.gnugrep}/bin/grep --color=never -o 'release-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
+                  if [ -z "$version" ]; then
+                    echo "Could not determine root flake version"
+                    exit 1
+                  fi
+                fi
+
+                for template in "$gitRoot"/templates/*; do
+                  pushd "$template"
+                  ${pkgs.gnused}/bin/sed -i "s/release-[0-9]\+.[0-9]\+/release-''${version/*-}/g" ./flake.nix
+                  cp ../../flake.lock ./flake.lock
+                  nix flake lock
+                  popd
+                done
+              '')
               nil
               nixfmt-rfc-style
             ];
@@ -322,9 +362,9 @@ rec {
           path = ./templates/nix;
           description = "Nix development environment";
         };
-        node = {
-          path = ./templates/node;
-          description = "Node.js development environment";
+        deno = {
+          path = ./templates/deno;
+          description = "Deno development environment";
         };
         python = {
           path = ./templates/python;

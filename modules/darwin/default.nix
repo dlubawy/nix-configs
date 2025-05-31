@@ -1,0 +1,3 @@
+{
+  default = import ./darwin.nix;
+}

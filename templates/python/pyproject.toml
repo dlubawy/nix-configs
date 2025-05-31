@@ -1,0 +1,13 @@
+[project]
+name = "template"
+version = "0.1.0"
+description = "idk"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+template = "template:main"

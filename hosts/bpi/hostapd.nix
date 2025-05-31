@@ -111,6 +111,7 @@
           countryCode = "US";
           networks = {
             wlan0 = {
+              logLevel = 1;
               apIsolate = true;
               authentication = {
                 mode = "wpa3-sae";
@@ -127,6 +128,7 @@
                 uapsd_advertisement_enabled = 1;
                 sae_confirm_immediate = 1;
                 ieee80211w = lib.mkForce 2;
+                disassoc_low_ack = 1;
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -211,6 +213,7 @@
           countryCode = "US";
           networks = {
             wlan1 = {
+              logLevel = 1;
               apIsolate = true;
               authentication = {
                 mode = "wpa3-sae";
