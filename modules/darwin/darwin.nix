@@ -27,7 +27,9 @@
     {
       nixpkgs = {
         system = "aarch64-darwin";
-        overlays = (builtins.attrValues outputs.overlays) ++ [ inputs.nixpkgs-firefox-darwin.overlay ];
+        overlays = (builtins.attrValues outputs.overlays) ++ [
+          inputs.nixpkgs-firefox-darwin.overlay
+        ];
         config = {
           allowUnfree = true;
         };
@@ -57,9 +59,9 @@
       environment = {
         shells = with pkgs; [ zsh ];
         shellAliases = {
-          sudoedit = "sudo -e ";
+          sudoedit = "sudo -Hu laplace sudo -e ";
           "${systemName}" =
-            "sudo -Hu ${systemName} darwin-rebuild switch --flake ${vars.flake}#${systemName}";
+            "sudo -Hu ${systemName} sudo darwin-rebuild switch --flake ${vars.flake}#${systemName}";
         };
         variables = {
           EDITOR = "nvim";
@@ -79,7 +81,7 @@
       };
 
       fonts = {
-        packages = with pkgs; [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
+        packages = with pkgs; [ nerd-fonts.fantasque-sans-mono ];
       };
 
       programs = {
@@ -101,7 +103,6 @@
       };
 
       services = {
-        nix-daemon.enable = true;
         tailscale = {
           enable = true;
           overrideLocalDns = true;
@@ -109,11 +110,11 @@
       };
 
       nix = {
+        enable = true;
         gc = {
           automatic = true;
           interval.Day = 7;
           options = "--delete-older-than 7d";
-          user = "${systemName}";
         };
         optimise.automatic = true;
         settings = {
@@ -160,48 +161,23 @@
             allowdownloadsignedenabled = 0;
             allowsignedenabled = 0;
           };
-          NSGlobalDomain = {
-            "com.apple.swipescrolldirection" = false;
-            NSDocumentSaveNewDocumentsToCloud = false;
-          };
-
-          dock = {
-            autohide = false;
-            largesize = 72;
-            tilesize = 48;
-            magnification = true;
-            mineffect = "genie";
-            orientation = "bottom";
-            showhidden = false;
-            show-recents = false;
-          };
-
-          finder = {
-            QuitMenuItem = false;
-          };
-
-          screensaver = {
-            askForPassword = true;
-            askForPasswordDelay = 0;
-          };
-
-          trackpad = {
-            Clicking = true;
-            TrackpadRightClick = true;
-          };
         };
         stateVersion = vars.darwinStateVersion;
       };
 
       security = {
-        pam = {
-          enableSudoTouchIdAuth = true;
-          enablePamReattach = true;
+        pam.services = {
+          sudo_local = {
+            enable = true;
+            reattach = true;
+            touchIdAuth = true;
+          };
         };
       };
 
       homebrew = {
         enable = true;
+        user = "laplace";
         onActivation = {
           autoUpdate = false;
           upgrade = false;

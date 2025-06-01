@@ -16,7 +16,7 @@ rec {
 
     # System modules
     darwin = {
-      url = "github:dlubawy/nix-darwin/develop";
+      url = "github:dlubawy/nix-darwin/develop-25.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     home-manager = {
