@@ -54,8 +54,8 @@ in
       };
     };
 
-    nixpkgs = {
-      overlays = lib.mkIf (!useGlobalPkgs) (builtins.attrValues outputs.overlays);
+    nixpkgs = lib.mkIf (!useGlobalPkgs) {
+      overlays = (builtins.attrValues outputs.overlays);
       config = {
         allowUnfree = true;
       };

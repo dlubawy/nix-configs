@@ -21,7 +21,6 @@
     ]
     ++ prev.lib.optionals prev.stdenv.hostPlatform.isDarwin [
       final.fuse-t
-      prev.darwin.apple_sdk.frameworks.DiskArbitration
     ];
   postInstall = ''
     wrapProgram $out/bin/ntfs-3g --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"

@@ -5,9 +5,7 @@ let
   allPackages = {
     aarch64-darwin = pkgs: {
       # example = pkgs.callPackage ./example { };
-      fuse-t = pkgs.callPackage ./fuse-t {
-        DiskArbitration = pkgs.darwin.apple_sdk.frameworks.DiskArbitration;
-      };
+      fuse-t = pkgs.callPackage ./fuse-t { };
     };
     x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {

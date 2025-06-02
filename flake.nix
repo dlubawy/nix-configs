@@ -10,19 +10,20 @@ rec {
 
   inputs = {
     # Different nixpkgs sources
-    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
 
     # System modules
     darwin = {
-      url = "github:dlubawy/nix-darwin/develop";
+      url = "github:dlubawy/nix-darwin/develop-25.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # FIXME: update branch when upstream is updated to 25.05
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/2411.6.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -34,15 +35,16 @@ rec {
 
     # Supporting modules
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-24.11";
+      url = "github:nix-community/nixvim/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
       url = "github:dlubawy/agenix/armor_support";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # FIXME: use main when merged - https://github.com/cachix/git-hooks.nix/pull/594
     pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix/master";
+      url = "github:cachix/git-hooks.nix/8f917ec50b90d1c3221821e0def78d622a0e07a5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-topology = {
@@ -93,8 +95,8 @@ rec {
         );
 
       vars = {
-        darwinStateVersion = 4;
-        stateVersion = "24.05";
+        darwinStateVersion = 6;
+        stateVersion = "25.05";
         flake = "github:dlubawy/nix-configs/main";
         admin = (import ./users/drew.nix).nix-configs.users.drew;
         inherit nixConfig;

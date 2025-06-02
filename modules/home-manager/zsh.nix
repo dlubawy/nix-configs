@@ -100,7 +100,7 @@
       # Aliases
       qrdecode = "zbarimage";
     };
-    initExtra = ''
+    initContent = ''
       cachix-push-flake() {
           nix flake archive --json \
           | jq -r '.path,(.inputs|to_entries[].value.path)' \

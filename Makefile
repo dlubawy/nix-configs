@@ -55,11 +55,11 @@ topology:
 laplace:
     ifdef DEBUG
 		sudo -u laplace sudo chown -R laplace:staff $(GIT_REPO) && \
-		(sudo -Hu laplace darwin-rebuild switch --flake $(GIT_REPO)\#laplace --show-trace --verbose || true) && \
+		(sudo -Hu laplace sudo darwin-rebuild switch --flake $(GIT_REPO)\#laplace --show-trace --verbose || true) && \
 		sudo -u laplace sudo chown -R $(USER):staff $(GIT_REPO)
     else
 		sudo -u laplace sudo chown -R laplace:staff $(GIT_REPO) && \
-		(sudo -Hu laplace darwin-rebuild switch --flake $(GIT_REPO)\#laplace || true) && \
+		(sudo -Hu laplace sudo darwin-rebuild switch --flake $(GIT_REPO)\#laplace || true) && \
 		sudo -u laplace sudo chown -R $(USER):staff $(GIT_REPO)
     endif
 

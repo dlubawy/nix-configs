@@ -122,11 +122,6 @@ let
 in
 {
   extraConfigLua = ''
-    require("orgmode").setup({
-      org_agenda_files = {"~/Documents/org/**/*.org"},
-      org_default_notes_file = "~/Documents/org/refile.org",
-      org_todo_keywords = { 'TODO(t)', 'WIP', 'HOLD', '|', 'DONE', 'CANCELLED' },
-    })
     require("org-roam").setup({
       directory = "~/Documents/org",
       templates = {
@@ -199,67 +194,81 @@ in
 
   extraPackages = with pkgs; [ pandoc ];
 
-  plugins.which-key = {
-    settings.spec = [
-      {
-        __unkeyed = "<leader>o";
-        group = "orgmode";
-      }
-      {
-        __unkeyed = "<leader>r";
-        group = "roam";
-      }
-      {
-        __unkeyed = "<leader>ra";
-        group = "alias";
-      }
-      {
-        __unkeyed = "<leader>ro";
-        group = "origin";
-      }
-      {
-        __unkeyed = "<leader>rd";
-        group = "dailies";
-      }
-    ];
+  plugins = {
+    orgmode = {
+      enable = true;
+      settings = {
+        org_agenda_files = [ "~/Documents/org/**/*.org" ];
+        org_default_notes_file = "~/Documents/org/refile.org";
+        org_todo_keywords = [
+          "TODO(t)"
+          "WIP"
+          "HOLD"
+          "|"
+          "DONE"
+          "CANCELLED"
+        ];
+      };
+    };
+    which-key = {
+      settings.spec = [
+        {
+          __unkeyed = "<leader>o";
+          group = "orgmode";
+        }
+        {
+          __unkeyed = "<leader>r";
+          group = "roam";
+        }
+        {
+          __unkeyed = "<leader>ra";
+          group = "alias";
+        }
+        {
+          __unkeyed = "<leader>ro";
+          group = "origin";
+        }
+        {
+          __unkeyed = "<leader>rd";
+          group = "dailies";
+        }
+      ];
+    };
   };
 
   extraPlugins = with pkgs; [
-    (vimUtils.buildVimPlugin {
-      name = "orgmode";
-      src = fetchFromGitHub {
-        owner = "nvim-orgmode";
-        repo = "orgmode";
-        rev = "0.3.5";
-        sha256 = "TUw+BSynn5KWGHZ1Qt3pStyLR+cbANTUJLywVrFV5is=";
-      };
-    })
     (vimUtils.buildVimPlugin {
       name = "org-bullets";
       src = fetchFromGitHub {
         owner = "nvim-orgmode";
         repo = "org-bullets.nvim";
-        rev = "ab8e1d860d61239c4fe187ead15f73bb2561acd1";
-        sha256 = "HbttsU5uq1RQjI2KBDx/mp+VO94DkJ3N6+1fSHvQNA0=";
+        rev = "21437cfa99c70f2c18977bffd423f912a7b832ea";
+        hash = "sha256-/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0=";
       };
+      buildInputs = [ vimPlugins.orgmode ];
     })
     (vimUtils.buildVimPlugin {
       name = "telescope-orgmode";
       src = fetchFromGitHub {
         owner = "nvim-orgmode";
         repo = "telescope-orgmode.nvim";
-        rev = "1.3.2";
-        sha256 = "N4BH8ysHo5lrQvYtoPCu+TFAmUt8zjzmrEdmr3MBW7A=";
+        rev = "1.3.3";
+        hash = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE=";
       };
+      buildInputs = [
+        vimPlugins.orgmode
+        vimPlugins.telescope-nvim
+      ];
     })
     (vimUtils.buildVimPlugin {
       name = "org-roam";
       src = fetchFromGitHub {
         owner = "chipsenkbeil";
         repo = "org-roam.nvim";
-        rev = "0.1.0";
-        sha256 = "n7GrZrM5W7QvM7805Li0VEBKc23KKbrxG3voL3otpLw=";
+        rev = "0.1.1";
+        hash = "sha256-TrRbZC9PCxtNv4w0rt5WB9sE/iOMY1jCDnP5qwLzRyE=";
       };
+      buildInputs = [ vimPlugins.orgmode ];
     })
   ];
 }
