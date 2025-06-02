@@ -131,8 +131,6 @@
         # Need to build the default linux-builder first before using `config.virtualisation`.
         linux-builder = {
           enable = true;
-          package = pkgs.darwin.linux-builder;
-          # package = pkgs.darwin.linux-builder-x86_64;
           ephemeral = true;
           maxJobs = 2;
           systems = [
@@ -140,6 +138,7 @@
             "x86_64-linux"
           ];
           config = {
+            boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
             virtualisation = {
               darwin-builder = {
                 diskSize = 50 * 1024;
