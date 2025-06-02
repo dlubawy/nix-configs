@@ -23,6 +23,7 @@ rec {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # FIXME: update branch when upstream is updated to 25.05
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/2411.6.0";
       inputs.nixpkgs.follows = "nixpkgs";
