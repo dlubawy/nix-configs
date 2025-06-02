@@ -1211,7 +1211,7 @@ let
           NET_ACT_CT = module;
 
           #NFS Client
-          NFS_FS = yes;
+          NFS_FS = lib.mkForce yes;
           NFS_V2 = yes;
           NFS_V3_ACL = yes;
           NFS_V4 = yes;
