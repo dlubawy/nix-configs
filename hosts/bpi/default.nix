@@ -15,6 +15,7 @@ in
     inputs.nixos-sbc.nixosModules.default
     ./adguardhome.nix
     ./grafana
+    ./hardware.nix
     ./hostapd.nix
     ./kernel
     ./loki.nix
