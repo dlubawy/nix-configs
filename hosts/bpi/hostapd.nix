@@ -128,7 +128,6 @@
                 uapsd_advertisement_enabled = 1;
                 sae_confirm_immediate = 1;
                 ieee80211w = lib.mkForce 2;
-                disassoc_low_ack = 1;
 
                 # VLAN
                 dynamic_vlan = 2;

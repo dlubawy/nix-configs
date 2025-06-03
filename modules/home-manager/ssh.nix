@@ -1,6 +1,16 @@
-{ config, vars, ... }:
+{
+  lib,
+  config,
+  vars,
+  ...
+}:
 let
   username = config.home.username;
+  sshKeys = lib.concatMap (file: [ "~/${file.target}" ]) (
+    lib.attrValues (
+      lib.filterAttrs (name: _: (lib.hasPrefix ".ssh" name && lib.hasSuffix ".pub" name)) config.home.file
+    )
+  );
 in
 {
   programs.ssh = {
@@ -29,7 +39,7 @@ in
           ControlMaster = "no";
         };
         identitiesOnly = true;
-        identityFile = [ "~/.ssh/id_yubikey.pub" ];
+        identityFile = [ ] ++ sshKeys;
       };
       "github.com" = {
         user = "git";
@@ -39,7 +49,7 @@ in
             "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com";
         };
         identitiesOnly = true;
-        identityFile = [ "~/.ssh/id_yubikey.pub" ];
+        identityFile = [ ] ++ sshKeys;
       };
       "rpi" = {
         hostname = "192.168.0.34";
@@ -52,7 +62,7 @@ in
           HostKeyAlgorithms = "ssh-ed25519";
         };
         identitiesOnly = true;
-        identityFile = [ "~/.ssh/id_yubikey.pub" ];
+        identityFile = [ ] ++ sshKeys;
       };
       "bpi" = {
         hostname = "192.168.1.1";
@@ -65,7 +75,7 @@ in
           HostKeyAlgorithms = "ssh-ed25519";
         };
         identitiesOnly = true;
-        identityFile = [ "~/.ssh/id_yubikey.pub" ];
+        identityFile = [ ] ++ sshKeys;
       };
     };
     serverAliveInterval = 300;

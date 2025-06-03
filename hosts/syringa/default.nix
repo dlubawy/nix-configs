@@ -25,7 +25,7 @@
     };
 
   home-manager.users = (
-    lib.concatMapAttrs (name: value: {
+    lib.concatMapAttrs (name: _: {
       ${name}.gui.enable = false;
     }) config.nix-configs.users
   );
