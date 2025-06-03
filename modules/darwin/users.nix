@@ -30,7 +30,7 @@ in
       # Allows standard user to run darwin-rebuild through the admin user
       # sudo -Hu ${systemName} darwin-rebuild
       sudo.extraConfig = lib.concatLines (
-        lib.concatMap (_: value: [ "${value.name} ALL = (${systemName}) ALL" ]) nixConfigUsers
+        lib.concatMap (user: [ "${user.name} ALL = (${systemName}) ALL" ]) (lib.attrValues nixConfigUsers)
       );
     };
 
