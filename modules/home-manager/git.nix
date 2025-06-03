@@ -5,14 +5,15 @@ in
 {
   programs.git = {
     enable = true;
-    userEmail = (lib.optionalString (user.email != null) "${user.email}");
-    userName = (lib.optionalString (user.fullName != null) "${user.fullName}");
+    userEmail = if user.email == "" then null else user.email;
+    userName = if user.fullName == "" then null else user.fullName;
     extraConfig = {
       init = {
         defaultBranch = "main";
       };
     };
     signing = lib.mkIf (user.gpgKey != null) {
+      format = "openpgp";
       key = "${user.gpgKey}";
       signByDefault = true;
     };

@@ -16,12 +16,13 @@ in
   config = {
     users.users = lib.concatMapAttrs (name: value: {
       ${name} = {
+        name = value.name;
         isNormalUser = true;
         isTokenUser = true;
         isHidden = false;
         shell = /bin/zsh;
-        description = "${value.fullName}";
-        initialPassword = "${name}";
+        description = value.fullName;
+        initialPassword = value.name;
       };
     }) nixConfigUsers;
 
@@ -29,11 +30,11 @@ in
       # Allows standard user to run darwin-rebuild through the admin user
       # sudo -Hu ${systemName} darwin-rebuild
       sudo.extraConfig = lib.concatLines (
-        lib.concatMap (name: [ "${name} ALL = (${systemName}) ALL" ]) (lib.attrNames nixConfigUsers)
+        lib.concatMap (_: value: [ "${value.name} ALL = (${systemName}) ALL" ]) nixConfigUsers
       );
     };
 
-    home-manager.users = lib.concatMapAttrs (name: value: {
+    home-manager.users = lib.concatMapAttrs (name: _: {
       ${name} = {
         gui.enable = true;
         programs.firefox.package = pkgs.firefox-bin.overrideAttrs (_: {

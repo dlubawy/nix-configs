@@ -6,8 +6,7 @@
 }:
 let
   nixConfigsUsers = config.nix-configs.users;
-  nixConfigsUsersNames = lib.attrNames nixConfigsUsers;
-  username = builtins.head nixConfigsUsersNames;
+  users = lib.attrValues nixConfigsUsers;
 in
 {
   imports = [
@@ -17,19 +16,23 @@ in
   config = {
     assertions = [
       {
-        assertion = (builtins.length nixConfigsUsersNames == 1);
-        message = "Only one user can be defined per home";
+        assertion = (builtins.length users == 1);
+        message = "A user must be defined and only one user can be defined per home";
       }
     ];
 
-    home = {
-      username = "${username}";
-      homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${username}";
+    home =
+      let
+        user = builtins.head users;
+      in
+      {
+        username = user.name;
+        homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${user.name}";
 
-      file.".ssh/id_yubikey.pub" = lib.mkIf (nixConfigsUsers.${username}.sshKey != null) {
-        enable = true;
-        text = nixConfigsUsers.${username}.sshKey;
+        file.".ssh/id_yubikey.pub" = lib.mkIf (user.sshKey != null) {
+          enable = true;
+          text = user.sshKey;
+        };
       };
-    };
   };
 }

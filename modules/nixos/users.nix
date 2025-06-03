@@ -16,14 +16,15 @@ in
     users.users = (
       lib.concatMapAttrs (name: value: {
         ${name} = {
+          name = value.name;
           isNormalUser = true;
           shell = pkgs.zsh;
-          description = "${value.fullName}";
+          description = value.fullName;
           extraGroups = [
             "wheel"
             "networkmanager"
           ];
-          initialPassword = "${name}";
+          initialPassword = value.name;
           openssh.authorizedKeys.keys = [ ] ++ (lib.optionals (value.sshKey != null) [ value.sshKey ]);
         };
       }) nixConfigsUsers
