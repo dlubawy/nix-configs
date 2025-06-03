@@ -127,8 +127,7 @@
           ];
         };
 
-        # NOTE: Change package attribute to switch between aarch64 and x86_64 architectures.
-        # Need to build the default linux-builder first before using `config.virtualisation`.
+        # NOTE: Need to build the default linux-builder first before using `config.virtualisation`.
         linux-builder = {
           enable = true;
           ephemeral = true;
