@@ -52,6 +52,13 @@ in
       };
     };
 
+    nix = {
+      settings = {
+        cores = 2;
+        max-jobs = 2;
+      };
+    };
+
     sbc = {
       wireless.wifi.acceptRegulatoryResponsibility = true;
       version = "0.3";
