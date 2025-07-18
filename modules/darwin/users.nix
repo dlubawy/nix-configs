@@ -37,9 +37,6 @@ in
     home-manager.users = lib.concatMapAttrs (name: _: {
       ${name} = {
         gui.enable = true;
-        programs.firefox.package = pkgs.firefox-bin.overrideAttrs (_: {
-          override = _: pkgs.firefox-bin;
-        });
         targets.darwin.defaults = {
           NSGlobalDomain = {
             "com.apple.swipescrolldirection" = false;
