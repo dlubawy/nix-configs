@@ -27,9 +27,7 @@
     {
       nixpkgs = {
         system = "aarch64-darwin";
-        overlays = (builtins.attrValues outputs.overlays) ++ [
-          inputs.nixpkgs-firefox-darwin.overlay
-        ];
+        overlays = (builtins.attrValues outputs.overlays);
         config = {
           allowUnfree = true;
         };
