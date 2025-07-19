@@ -110,6 +110,36 @@
             headline = "11.01 Inbox 📥";
           };
         };
+        org_agenda_custom_commands = {
+          p = {
+            description = "Personal agenda";
+            types = [
+              {
+                type = "agenda";
+                org_agenda_span = "day";
+              }
+              {
+                type = "tags";
+                match = ''inbox-ID>"10"'';
+                org_agenda_overriding_header = "Tasks to refile";
+              }
+              {
+                type = "tags_todo";
+                match = "/NEXT";
+                org_agenda_overriding_header = "Next actions";
+                org_agenda_todo_ignore_scheduled = "all";
+                org_agenda_todo_ignore_deadlines = "all";
+              }
+              {
+                type = "tags_todo";
+                match = "/TODO";
+                org_agenda_overriding_header = "Tasks";
+                org_agenda_todo_ignore_scheduled = "all";
+                org_agenda_todo_ignore_deadlines = "all";
+              }
+            ];
+          };
+        };
       };
     };
     which-key = {
