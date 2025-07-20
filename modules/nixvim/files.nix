@@ -28,6 +28,10 @@
     "ftplugin/org.lua" = {
       extraConfigLua = ''
         vim.cmd("TableModeEnable")
+        vim.keymap.set('i', '<F2>', '<cmd>lua require("orgmode").action("org_mappings.meta_return")<CR>', {
+          silent = true,
+          buffer = true,
+        })
       '';
     };
   };
