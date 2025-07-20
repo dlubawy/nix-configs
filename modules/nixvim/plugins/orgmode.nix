@@ -53,15 +53,15 @@
         org_capture_templates = {
           t = {
             description = "todo";
-            template = "* TODO %?\n%U\n%a\n";
+            template = "* TODO %?";
           };
           r = {
             description = "respond";
-            template = "* NEXT Respond to %^{from} on %^{subject}\nSCHEDULED: %t\n%U\n%a\n";
+            template = "* NEXT Respond to %^{from} on %^{subject}\nSCHEDULED: %t";
           };
           n = {
             description = "note";
-            template = "* %? :NOTE:\n%U\n%a\n";
+            template = "* %?";
           };
           j = {
             description = "journal";
@@ -76,8 +76,6 @@
             description = "habit";
             template = ''
               *** NEXT %?
-              %U
-              %a
               SCHEDULED: <%<%Y-%m-%d %a> .+1d/3d>
               :PROPERTIES:
               :STYLE: habit
@@ -103,7 +101,7 @@
               :Location:
               :END:
 
-              **** Birthday   :birthday:
+              **** %{Name}'s Birthday   :birthday:
               DEADLINE: <yyyy-mm-dd aaa +1y -4w>
             '';
             target = "~/Documents/org/10-19 Life admin/11 🙋 Me & other living things.org";
