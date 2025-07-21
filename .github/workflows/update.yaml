@@ -21,7 +21,7 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@9070c8924674eb79cc49246b8b6f2e14f4378eb0
+        uses: DeterminateSystems/update-flake-lock@c5930b397a673a70ca70be06020e943aeac310a1
         with:
           pr-title: "chore: update flake.lock" # Title of PR to be created
           pr-labels: | # Labels to be set on the PR
