@@ -31,6 +31,13 @@ in
         env = {
           TERM = "xterm-256color";
         };
+        keyboard.bindings = [
+          {
+            chars = ''''\\u001BOQ'';
+            key = "Return";
+            mods = "Shift";
+          }
+        ];
         # TODO: Add bell for linux systems
         bell.command = lib.mkIf pkgs.stdenv.isDarwin {
           program = bell.program;

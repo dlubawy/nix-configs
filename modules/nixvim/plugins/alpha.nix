@@ -111,7 +111,7 @@
           }
           {
             on_press = {
-              __raw = ''function() require("orgmode").action("agenda.prompt") end'';
+              __raw = ''function() require("orgmode").action("agenda.open_by_key", "p") end'';
             };
             opts = {
               shortcut = "a";
@@ -123,7 +123,7 @@
               keymap = [
                 "n"
                 "a"
-                ''<cmd>lua require("orgmode").action("agenda.prompt")<CR>''
+                ''<cmd>lua require("orgmode").action("agenda.open_by_key", "p")<CR>''
               ];
             };
             type = "button";

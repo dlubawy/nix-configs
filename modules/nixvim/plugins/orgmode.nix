@@ -1,149 +1,15 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
-  dailiesTemplate = ''
-    * Daily Intent
-
-    Goal
-    ___
-    %^{Goal}
-
-    * Log
-    ** WIP Daily Tasks [/]
-
-    ** Pings
-  '';
-  personTemplate = ''
-    * %^{Name}
-    :PROPERTIES:
-    :Full_Name:
-    :Email:
-    :Phone:
-    :WhatsApp:
-    :Telegram:
-    :Twitter:
-    :Current_Company:
-    :Current_Role:
-    :Location:
-    :END:
-
-    * Birthday   :bday:
-      DEADLINE: <yyyy-mm-dd aaa +1y -4w>
-
-    * How We Met
-  '';
-  resonanaceTemplate = ''
-    * %^{Title}
-    :PROPERTIES:
-    :Type: %^{Type||game|book|movie}
-    :Start:
-    :Fin:
-    :Killed:
-    :Rating:
-    :Digested:
-    :Creator:
-    :URL:
-    :END:
-
-    ** Actions
-
-    ** Key Ideas
-
-    ** Review
-
-    ** Quotes
-
-    ** Notes
-  '';
-  weeklyTemplate = ''
-    #+TITLE: %<%Yw%V>
-
-    * Intents
-      Week Goal:
-      |----+--------+-----------+----------+---------+---------+---------------+-----------|
-      |    | Mon    | Tue       | Wed      | Thu     | Fri     | Sat           | Sun       |
-      |----+--------+-----------+----------+---------+---------+---------------+-----------|
-      | 🐧 |        |           |          |         |         |               |           |
-      |----+--------+-----------+----------+---------+---------+---------------+-----------|
-      | \Delta  |   |           |          |         |         |               |           |
-      |----+--------+-----------+----------+---------+---------+---------------+-----------|
-    * Commits
-      |---------------------------------------+-----------------------------------|
-      | *This Week*                           | *Q1 OKRs*                         |
-      |---------------------------------------+-----------------------------------|
-      | 1. Health:                            | 1.                                |
-      | 2. Astro:                             | 2.                                |
-      | 3. Coding:                            | 3.                                |
-      | 4. PhD:                               | 4.                                |
-      | 5. Writing:                           | 5.                                |
-      |---------------------------------------+-----------------------------------|
-      | *Next 4 Weeks*                        | *Health Metrics*                  |
-      |---------------------------------------+-----------------------------------|
-      | 1.                                    | 1.                                |
-      | 2.                                    | 2.                                |
-      | 3.                                    | 3.                                |
-      | 4.                                    | 4.                                |
-      |---------------------------------------+-----------------------------------|
-      Watched:
-      Played:
-      Read:
-    * Buckets
-    ** Sharpen
-       2 wo/run + movie + game + read
-       ⬜ ⬜ ⬜ ⬜
-    ** Create
-       Blog + Book
-       ⬜ ⬜
-    ** Invest
-       COMA
-       ⬜
-    ** Learn
-       Astro + COMA Airflow + Rust
-       ⬜ ⬜ ⬜
-    ** Review, Plan, Prune
-       Buckets + Weekly Review
-       ✅ ⬜
-    * Weekly Review
-      ⬜✅💪❌🔼🔽¼ ½ ¾ ⅓ ⅔ ⅕ ⅖ ⅗ ⅘
-    ** Score: XX/XX ~ XX%
-    ** How'd it go?
-    ** *🏆 Pluses*
-       1.
-       2.
-       3.
-    ** 🔽 Minuses
-       1.
-       2.
-       3.
-    ** ▶️ Next
-       1.
-       2.
-       3.
-  '';
+  orgAgendaFiles = [ "~/Documents/org/**/*.org" ];
+  orgDefaultNotesFile = "~/Documents/org/01.01 Inbox 📥.org";
 in
 {
   extraConfigLua = ''
     require("org-roam").setup({
       directory = "~/Documents/org",
-      templates = {
-        d = {
-          description = "default",
-          template = "* %^{Title}",
-          target = "%[slug].org",
-        },
-        p = {
-          description = "person",
-          template = [=[${personTemplate}]=],
-          target = "%R/refs/prm/%[slug].org",
-        },
-        r = {
-          description = "resonance",
-          template = [=[${resonanaceTemplate}]=],
-          target = "%R/refs/rez/%[slug].org",
-        },
-        w = {
-          description = "weekly",
-          template = [=[${weeklyTemplate}]=],
-          target = "%R/logs/%<%Yw%V>.org",
+      extensions = {
+        dailies = {
+          directory = "~/Documents/10-19 Life admin/11 🙋 Me & other living things/11.32 My thoughts, journalling, diaries, & other writing",
         },
       },
       bindings = {
@@ -162,31 +28,6 @@ in
         toggle_roam_buffer = "<leader>rl",
         toggle_roam_buffer_fixed = "<leader>rb"
       },
-      extensions = {
-        dailies = {
-          directory = "logs",
-          templates = {
-            d = {
-              description = "default",
-              template = [=[${dailiesTemplate}]=],
-              target = "%<%Y-%m-%d>.org",
-            },
-          },
-          bindings = {
-            capture_date = "<leader>rdD",
-            capture_today = "<leader>rdN",
-            capture_tomorrow = "<leader>rdT",
-            capture_yesterday = "<leader>rdY",
-            find_directory = "<leader>rd.",
-            goto_date = "<leader>rdd",
-            goto_next_date = "<leader>rdf",
-            goto_prev_date = "<leader>rdb",
-            goto_today = "<leader>rdn",
-            goto_tomorrow = "<leader>rdt",
-            goto_yesterday = "<leader>rdy"
-          }
-        }
-      }
     })
     require("telescope").load_extension("orgmode")
     require("org-bullets").setup()
@@ -198,16 +39,109 @@ in
     orgmode = {
       enable = true;
       settings = {
-        org_agenda_files = [ "~/Documents/org/**/*.org" ];
-        org_default_notes_file = "~/Documents/org/refile.org";
+        org_agenda_files = orgAgendaFiles;
+        org_default_notes_file = orgDefaultNotesFile;
         org_todo_keywords = [
           "TODO(t)"
-          "WIP"
-          "HOLD"
+          "NEXT(n)"
+          "WAITING(w)"
+          "HOLD(h)"
           "|"
-          "DONE"
-          "CANCELLED"
+          "DONE(d)"
+          "CANCELLED(c)"
+          "MEETING(m)"
+          "PHONE(p)"
         ];
+        org_startup_indented = true;
+        org_adapt_indentation = false;
+        org_capture_templates = {
+          t = {
+            description = "todo";
+            template = "* TODO %?";
+          };
+          r = {
+            description = "respond";
+            template = "* NEXT Respond to %^{from} on %^{subject}\nSCHEDULED: %t";
+          };
+          n = {
+            description = "note";
+            template = "* %?";
+          };
+          j = {
+            description = "journal";
+            template = ''
+              *** %<%Y-%m-%d>
+              %?
+            '';
+            target = "~/Documents/org/10-19 Life admin/11 🙋 Me & other living things.org";
+            headline = "11.32 My thoughts, journaling, diaries, & other writing";
+          };
+          h = {
+            description = "habit";
+            template = ''
+              *** NEXT %?
+              SCHEDULED: <%<%Y-%m-%d %a> .+1d/3d>
+              :PROPERTIES:
+              :STYLE: habit
+              :REPEAT_TO_STATE: NEXT
+              :END:
+            '';
+            target = "~/Documents/org/10-19 Life admin/11 🙋 Me & other living things.org";
+            headline = "11.34 Habits, routines, & planning";
+          };
+          p = {
+            description = "person";
+            template = ''
+              *** %^{Name}
+              :PROPERTIES:
+              :Full_Name:
+              :Email:
+              :Phone:
+              :WhatsApp:
+              :Telegram:
+              :Twitter:
+              :Current_Company:
+              :Current_Role:
+              :Location:
+              :END:
+
+              **** %{Name}'s Birthday   :birthday:
+              DEADLINE: <yyyy-mm-dd aaa +1y -4w>
+            '';
+            target = "~/Documents/org/10-19 Life admin/11 🙋 Me & other living things.org";
+            headline = "11.01 Inbox 📥";
+          };
+        };
+        org_agenda_custom_commands = {
+          p = {
+            description = "Personal agenda";
+            types = [
+              {
+                type = "agenda";
+                org_agenda_span = "day";
+              }
+              {
+                type = "tags";
+                match = ''inbox-ID>"10"'';
+                org_agenda_overriding_header = "Tasks to refile";
+              }
+              {
+                type = "tags_todo";
+                match = "/NEXT";
+                org_agenda_overriding_header = "Next actions";
+                org_agenda_todo_ignore_scheduled = "all";
+                org_agenda_todo_ignore_deadlines = "all";
+              }
+              {
+                type = "tags_todo";
+                match = "/TODO";
+                org_agenda_overriding_header = "Tasks";
+                org_agenda_todo_ignore_scheduled = "all";
+                org_agenda_todo_ignore_deadlines = "all";
+              }
+            ];
+          };
+        };
       };
     };
     which-key = {
@@ -235,7 +169,41 @@ in
       ];
     };
   };
+  files = {
+    "lua/partials/org_cron.lua" = {
+      extraConfigLua = ''
+        require('orgmode').cron({
+          org_agenda_files = {${lib.strings.concatMapStringsSep "," (x: "'${x}'") orgAgendaFiles}},
+          org_default_notes_file = '${orgDefaultNotesFile}',
+          notifications = {
+            cron_notifier = function(tasks)
+              for _, task in ipairs(tasks) do
+                local title = string.format('%s (%s)', task.category, task.humanized_duration)
+                local subtitle = string.format('%s %s %s', string.rep('*', task.level), task.todo, task.title)
+                local date = string.format('%s: %s', task.type, task.time:to_string())
 
+                -- Linux
+                if vim.fn.executable('notify-send') == 1 then
+                  vim.system({
+                    'notify-send',
+                    '--icon=/path/to/orgmode/assets/nvim-orgmode-small.png',
+                    '--app-name=orgmode',
+                    title,
+                    string.format('%s\n%s', subtitle, date),
+                  })
+                end
+
+                -- MacOS
+                if vim.fn.executable('osascript') == 1 then
+                  vim.system({'osascript', '-e', string.format('display notification "%s" with title "%s" subtitle "%s"', date, title, subtitle)})
+                end
+              end
+            end
+          },
+        })
+      '';
+    };
+  };
   extraPlugins = with pkgs; [
     (vimUtils.buildVimPlugin {
       name = "org-bullets";
