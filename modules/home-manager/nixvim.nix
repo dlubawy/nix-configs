@@ -1,4 +1,10 @@
-{ lib, inputs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  inputs,
+  ...
+}:
 {
   imports = [ inputs.nixvim.homeManagerModules.nixvim ];
 
@@ -11,5 +17,21 @@
         vimdiffAlias = true;
       }
     ];
+  };
+
+  launchd.agents = lib.mkIf (pkgs.stdenv.isDarwin && config.gui.enable) {
+    orgmode = {
+      enable = true;
+      config =
+        let
+          orgmodeScript = pkgs.writeShellScriptBin "org_cron" ''
+            ${config.programs.nixvim.build.package.outPath}/bin/nvim --noplugin --headless -c 'lua require("partials.org_cron")'
+          '';
+        in
+        {
+          StartCalendarInterval = { };
+          Program = "${orgmodeScript}/bin/org_cron";
+        };
+    };
   };
 }

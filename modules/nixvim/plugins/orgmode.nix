@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
+let
+  orgAgendaFiles = [ "~/Documents/org/**/*.org" ];
+  orgDefaultNotesFile = "~/Documents/org/01.01 Inbox 📥.org";
+in
 {
   extraConfigLua = ''
     require("org-roam").setup({
@@ -35,8 +39,8 @@
     orgmode = {
       enable = true;
       settings = {
-        org_agenda_files = [ "~/Documents/org/**/*.org" ];
-        org_default_notes_file = "~/Documents/org/01.01 Inbox 📥.org";
+        org_agenda_files = orgAgendaFiles;
+        org_default_notes_file = orgDefaultNotesFile;
         org_todo_keywords = [
           "TODO(t)"
           "NEXT(n)"
@@ -165,7 +169,41 @@
       ];
     };
   };
+  files = {
+    "lua/partials/org_cron.lua" = {
+      extraConfigLua = ''
+        require('orgmode').cron({
+          org_agenda_files = {${lib.strings.concatMapStringsSep "," (x: "'${x}'") orgAgendaFiles}},
+          org_default_notes_file = '${orgDefaultNotesFile}',
+          notifications = {
+            cron_notifier = function(tasks)
+              for _, task in ipairs(tasks) do
+                local title = string.format('%s (%s)', task.category, task.humanized_duration)
+                local subtitle = string.format('%s %s %s', string.rep('*', task.level), task.todo, task.title)
+                local date = string.format('%s: %s', task.type, task.time:to_string())
 
+                -- Linux
+                if vim.fn.executable('notify-send') == 1 then
+                  vim.system({
+                    'notify-send',
+                    '--icon=/path/to/orgmode/assets/nvim-orgmode-small.png',
+                    '--app-name=orgmode',
+                    title,
+                    string.format('%s\n%s', subtitle, date),
+                  })
+                end
+
+                -- MacOS
+                if vim.fn.executable('osascript') == 1 then
+                  vim.system({'osascript', '-e', string.format('display notification "%s" with title "%s" subtitle "%s"', date, title, subtitle)})
+                end
+              end
+            end
+          },
+        })
+      '';
+    };
+  };
   extraPlugins = with pkgs; [
     (vimUtils.buildVimPlugin {
       name = "org-bullets";
