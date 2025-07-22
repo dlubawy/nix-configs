@@ -134,12 +134,17 @@ in
               }
               {
                 type = "tags_todo";
-                match = "/TODO";
+                match = "-inbox/TODO";
                 org_agenda_overriding_header = "Tasks";
                 org_agenda_todo_ignore_scheduled = "all";
                 org_agenda_todo_ignore_deadlines = "all";
               }
             ];
+          };
+        };
+        mappings = {
+          global = {
+            org_agenda = "<leader>oA";
           };
         };
       };
@@ -149,6 +154,15 @@ in
         {
           __unkeyed = "<leader>o";
           group = "orgmode";
+        }
+        {
+          __unkeyed = "<leader>oA";
+          desc = "org agenda prompt";
+        }
+        {
+          __unkeyed-1 = "<leader>oa";
+          __unkeyed-2 = ''<cmd>lua require("orgmode").action("agenda.open_by_key", "p")<CR>'';
+          desc = "org agenda";
         }
         {
           __unkeyed = "<leader>r";
