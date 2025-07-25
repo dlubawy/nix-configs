@@ -15,7 +15,8 @@ in
     publicKeys = [
       systems.pi
       systems.bpi
-    ] ++ allYubiKeys;
+    ]
+    ++ allYubiKeys;
     armor = true;
   };
   "wifi-sae.age" = {
