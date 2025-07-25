@@ -10,6 +10,26 @@ in
       extensions = {
         dailies = {
           directory = "~/Documents/10-19 Life admin/11 🙋 Me & other living things/11.32 My thoughts, journalling, diaries, & other writing",
+          templates = {
+            d = {
+              description = "diary",
+              template = "%?",
+              target = "%<%Y-%m-%d>.org",
+            },
+          },
+          bindings = {
+            capture_date = "<leader>rdD",
+            capture_today = "<leader>rdN",
+            capture_tomorrow = "<leader>rdT",
+            capture_yesterday = "<leader>rdY",
+            find_directory = "<leader>rd.",
+            goto_date = "<leader>rdd",
+            goto_next_date = "<leader>rdf",
+            goto_prev_date = "<leader>rdb",
+            goto_today = "<leader>rdn",
+            goto_tomorrow = "<leader>rdt",
+            goto_yesterday = "<leader>rdy"
+          }
         },
       },
       bindings = {
@@ -52,6 +72,16 @@ in
           "MEETING(m)"
           "PHONE(p)"
         ];
+        org_todo_keyword_faces = {
+          TDOD = '':foreground #e78284 :weight bold'';
+          NEXT = '':foreground #85c1dc :weight bold'';
+          DONE = '':foreground #a6d189 :weight bold'';
+          WAITING = '':foreground #ef9f76 :weight bold'';
+          HOLD = '':foreground #ca9ee6 :weight bold'';
+          CANCELLED = '':foreground #a6d189 :weight bold'';
+          MEETING = '':foreground #a6d189 :weight bold'';
+          PHONE = '':foreground #a6d189 :weight bold'';
+        };
         org_startup_indented = true;
         org_adapt_indentation = false;
         org_capture_templates = {
@@ -61,7 +91,7 @@ in
           };
           r = {
             description = "respond";
-            template = "* NEXT Respond to %^{from} on %^{subject}\nSCHEDULED: %t";
+            template = "* NEXT Respond to %^{From} on %^{Subject}\nSCHEDULED: %t";
           };
           n = {
             description = "note";
@@ -70,7 +100,8 @@ in
           j = {
             description = "journal";
             template = ''
-              *** %<%Y-%m-%d>
+              *** %^{Topic} - %<%Y-%m-%d>
+              %U
               %?
             '';
             target = "~/Documents/org/10-19 Life admin/11 🙋 Me & other living things.org";
@@ -92,8 +123,9 @@ in
           p = {
             description = "person";
             template = ''
-              *** %^{Name}
+              *** 11.XX+ %^{Name}
               :PROPERTIES:
+              :ID: 11.XX+XXX
               :Full_Name:
               :Email:
               :Phone:
@@ -105,11 +137,31 @@ in
               :Location:
               :END:
 
-              **** %{Name}'s Birthday   :birthday:
+              **** %^{Name}'s Birthday   :birthday:
               DEADLINE: <yyyy-mm-dd aaa +1y -4w>
             '';
             target = "~/Documents/org/10-19 Life admin/11 🙋 Me & other living things.org";
             headline = "11.01 Inbox 📥";
+          };
+          c = {
+            description = "call";
+            template = ''
+              * PHONE %^{Caller} :phone:
+              :LOGBOOK:
+              CLOCK: %U
+              :END:
+              %?
+            '';
+          };
+          m = {
+            description = "meeting";
+            template = ''
+              * MEETING with %^{Who} :meeting:
+              :LOGBOOK:
+              CLOCK: %U
+              :END:
+              %?
+            '';
           };
         };
         org_agenda_custom_commands = {
@@ -119,6 +171,7 @@ in
               {
                 type = "agenda";
                 org_agenda_span = "day";
+                org_agenda_tag_filter_preset = "-no_agenda";
               }
               {
                 type = "tags";
