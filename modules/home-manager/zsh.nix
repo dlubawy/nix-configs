@@ -31,7 +31,8 @@
         "urltools"
         "vi-mode"
         "web-search"
-      ] ++ (lib.optionals (!pkgs.stdenv.isDarwin) [ "systemd" ]);
+      ]
+      ++ (lib.optionals (!pkgs.stdenv.isDarwin) [ "systemd" ]);
       extraConfig = ''
         bindkey -M viins 'jk' vi-cmd-mode
       '';

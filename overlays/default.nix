@@ -21,6 +21,9 @@
       CopilotChat-nvim = prev.vimPlugins.CopilotChat-nvim.overrideAttrs (_: {
         nvimSkipModules = [ "CopilotChat.integrations.fzflua" ];
       });
+      render-markdown-nvim = prev.vimPlugins.render-markdown-nvim.overrideAttrs (_: {
+        nvimSkipModules = [ "render-markdown.config.patterns" ];
+      });
     };
   };
 
