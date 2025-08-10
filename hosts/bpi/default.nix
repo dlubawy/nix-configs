@@ -78,7 +78,21 @@ in
 
     home-manager.users = (
       lib.concatMapAttrs (name: _: {
-        ${name}.gui.enable = false;
+        ${name} = {
+          gui.enable = false;
+
+          systemd.user.services.taildrive = lib.mkIf config.services.tailscale.enable {
+            Unit = {
+              Description = "Tailscale drive service";
+              After = [ "tailscale.service" ];
+            };
+            Service = {
+              Type = "oneshot";
+              RemainAfterExit = true;
+              ExecStart = "${config.services.tailscale.package}/bin/tailscale drive %h/Documents/org";
+            };
+          };
+        };
       }) config.nix-configs.users
     );
 
