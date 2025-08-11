@@ -41,9 +41,8 @@ rec {
       url = "github:dlubawy/agenix/armor_support";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # FIXME: use main when merged - https://github.com/cachix/git-hooks.nix/pull/594
     pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix/8f917ec50b90d1c3221821e0def78d622a0e07a5";
+      url = "github:cachix/git-hooks.nix/9c52372878df6911f9afc1e2a1391f55e4dfc864";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-topology = {
