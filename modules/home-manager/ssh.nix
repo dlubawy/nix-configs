@@ -59,6 +59,7 @@ in
           ControlMaster = "no";
           # FIXME: there is an issue with key length on the host when using a YubiKey with SSH.
           # So we force it to ssh-ed25519, but the root cause should be fixed if possible.
+          # Might be related: https://github.com/djmdjm/openssh-portable-wip/pull/9
           HostKeyAlgorithms = "ssh-ed25519";
         };
         identitiesOnly = true;
@@ -72,6 +73,7 @@ in
           ControlMaster = "no";
           # FIXME: there is an issue with key length on the host when using a YubiKey with SSH.
           # So we force it to ssh-ed25519, but the root cause should be fixed if possible.
+          # Might be related: https://github.com/djmdjm/openssh-portable-wip/pull/9
           HostKeyAlgorithms = "ssh-ed25519";
         };
         identitiesOnly = true;
