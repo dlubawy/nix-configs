@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 23,
   "links": [],
   "panels": [
     {
@@ -41,8 +41,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -119,33 +118,149 @@
           ],
           "show": false
         },
-        "showHeader": true
+        "frameIndex": 58,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "address"
+          }
+        ]
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.0.2+security-01",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "networkctl_dhcp_server_leases_info{instance=\"192.168.1.1:9100\", job=\"router_metrics\"}",
+          "expr": "networkctl_dhcp_server_leases_info{instance=\"192.168.1.1:9100\", job=\"router_metrics\", hostname!=\"\"}",
           "format": "table",
-          "instant": true,
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
           "legendFormat": "__auto",
-          "range": false,
-          "refId": "A"
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "networkctl_dhcp_server_leases_info{instance=\"192.168.1.1:9100\", job=\"router_metrics\", hostname=\"\"}",
+          "format": "table",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
         }
       ],
       "title": "Leases",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Time": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "address": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "client_id": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "expiration": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "hostname": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "network": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Time (lastNotNull)": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "address": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "groupby"
+              },
+              "client_id": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "expiration (lastNotNull)": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "hostname (lastNotNull)": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "network (lastNotNull)": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        }
+      ],
       "transparent": true,
       "type": "table"
     }
   ],
   "preload": false,
   "refresh": "1m",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": []
@@ -158,6 +273,5 @@
   "timezone": "browser",
   "title": "DHCP Server",
   "uid": "bdy36esut6wowf",
-  "version": 1,
-  "weekStart": ""
+  "version": 1
 }
