@@ -5,6 +5,183 @@ groups:
     folder: Alerts
     interval: 1m
     rules:
+      - uid: aeuuzc1rol4w0b
+        title: Server src NAT Traffic
+        condition: threshold
+        data:
+          - refId: traffic
+            relativeTimeRange:
+              from: 10800
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              adhocFilters: []
+              datasource:
+                type: prometheus
+                uid: PBFA97CFB590B2093
+              editorMode: code
+              exemplar: false
+              expr: rate(nf_conntrack_nat_bytes{instance=~"192.168.1.1:9100",job=~"router_metrics",src=~"192.168.(1|20|30|40|50)..*"}[5m])
+              instant: false
+              interval: ""
+              intervalMs: 15000
+              legendFormat: Dest={{dst}}, Source={{src}}
+              maxDataPoints: 43200
+              range: true
+              refId: traffic
+          - refId: reducer
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: traffic
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: reducer
+              type: reduce
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1e+06
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: reducer
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: threshold
+              type: threshold
+        dashboardUid: fLi0yXAWk
+        panelId: 318
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: fLi0yXAWk
+          __panelId__: "318"
+          summary: High traffic detected
+        labels: {}
+        isPaused: false
+        notification_settings:
+          receiver: Telegram
+
+      - uid: eeuuzo3xlqn0ga
+        title: SSH Failure by User and IP
+        condition: threshold
+        data:
+          - refId: failures
+            queryType: range
+            relativeTimeRange:
+              from: 172800
+              to: 0
+            datasourceUid: FECRLA1BDO9OGF
+            model:
+              datasource:
+                type: loki
+                uid: FECRLA1BDO9OGF
+              editorMode: code
+              expr: count_over_time({host="bpi", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m])
+              instant: true
+              intervalMs: 1000
+              maxDataPoints: 43200
+              queryType: range
+              range: false
+              refId: failures
+          - refId: reduce
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - D
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: failures
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: reduce
+              type: reduce
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 10
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - E
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: reduce
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: threshold
+              type: threshold
+        dashboardUid: OMEuTfqVk
+        panelId: 23
+        noDataState: OK
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: OMEuTfqVk
+          __panelId__: "23"
+          description: Detected unusually high SSH login failures
+          summary: High SSH login failures
+        isPaused: false
+        notification_settings:
+          receiver: Telegram
+
       - uid: ced46ynzr9ywwf
         title: New DHCP lease
         condition: NewClients
@@ -23,8 +200,8 @@ groups:
               editorMode: code
               exemplar: false
               expr: |-
-                (count by(client_id, hostname) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""})) unless (count by(client_id, hostname) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""}[24h] offset 15m)) > bool 0) or
-                (count by(client_id) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""})) unless (count by(client_id) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""}[24h] offset 15m)) > bool 0)
+                (count by(client_id, hostname) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""})) unless (count by(client_id, hostname) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""}[48h] offset 15m)) > bool 0) or
+                (count by(client_id) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""})) unless (count by(client_id) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""}[48h] offset 15m)) > bool 0)
               format: table
               fullMetaSearch: false
               includeNullMetadata: true
