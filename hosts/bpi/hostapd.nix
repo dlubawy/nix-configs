@@ -148,7 +148,7 @@
                 rrm_beacon_report = 1;
                 rrm_neighbor_report = 1;
                 time_advertisement = 2;
-                time_zone = "America/Los_Angeles";
+                time_zone = "PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00";
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
 
@@ -229,6 +229,7 @@
                 uapsd_advertisement_enabled = 1;
                 sae_confirm_immediate = 1;
                 ieee80211w = lib.mkForce 2;
+                disassoc_low_ack = 1;
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -249,7 +250,7 @@
                 rrm_beacon_report = 1;
                 rrm_neighbor_report = 1;
                 time_advertisement = 2;
-                time_zone = "America/Los_Angeles";
+                time_zone = "PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00";
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
 
