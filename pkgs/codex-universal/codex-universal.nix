@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, nixpkgs, ... }:
 let
   inherit (pkgs)
     dockerTools
@@ -29,10 +29,13 @@ let
     copyToRoot = [
       (buildEnv {
         name = "image-root";
-        paths = with pkgs; [
-          bash
-          codex
-        ];
+        paths =
+          with (import nixpkgs {
+            system = (builtins.replaceStrings [ "darwin" ] [ "linux" ] pkgs.system);
+          }); [
+            bash
+            codex
+          ];
         pathsToLink = [ "/bin" ];
       })
       (buildEnv {

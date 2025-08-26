@@ -1,15 +1,15 @@
 # Custom packages, that can be defined similarly to ones from nixpkgs
 # You can build them using 'nix build .#example'
-system:
+system: nixpkgs:
 let
   allPackages = {
     aarch64-darwin = pkgs: {
       # example = pkgs.callPackage ./example { };
+      codex-universal = pkgs.callPackage ./codex-universal { inherit pkgs nixpkgs; };
       fuse-t = pkgs.callPackage ./fuse-t { };
     };
     x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {
-      codex-universal = pkgs.callPackage ./codex-universal { };
       iwinfo-lite = pkgs.callPackage ./iwinfo-lite { };
       hostap-wpa3 = pkgs.callPackage ./hostap-wpa3 { };
       prometheus-nf-conntrack = pkgs.callPackage ./prometheus-nf-conntrack { };
