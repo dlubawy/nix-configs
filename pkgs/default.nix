@@ -9,6 +9,7 @@ let
     };
     x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {
+      codex-universal = pkgs.callPackage ./codex-universal { };
       iwinfo-lite = pkgs.callPackage ./iwinfo-lite { };
       hostap-wpa3 = pkgs.callPackage ./hostap-wpa3 { };
       prometheus-nf-conntrack = pkgs.callPackage ./prometheus-nf-conntrack { };
