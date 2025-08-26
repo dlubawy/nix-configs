@@ -94,7 +94,7 @@ in
     ];
     text = ''
       machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]')"
-      ollamaPid="$(ps -ef | grep --color ollama | grep --color -v grep | awk -F' ' '{print $2}' | head -n 1)"
+      ollamaPid="$(pgrep ollama | head -n 1)"
       podmanOpts=("-it" "--rm")
 
       while [ $# -gt 0 ]; do
@@ -116,12 +116,12 @@ in
           ;;
           -w|--workspace)
             workingDir="''${2/*=/}"
-            podmanOpts+=("-v" "$workingDir:/workspace/$(basename $workingDir)" "-w" "/workspace/$(basename $workingDir)")
+            podmanOpts+=("-v" "$workingDir:/workspace/$(basename "$workingDir")" "-w" "/workspace/$(basename "$workingDir")")
             shift 2
           ;;
           --workspace=*)
             workingDir="''${1/*=/}"
-            podmanOpts+=("-v" "$workingDir:/workspace/$(basename $workingDir)" "-w" "/workspace/$(basename $workingDir)")
+            podmanOpts+=("-v" "$workingDir:/workspace/$(basename "$workingDir")" "-w" "/workspace/$(basename "$workingDir")")
             shift
           ;;
           *)
@@ -133,7 +133,7 @@ in
 
       if [ -z "$workingDir" ]; then
         workingDir="$(pwd)"
-        podmanOpts+=("-v" "$workingDir:/workspace/$(basename $workingDir)" "-w" "/workspace/$(basename $workingDir)")
+        podmanOpts+=("-v" "$workingDir:/workspace/$(basename "$workingDir")" "-w" "/workspace/$(basename "$workingDir")")
       fi
 
       if [ -z "$ollamaPid" ]; then
@@ -141,7 +141,7 @@ in
         exit 1
       fi
 
-      if [ -z $machine ]; then
+      if [ -z "$machine" ]; then
         podman machine init -m 4096
       fi
       podman machine start 2>/dev/null
