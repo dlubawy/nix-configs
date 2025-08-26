@@ -99,6 +99,7 @@ in
       machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]')"
       ollamaPid="$(pgrep ollama | head -n 1)"
       podmanOpts=("-it" "--rm")
+      workingDir=""
 
       while [ $# -gt 0 ]; do
         case "$1" in
@@ -118,7 +119,7 @@ in
             shift 2
           ;;
           -w|--workspace)
-            workingDir="''${2/*=/}"
+            workingDir="$2"
             podmanOpts+=("-v" "$workingDir:/workspace/$(basename "$workingDir")" "-w" "/workspace/$(basename "$workingDir")")
             shift 2
           ;;
@@ -134,7 +135,7 @@ in
         esac
       done
 
-      if [ -z "''${workingDir:-}" ]; then
+      if [ -z "$workingDir" ]; then
         workingDir="$(pwd)"
         podmanOpts+=("-v" "$workingDir:/workspace/$(basename "$workingDir")" "-w" "/workspace/$(basename "$workingDir")")
       fi
@@ -147,7 +148,9 @@ in
       if [ -z "$machine" ]; then
         podman machine init -m 4096
       fi
+      set +o errexit
       podman machine start 2>/dev/null
+      set -o errexit
 
       imageId="$(podman images localhost/codex-universal:${version} | tail -n 1 | awk -F' ' '{print $3}' | tr -s '[:blank:]')"
       if [ -z "$imageId" ]; then
