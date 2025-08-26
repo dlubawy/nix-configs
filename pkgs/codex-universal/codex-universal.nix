@@ -134,7 +134,7 @@ in
         esac
       done
 
-      if [ -z "$workingDir" ]; then
+      if [ -z "''${workingDir:-}" ]; then
         workingDir="$(pwd)"
         podmanOpts+=("-v" "$workingDir:/workspace/$(basename "$workingDir")" "-w" "/workspace/$(basename "$workingDir")")
       fi
