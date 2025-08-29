@@ -1,4 +1,4 @@
-{ pkgs, nixpkgs, ... }:
+{ pkgs, containerPkgs, ... }:
 let
   inherit (pkgs)
     dockerTools
@@ -6,7 +6,8 @@ let
     writeTextFile
     writeShellApplication
     ;
-  version = "0.1.0";
+
+  version = "${pkgs.codex.version}";
   codexImage = dockerTools.pullImage {
     imageName = "ghcr.io/openai/codex-universal";
     imageDigest = "sha256:49d6d4a7d50de60daa5fa50da3d8a153991208314924c4b1efa9b3d9e9ae4ce6";
@@ -14,12 +15,12 @@ let
   };
   codexConfig = writeTextFile {
     name = "codexConfig";
-    text = ./config.toml;
+    text = builtins.readFile ./config.toml;
     destination = "/root/.codex/config.toml";
   };
   codexAgents = writeTextFile {
     name = "codexAgents";
-    text = ./AGENTS.md;
+    text = builtins.readFile ./AGENTS.md;
     destination = "/root/.codex/AGENTS.md";
   };
   codexUniversal = dockerTools.buildImage {
@@ -29,13 +30,10 @@ let
     copyToRoot = [
       (buildEnv {
         name = "image-root";
-        paths =
-          with (import nixpkgs {
-            system = (builtins.replaceStrings [ "darwin" ] [ "linux" ] pkgs.system);
-          }); [
-            bash
-            codex
-          ];
+        paths = with containerPkgs; [
+          bash
+          codex
+        ];
         pathsToLink = [ "/bin" ];
       })
       (buildEnv {
@@ -98,7 +96,8 @@ in
     text = ''
       machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]')"
       ollamaPid="$(pgrep ollama | head -n 1)"
-      podmanOpts=("-it" "--rm")
+      codexHome="$HOME/.codex"
+      podmanOpts=("-it" "--rm" "-e" "CODEX_ENV_SWIFT_VERSION='''")
       workingDir=""
 
       while [ $# -gt 0 ]; do
@@ -109,14 +108,19 @@ in
             echo -e "Usage:\n codex-start [options]\n"
             echo -e "Examples:\n codex-start -w /home/user/code-project\n codex-start -p 3000:3000\n"
             echo -e "Options:"
-            echo -e " -h, --help       Print help message"
-            echo -e " -p               Port option to pass to container"
-            echo -e " -w, --workspace  Workspace to mount in container"
+            echo -e " -h, --help              Print help message"
+            echo -e " --rmi                   Removes the image when done"
+            echo -e " -p string               Port option to pass to container"
+            echo -e " -w, --workspace string  Workspace to mount in container"
             exit 0
           ;;
           -p)
             podmanOpts+=("-p" "$2")
             shift 2
+          ;;
+          --rmi)
+            podmanOpts+=("--rmi")
+            shift
           ;;
           -w|--workspace)
             workingDir="$2"
@@ -152,11 +156,13 @@ in
       podman machine start 2>/dev/null
       set -o errexit
 
-      imageId="$(podman images localhost/codex-universal:${version} | tail -n 1 | awk -F' ' '{print $3}' | tr -s '[:blank:]')"
+      imageId="$(podman images -n localhost/codex-universal:${version} | tail -n 1 | awk -F' ' '{print $3}' | tr -s '[:blank:]')"
       if [ -z "$imageId" ]; then
         echo "Loading container image..."
         podman image load -i ${codexUniversal}
       fi
+
+      mkdir -p "$codexHome"
 
       echo "Starting container..."
       podman run "''${podmanOpts[@]}" localhost/codex-universal:${version} '-c' '/usr/bin/sh -c "codex"'

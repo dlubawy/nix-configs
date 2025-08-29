@@ -119,7 +119,7 @@ rec {
         };
     in
     rec {
-      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system nixpkgs) pkgs);
+      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system inputs) pkgs);
       formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
 
       overlays = import ./overlays { inherit inputs; };
