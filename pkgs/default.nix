@@ -9,7 +9,7 @@ let
         inherit pkgs;
         containerPkgs = (
           import inputs.nixpkgs-unstable {
-            system = (builtins.replaceStrings [ "darwin" ] [ "linux" ] system);
+            system = (builtins.replaceStrings [ "darwin" ] [ "linux" ] pkgs.system);
           }
         );
       };
