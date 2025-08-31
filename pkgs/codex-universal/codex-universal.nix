@@ -7,7 +7,7 @@ let
     writeShellApplication
     ;
 
-  version = "${pkgs.codex.version}";
+  version = "${containerPkgs.codex.version}";
   codexImage = dockerTools.pullImage {
     imageName = "ghcr.io/openai/codex-universal";
     imageDigest = "sha256:49d6d4a7d50de60daa5fa50da3d8a153991208314924c4b1efa9b3d9e9ae4ce6";
