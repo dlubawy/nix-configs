@@ -9,9 +9,10 @@ let
 in
 symlinkJoin {
   name = "codex-universal";
-  paths = [
+  paths = with pkgs; [
     codex-log
     codex-enter
     codex-start
+    podman
   ];
 }
