@@ -97,7 +97,7 @@ in
     text = ''
       machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]')"
       ollamaPid="$(pgrep ollama | head -n 1)"
-      podmanOpts=("-it" "--rm" "-v" "codex-universal:/root/.codex")
+      podmanOpts=("-it" "--rm")
       workingDir=""
 
       while [ $# -gt 0 ]; do
