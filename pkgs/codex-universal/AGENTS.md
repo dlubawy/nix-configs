@@ -17,6 +17,7 @@ Do not use any other tool outside this list
 - Vite (Node/JavaScript/TypeScript): `pnpm create vite <project-name> <framework>`
 - UV (Python): `uv init <project-name>`
 - Cargo (Rust): `cargo init (--bin|--lib)`
+- Go (Go): `go mod init <project-name>/<module>`
 - SwiftPM (Swift): `swift package init --name <project-name> --type (library|executable|tool)`
 
 ## Testing instructions
