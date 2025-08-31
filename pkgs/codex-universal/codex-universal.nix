@@ -55,7 +55,8 @@ let
         "CODEX_ENV_PYTHON_VERSION=3.13"
         "CODEX_ENV_NODE_VERSION=22"
         "CODEX_ENV_RUST_VERSION=1.87.0"
-        "CODEX_ENV_SWIFT_VERSION=6.1"
+        "CODEX_ENV_GO_VERSION=1.23.8"
+        "CODEX_ENV_SWIFT_VERSION=6.1.1"
       ];
       WorkingDir = "/workspace";
     };
@@ -96,8 +97,7 @@ in
     text = ''
       machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]')"
       ollamaPid="$(pgrep ollama | head -n 1)"
-      codexHome="$HOME/.codex"
-      podmanOpts=("-it" "--rm" "-e" "CODEX_ENV_SWIFT_VERSION='''")
+      podmanOpts=("-it" "--rm" "-v" "codex-universal:/root/.codex")
       workingDir=""
 
       while [ $# -gt 0 ]; do
@@ -161,8 +161,6 @@ in
         echo "Loading container image..."
         podman image load -i ${codexUniversal}
       fi
-
-      mkdir -p "$codexHome"
 
       echo "Starting container..."
       podman run "''${podmanOpts[@]}" localhost/codex-universal:${version} '-c' '/usr/bin/sh -c "codex"'
