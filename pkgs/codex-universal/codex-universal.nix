@@ -143,7 +143,7 @@ in
             shift
           ;;
           *)
-            echo "$1 is not a valid command"
+            echo "$1 is not a valid command" >&2
             exit 1
           ;;
         esac
@@ -155,7 +155,7 @@ in
       fi
 
       if [ -z "$ollamaPid" ]; then
-        echo "Must have ollama running to use"
+        echo "Must have ollama running to use" >&2
         exit 1
       fi
 
