@@ -13,6 +13,13 @@ let
     imageDigest = "sha256:49d6d4a7d50de60daa5fa50da3d8a153991208314924c4b1efa9b3d9e9ae4ce6";
     hash = "sha256-aOg0o5789qWN2AcB/M/T3ZLVXnsyLD/Fr92icMOoxEE=";
   };
+  nixConfig = writeTextFile {
+    name = "nixConfig";
+    text = ''
+      experimental-features = nix-command flakes
+    '';
+    destination = "/root/.config/nix/nix.conf";
+  };
   codexConfig = writeTextFile {
     name = "codexConfig";
     text = builtins.readFile ./config.toml;
@@ -33,12 +40,14 @@ let
         paths = with containerPkgs; [
           bash
           codex
+          nix
         ];
         pathsToLink = [ "/bin" ];
       })
       (buildEnv {
         name = "image-home";
         paths = [
+          nixConfig
           codexConfig
           codexAgents
         ];
@@ -97,7 +106,8 @@ in
     text = ''
       machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]')"
       ollamaPid="$(pgrep ollama | head -n 1)"
-      podmanOpts=("-it" "--rm")
+      codexHome="$HOME/.codex"
+      podmanOpts=("-it" "--rm" "-v" "$codexHome:/root/.codex")
       workingDir=""
 
       while [ $# -gt 0 ]; do
@@ -161,6 +171,10 @@ in
         echo "Loading container image..."
         podman image load -i ${codexUniversal}
       fi
+
+      mkdir -p "$codexHome"
+      ln -fs ${codexAgents}/root/.codex/AGENTS.md "$codexHome/AGENTS.md"
+      ln -fs ${codexConfig}/root/.codex/config.toml "$codexHome/config.toml"
 
       echo "Starting container..."
       podman run "''${podmanOpts[@]}" localhost/codex-universal:${version} '-c' '/usr/bin/sh -c "codex"'
