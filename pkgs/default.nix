@@ -3,19 +3,24 @@
 system: inputs:
 let
   allPackages = {
-    aarch64-darwin = pkgs: {
-      # example = pkgs.callPackage ./example { };
-      codex-universal = pkgs.callPackage ./codex-universal {
-        inherit pkgs;
-        containerPkgs = (
-          import inputs.nixpkgs-unstable {
-            system = (builtins.replaceStrings [ "darwin" ] [ "linux" ] pkgs.system);
-          }
-        );
-        openaiResponses = inputs.openai-responses.packages.${system}.default;
+    aarch64-darwin =
+      pkgs:
+      let
+        openaiResponses = inputs.openai-responses.packages.aarch64-darwin.default;
+      in
+      {
+        # example = pkgs.callPackage ./example { };
+        codex-universal = pkgs.callPackage ./codex-universal {
+          inherit pkgs openaiResponses;
+          containerPkgs = (
+            import inputs.nixpkgs-unstable {
+              system = "aarch64-linux";
+            }
+          );
+        };
+        fuse-t = pkgs.callPackage ./fuse-t { };
+        openai-responses = openaiResponses;
       };
-      fuse-t = pkgs.callPackage ./fuse-t { };
-    };
     x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {
       iwinfo-lite = pkgs.callPackage ./iwinfo-lite { };

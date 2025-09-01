@@ -36,6 +36,9 @@ in
 
     home-manager.users = lib.concatMapAttrs (name: _: {
       ${name} = {
+        home.packages = with pkgs; [
+          codex-universal
+        ];
         gui.enable = true;
         targets.darwin.defaults = {
           NSGlobalDomain = {
