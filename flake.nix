@@ -49,6 +49,12 @@ rec {
       url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Custom package flakes
+    openai-responses = {
+      url = "github:dlubawy/openai-responses/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

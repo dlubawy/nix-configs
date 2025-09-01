@@ -1,7 +1,12 @@
-{ pkgs, containerPkgs, ... }:
+{
+  pkgs,
+  containerPkgs,
+  openaiResponses,
+  ...
+}:
 let
   inherit (pkgs) symlinkJoin;
-  inherit (import ./codex-universal.nix { inherit pkgs containerPkgs; })
+  inherit (import ./codex-universal.nix { inherit pkgs containerPkgs openaiResponses; })
     codex-log
     codex-enter
     codex-start
@@ -13,6 +18,7 @@ symlinkJoin {
     codex-log
     codex-enter
     codex-start
+    ollama
     podman
   ];
 }

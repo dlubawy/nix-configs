@@ -1,13 +1,24 @@
-{ pkgs, containerPkgs, ... }:
+{
+  pkgs,
+  containerPkgs,
+  openaiResponses,
+  ...
+}:
 let
   inherit (pkgs)
     dockerTools
     buildEnv
     writeTextFile
     writeShellApplication
+    lib
     ;
 
   version = "${containerPkgs.codex.version}";
+  caddyfile = writeTextFile {
+    name = "codex-universal-caddyfile";
+    text = builtins.readFile ./Caddyfile;
+    destination = "/Caddyfile";
+  };
   codexImage = dockerTools.pullImage {
     imageName = "ghcr.io/openai/codex-universal";
     imageDigest = "sha256:49d6d4a7d50de60daa5fa50da3d8a153991208314924c4b1efa9b3d9e9ae4ce6";
@@ -99,13 +110,29 @@ in
   codex-start = writeShellApplication {
     name = "codex-start";
     runtimeInputs = with pkgs; [
+      caddy
       gawk
       gnugrep
+      ollama
+      openaiResponses
       podman
     ];
+    runtimeEnv = {
+      OLLAMA_CONTEXT_LENGTH = 128000;
+      OLLAMA_ORIGINS = (
+        lib.strings.concatStringsSep "," [
+          "http://localhost"
+          "http://host.docker.internal"
+          "http://localhost:*"
+          "http://host.docker.internal:*"
+        ]
+      );
+    };
     text = ''
-      machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]')"
-      ollamaPid="$(pgrep ollama | head -n 1)"
+      machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]' || true)"
+      ollamaPid="$(pgrep -o ollama | head -n 1 || true)"
+      responsesPid="$(pgrep -f responses_api | head -n 1 || true)"
+      caddyPid="$(pgrep caddy | head -n 1 || true)"
       codexHome="$HOME/.codex"
       podmanOpts=("-it" "--rm" "-v" "$codexHome:/root/.codex")
       workingDir=""
@@ -113,15 +140,25 @@ in
       while [ $# -gt 0 ]; do
         case "$1" in
           -h|--help)
-            echo -e "Start codex container\n"
-            echo -e "Description:\n  Starts codex in a container without sandbox controls enabled.\n"
-            echo -e "Usage:\n codex-start [options]\n"
-            echo -e "Examples:\n codex-start -w /home/user/code-project\n codex-start -p 3000:3000\n"
-            echo -e "Options:"
-            echo -e " -h, --help              Print help message"
-            echo -e " --rmi                   Removes the image when done"
-            echo -e " -p string               Port option to pass to container"
-            echo -e " -w, --workspace string  Workspace to mount in container"
+            cat << EOF
+      Start codex container
+
+      Description:
+        Starts codex in a container without sandbox controls enabled.
+
+      Usage:
+        codex-start [options]
+
+      Examples:
+        codex-start -w /home/user/code-project
+        codex-start -p 3000:3000
+
+      Options:
+        -h, --help              Print help message
+        --rmi                   Removes the image when done
+        -p string               Port option to pass to container
+        -w, --workspace string  Workspace to mount in container
+      EOF
             exit 0
           ;;
           -p)
@@ -143,7 +180,7 @@ in
             shift
           ;;
           *)
-            echo "$1 is not a valid command" >&2
+            printf "'%s' is not a valid command\n" "$1" >&2
             exit 1
           ;;
         esac
@@ -155,29 +192,66 @@ in
       fi
 
       if [ -z "$ollamaPid" ]; then
-        echo "Must have ollama running to use" >&2
-        exit 1
+        printf "Starting Ollama..."
+        set +o errexit
+        ollama serve > /dev/null 2>&1 &
+        set -o errexit
+        ollamaPid="$(pgrep -o ollama | head -n 1)"
+        printf "\rdone.....................\n\n"
+      fi
+
+      if [ -z "$responsesPid" ]; then
+        responsesHome="$HOME/.local/state/openai-responses"
+        mkdir -p "$responsesHome"
+        printf "Starting Responses API..."
+        set +o errexit
+        responses_api --checkpoint 'gpt-oss:20b' --port 3000 --inference-backend ollama > "$responsesHome/logs.txt" 2>&1 &
+        set -o errexit
+        responsesPid="$(pgrep -f responses_api | head -n 1)"
+        printf "\rdone.....................\n\n"
+      fi
+
+      if [ -z "$caddyPid" ]; then
+        printf "Starting Cuddy..."
+        set +o errexit
+        caddy start --config ${caddyfile}/Caddyfile > /dev/null 2>&1
+        set -o errexit
+        printf "\rdone.....................\n\n"
       fi
 
       if [ -z "$machine" ]; then
         podman machine init -m 4096
       fi
       set +o errexit
-      podman machine start 2>/dev/null
+      podman machine start > /dev/null 2>&1
       set -o errexit
 
       imageId="$(podman images -n localhost/codex-universal:${version} | tail -n 1 | awk -F' ' '{print $3}' | tr -s '[:blank:]')"
       if [ -z "$imageId" ]; then
-        echo "Loading container image..."
-        podman image load -i ${codexUniversal}
+        printf "Loading container image..."
+        podman image load -i ${codexUniversal} > /dev/null 2>&1
+        printf "\rdone.....................\n\n"
       fi
 
       mkdir -p "$codexHome"
       ln -fs ${codexAgents}/root/.codex/AGENTS.md "$codexHome/AGENTS.md"
       ln -fs ${codexConfig}/root/.codex/config.toml "$codexHome/config.toml"
 
-      echo "Starting container..."
+      printf "Starting container..."
       podman run "''${podmanOpts[@]}" localhost/codex-universal:${version} '-c' '/usr/bin/sh -c "codex"'
+      printf "\rStopping...\n\n"
+
+      if [ -n "$ollamaPid" ]; then
+        kill -6 "$ollamaPid"
+      fi
+
+      if [ -n "$responsesPid" ]; then
+        kill -6 "$responsesPid"
+      fi
+
+      caddy stop
+
+      printf "\rfinished.................\n\n"
     '';
   };
 }

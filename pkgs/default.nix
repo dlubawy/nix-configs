@@ -12,6 +12,7 @@ let
             system = (builtins.replaceStrings [ "darwin" ] [ "linux" ] pkgs.system);
           }
         );
+        openaiResponses = inputs.openai-responses.packages.${system}.default;
       };
       fuse-t = pkgs.callPackage ./fuse-t { };
     };

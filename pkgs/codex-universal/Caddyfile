@@ -1,0 +1,8 @@
+{
+    auto_https off
+}
+
+localhost:80 127.0.0.1:80 host.docker.internal:80 {
+    reverse_proxy /v1/responses http://127.0.0.1:3000
+    reverse_proxy /v1/* http://127.0.0.1:11434
+}
