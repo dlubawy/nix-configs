@@ -129,7 +129,7 @@ in
       );
     };
     text = ''
-      machine="$(podman machine list | tail -n 1 | awk -F'-' '{print $1}' | tr -s '[:blank:]' || true)"
+      machine="$(podman machine inspect | jq '.[].Name' || true)"
       ollamaPid="$(pgrep -o ollama | head -n 1 || true)"
       responsesPid="$(pgrep -f responses_api | head -n 1 || true)"
       caddyPid="$(pgrep caddy | head -n 1 || true)"
