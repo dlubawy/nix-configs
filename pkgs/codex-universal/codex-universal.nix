@@ -136,7 +136,11 @@ in
       codexHome="$HOME/.codex"
       podmanOpts=("-it" "--rm" "-v" "$codexHome:/root/.codex")
       workingDir=""
+      codexExec=""
+      managedPids=()
 
+
+      positionalArgs=()
       while [ $# -gt 0 ]; do
         case "$1" in
           -h|--help)
@@ -158,6 +162,7 @@ in
         --rmi                   Removes the image when done
         -p string               Port option to pass to container
         -w, --workspace string  Workspace to mount in container
+        --exec                  Execute prompt in non-interactive mode
       EOF
             exit 0
           ;;
@@ -179,12 +184,22 @@ in
             podmanOpts+=("-v" "$workingDir:/workspace/$(basename "$workingDir")" "-w" "/workspace/$(basename "$workingDir")")
             shift
           ;;
-          *)
+          -e|--exec)
+            codexExec="exec"
+            shift
+          ;;
+          -*)
             printf "'%s' is not a valid command\n" "$1" >&2
             exit 1
           ;;
+          *)
+            positionalArgs+=("$1")
+            shift
+          ;;
         esac
       done
+
+      set -- "''${positionalArgs[@]}"
 
       if [ -z "$workingDir" ]; then
         workingDir="$(pwd)"
@@ -195,8 +210,8 @@ in
         printf "Starting Ollama..."
         set +o errexit
         ollama serve > /dev/null 2>&1 &
+        managedPids+=($!)
         set -o errexit
-        ollamaPid="$(pgrep -o ollama | head -n 1)"
         printf "\rdone.....................\n\n"
       fi
 
@@ -206,8 +221,8 @@ in
         printf "Starting Responses API..."
         set +o errexit
         responses_api --checkpoint 'gpt-oss:20b' --port 3000 --inference-backend ollama > "$responsesHome/logs.txt" 2>&1 &
+        managedPids+=($!)
         set -o errexit
-        responsesPid="$(pgrep -f responses_api | head -n 1)"
         printf "\rdone.....................\n\n"
       fi
 
@@ -237,20 +252,23 @@ in
       ln -fs ${codexAgents}/root/.codex/AGENTS.md "$codexHome/AGENTS.md"
       ln -fs ${codexConfig}/root/.codex/config.toml "$codexHome/config.toml"
 
-      printf "Starting container..."
-      podman run "''${podmanOpts[@]}" localhost/codex-universal:${version} '-c' '/usr/bin/sh -c "codex"'
-      printf "\rStopping...\n\n"
+      printf "Starting container...\n"
+      set +o errexit
+      podman run "''${podmanOpts[@]}" localhost/codex-universal:${version} '-c' "/usr/bin/sh -c 'codex $codexExec \"$*\"'"
+      set -o errexit
 
-      if [ -n "$ollamaPid" ]; then
-        kill -2 "$ollamaPid"
-      fi
-
-      if [ -n "$responsesPid" ]; then
-        kill -2 "$responsesPid"
-      fi
-
+      printf "\rStopping..."
+      set +o errexit
+      for pid in "''${managedPids[@]}"; do
+        kill -2 "$pid"
+        sleep 5
+        check="$(ps "$pid" | tail -n 1 | awk -F' ' '{print $1}' | tr -d -c '[:digit:]')"
+        if [[ "$pid" -eq "$check" ]]; then
+          kill -9 "$pid"
+        fi
+      done
       caddy stop
-
+      set +o errexit
       printf "\rfinished.................\n\n"
     '';
   };
