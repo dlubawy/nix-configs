@@ -138,6 +138,7 @@ in
       workingDir=""
       codexExec=""
       managedPids=()
+      managingCaddy=""
 
 
       positionalArgs=()
@@ -162,7 +163,8 @@ in
         --rmi                   Removes the image when done
         -p string               Port option to pass to container
         -w, --workspace string  Workspace to mount in container
-        --exec                  Execute prompt in non-interactive mode
+        -e, --exec              Execute prompt in non-interactive mode
+        -c, --context           Ollama context length in tokens
       EOF
             exit 0
           ;;
@@ -186,6 +188,14 @@ in
           ;;
           -e|--exec)
             codexExec="exec"
+            shift
+          ;;
+          -c|--context)
+            export OLLAMA_CONTEXT_LENGTH="$2"
+            shift 2
+          ;;
+          --context=*)
+            export OLLAMA_CONTEXT_LENGTH="''${1/*=}"
             shift
           ;;
           -*)
@@ -230,6 +240,7 @@ in
         printf "Starting Cuddy..."
         set +o errexit
         caddy start --config ${caddyfile}/Caddyfile > /dev/null 2>&1
+        managingCaddy="1"
         set -o errexit
         printf "\rdone.....................\n\n"
       fi
@@ -249,8 +260,12 @@ in
       fi
 
       mkdir -p "$codexHome"
-      ln -fs ${codexAgents}/root/.codex/AGENTS.md "$codexHome/AGENTS.md"
-      ln -fs ${codexConfig}/root/.codex/config.toml "$codexHome/config.toml"
+      if [ -L "$codexHome/AGENTS.md" ]; then
+        ln -fs ${codexAgents}/root/.codex/AGENTS.md "$codexHome/AGENTS.md"
+      fi
+      if [ -L "$codexHome/config.toml" ]; then
+        ln -fs ${codexConfig}/root/.codex/config.toml "$codexHome/config.toml"
+      fi
 
       printf "Starting container...\n"
       set +o errexit
@@ -267,7 +282,9 @@ in
           kill -9 "$pid"
         fi
       done
-      caddy stop
+      if [ -n "$managingCaddy" ]; then
+        caddy stop
+      fi
       set +o errexit
       printf "\rfinished.................\n\n"
     '';
