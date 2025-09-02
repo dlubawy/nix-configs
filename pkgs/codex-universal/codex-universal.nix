@@ -242,11 +242,11 @@ in
       printf "\rStopping...\n\n"
 
       if [ -n "$ollamaPid" ]; then
-        kill -6 "$ollamaPid"
+        kill -2 "$ollamaPid"
       fi
 
       if [ -n "$responsesPid" ]; then
-        kill -6 "$responsesPid"
+        kill -2 "$responsesPid"
       fi
 
       caddy stop
