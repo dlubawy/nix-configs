@@ -31,16 +31,7 @@ let
     '';
     destination = "/root/.config/nix/nix.conf";
   };
-  codexConfig = writeTextFile {
-    name = "codexConfig";
-    text = builtins.readFile ./config.toml;
-    destination = "/root/.codex/config.toml";
-  };
-  codexAgents = writeTextFile {
-    name = "codexAgents";
-    text = builtins.readFile ./AGENTS.md;
-    destination = "/root/.codex/AGENTS.md";
-  };
+  codexFramework = (import ./framework { inherit pkgs; });
   codexUniversal = dockerTools.buildImage {
     name = "codex-universal";
     tag = version;
@@ -59,8 +50,7 @@ let
         name = "image-home";
         paths = [
           nixConfig
-          codexConfig
-          codexAgents
+          codexFramework
         ];
         pathsToLink = [ "/root" ];
       })
@@ -77,6 +67,8 @@ let
         "CODEX_ENV_RUST_VERSION=1.87.0"
         "CODEX_ENV_GO_VERSION=1.23.8"
         "CODEX_ENV_SWIFT_VERSION=6.1.1"
+        "OPENAI_BASE_URL=http://host.docker.internal"
+        "OPENAI_API_KEY=''"
       ];
       WorkingDir = "/workspace";
     };
@@ -191,11 +183,11 @@ in
             shift
           ;;
           -c|--context)
-            export OLLAMA_CONTEXT_LENGTH="$2"
+            OLLAMA_CONTEXT_LENGTH="$2"
             shift 2
           ;;
           --context=*)
-            export OLLAMA_CONTEXT_LENGTH="''${1/*=}"
+            OLLAMA_CONTEXT_LENGTH="''${1/*=}"
             shift
           ;;
           -*)
@@ -219,7 +211,7 @@ in
       if [ -z "$ollamaPid" ]; then
         printf "Starting Ollama..."
         set +o errexit
-        ollama serve > /dev/null 2>&1 &
+        env OLLAMA_ORIGINS="$OLLAMA_ORIGINS" OLLAMA_CONTEXT_LENGTH="$OLLAMA_CONTEXT_LENGTH" ollama serve > /dev/null 2>&1 &
         managedPids+=($!)
         set -o errexit
         printf "\rdone.....................\n\n"
@@ -260,12 +252,14 @@ in
       fi
 
       mkdir -p "$codexHome"
-      if [ -L "$codexHome/AGENTS.md" ]; then
-        ln -fs ${codexAgents}/root/.codex/AGENTS.md "$codexHome/AGENTS.md"
-      fi
-      if [ -L "$codexHome/config.toml" ]; then
-        ln -fs ${codexConfig}/root/.codex/config.toml "$codexHome/config.toml"
-      fi
+      mkdir -p "$codexHome/agents"
+      mkdir -p "$codexHome/commands"
+      set +o errexit
+      cp -f "${codexFramework}/root/.codex/framework-instructions.md" "$codexHome/framework-instructions.md"
+      cp -f "${codexFramework}/root/.codex/config.toml" "$codexHome/config.toml"
+      cp -f ${codexFramework}/root/.codex/agents/* "$codexHome/agents"
+      cp -f ${codexFramework}/root/.codex/commands/* "$codexHome/commands"
+      set -o errexit
 
       printf "Starting container...\n"
       set +o errexit
@@ -273,6 +267,7 @@ in
       set -o errexit
 
       printf "\rStopping..."
+      trap "" SIGINT
       set +o errexit
       for pid in "''${managedPids[@]}"; do
         kill -2 "$pid"

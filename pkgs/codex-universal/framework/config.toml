@@ -1,0 +1,36 @@
+model = "gpt-oss:20b"
+model_provider = "gpt-oss-responses"
+model_context_window = 96000
+max_output_tokens = 32000
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+disable_response_storage = false
+model_supports_reasoning_summaries = true
+experimental_instructions_file = "/root/.codex/framework-instructions.md"
+
+[tools]
+web_search = true
+
+[model_providers.gpt-oss-responses]
+name = "gpt-oss-responses"
+base_url = "http://host.docker.internal/v1"
+wire_api = "responses"
+request_max_retries = 4
+stream_max_retries = 10
+stream_idle_timeout_ms = 300000
+
+[mcp_servers.context7]
+args = ["-y", "@upstash/context7-mcp"]
+command = "npx"
+
+[mcp_servers.playwright]
+args = ["-y", "@playwright/mcp@latest"]
+command = "npx"
+
+[mcp_servers.sequential-thinking]
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+command = "npx"
+
+[mcp_servers.serena]
+args = ["--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server", "--context", "codex"]
+command = "uvx"
