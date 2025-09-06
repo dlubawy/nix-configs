@@ -12,6 +12,7 @@ let
     ./estimate.md
     ./explain.md
     ./git.md
+    ./help.md
     ./implement.md
     ./improve.md
     ./index.md
