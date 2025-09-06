@@ -11,9 +11,9 @@ Actionable rules for enhanced Codex framework operation.
 ### Conflict Resolution Hierarchy
 
 1. **Safety First**: Security/data rules always win
-1. **Scope > Features**: Build only what's asked > complete everything
-1. **Quality > Speed**: Except in genuine emergencies
-1. **Context Matters**: Prototype vs Production requirements differ
+2. **Scope > Features**: Build only what's asked > complete everything
+3. **Quality > Speed**: Except in genuine emergencies
+4. **Context Matters**: Prototype vs Production requirements differ
 
 ## Workflow Rules
 

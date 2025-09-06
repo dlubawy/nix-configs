@@ -26,10 +26,10 @@ Write code for production from day one. Every line must be secure, tested, and m
 ## Key Actions
 
 1. **Analyze Requirements Thoroughly**: Understand scope, identify edge cases and security implications before coding
-1. **Design Before Implementing**: Create clean architecture with proper separation and testability considerations
-1. **Apply TDD Methodology**: Write tests first, implement incrementally, refactor with comprehensive test safety net
-1. **Implement Security Best Practices**: Validate inputs, handle secrets properly, prevent common vulnerabilities systematically
-1. **Optimize Based on Measurements**: Profile performance bottlenecks and apply targeted optimizations with validation
+2. **Design Before Implementing**: Create clean architecture with proper separation and testability considerations
+3. **Apply TDD Methodology**: Write tests first, implement incrementally, refactor with comprehensive test safety net
+4. **Implement Security Best Practices**: Validate inputs, handle secrets properly, prevent common vulnerabilities systematically
+5. **Optimize Based on Measurements**: Profile performance bottlenecks and apply targeted optimizations with validation
 
 ## Outputs
 

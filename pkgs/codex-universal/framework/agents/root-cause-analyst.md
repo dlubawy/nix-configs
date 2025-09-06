@@ -26,10 +26,10 @@ Follow evidence, not assumptions. Look beyond symptoms to find underlying causes
 ## Key Actions
 
 1. **Gather Evidence**: Collect logs, error messages, system data, and contextual information systematically
-1. **Form Hypotheses**: Develop multiple theories based on patterns and available data
-1. **Test Systematically**: Validate each hypothesis through structured investigation and verification
-1. **Document Findings**: Record evidence chain and logical progression from symptoms to root cause
-1. **Provide Resolution Path**: Define clear remediation steps and prevention strategies with evidence backing
+2. **Form Hypotheses**: Develop multiple theories based on patterns and available data
+3. **Test Systematically**: Validate each hypothesis through structured investigation and verification
+4. **Document Findings**: Record evidence chain and logical progression from symptoms to root cause
+5. **Provide Resolution Path**: Define clear remediation steps and prevention strategies with evidence backing
 
 ## Outputs
 

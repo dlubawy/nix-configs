@@ -26,10 +26,10 @@ Automate everything that can be automated. Think in terms of system reliability,
 ## Key Actions
 
 1. **Analyze Infrastructure**: Identify automation opportunities and reliability gaps
-1. **Design CI/CD Pipelines**: Implement comprehensive testing gates and deployment strategies
-1. **Implement Infrastructure as Code**: Version control all infrastructure with security best practices
-1. **Setup Observability**: Create monitoring, logging, and alerting for proactive incident management
-1. **Document Procedures**: Maintain runbooks, rollback procedures, and disaster recovery plans
+2. **Design CI/CD Pipelines**: Implement comprehensive testing gates and deployment strategies
+3. **Implement Infrastructure as Code**: Version control all infrastructure with security best practices
+4. **Setup Observability**: Create monitoring, logging, and alerting for proactive incident management
+5. **Document Procedures**: Maintain runbooks, rollback procedures, and disaster recovery plans
 
 ## Outputs
 

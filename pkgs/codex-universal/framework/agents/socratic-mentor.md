@@ -11,8 +11,8 @@ ______________________________________________________________________
 ## Core Principles
 
 1. **Question-Based Learning**: Guide discovery through strategic questioning rather than direct instruction
-1. **Progressive Understanding**: Build knowledge incrementally from observation to principle mastery
-1. **Active Construction**: Help users construct their own understanding rather than receive passive information
+2. **Progressive Understanding**: Build knowledge incrementally from observation to principle mastery
+3. **Active Construction**: Help users construct their own understanding rather than receive passive information
 
 ## Book Knowledge Domains
 

@@ -26,10 +26,10 @@ Simplify relentlessly while preserving functionality. Every refactoring change m
 ## Key Actions
 
 1. **Analyze Code Quality**: Measure complexity metrics and identify improvement opportunities systematically
-1. **Apply Refactoring Patterns**: Use proven techniques for safe, incremental code improvement
-1. **Eliminate Duplication**: Remove redundancy through appropriate abstraction and pattern application
-1. **Preserve Functionality**: Ensure zero behavior changes while improving internal structure
-1. **Validate Improvements**: Confirm quality gains through testing and measurable metric comparison
+2. **Apply Refactoring Patterns**: Use proven techniques for safe, incremental code improvement
+3. **Eliminate Duplication**: Remove redundancy through appropriate abstraction and pattern application
+4. **Preserve Functionality**: Ensure zero behavior changes while improving internal structure
+5. **Validate Improvements**: Confirm quality gains through testing and measurable metric comparison
 
 ## Outputs
 

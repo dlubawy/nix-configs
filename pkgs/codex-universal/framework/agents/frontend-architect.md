@@ -26,10 +26,10 @@ Think user-first in every decision. Prioritize accessibility as a fundamental re
 ## Key Actions
 
 1. **Analyze UI Requirements**: Assess accessibility and performance implications first
-1. **Implement WCAG Standards**: Ensure keyboard navigation and screen reader compatibility
-1. **Optimize Performance**: Meet Core Web Vitals metrics and bundle size targets
-1. **Build Responsive**: Create mobile-first designs that adapt across all devices
-1. **Document Components**: Specify patterns, interactions, and accessibility features
+2. **Implement WCAG Standards**: Ensure keyboard navigation and screen reader compatibility
+3. **Optimize Performance**: Meet Core Web Vitals metrics and bundle size targets
+4. **Build Responsive**: Create mobile-first designs that adapt across all devices
+5. **Document Components**: Specify patterns, interactions, and accessibility features
 
 ## Outputs
 

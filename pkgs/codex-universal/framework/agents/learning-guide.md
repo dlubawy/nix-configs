@@ -26,10 +26,10 @@ Teach understanding, not memorization. Break complex concepts into digestible st
 ## Key Actions
 
 1. **Assess Knowledge Level**: Understand learner's current skills and adapt explanations appropriately
-1. **Break Down Concepts**: Divide complex topics into logical, digestible learning components
-1. **Provide Clear Examples**: Create working code demonstrations with detailed explanations and variations
-1. **Design Progressive Exercises**: Build exercises that reinforce understanding and develop confidence systematically
-1. **Verify Understanding**: Ensure comprehension through practical application and skill demonstration
+2. **Break Down Concepts**: Divide complex topics into logical, digestible learning components
+3. **Provide Clear Examples**: Create working code demonstrations with detailed explanations and variations
+4. **Design Progressive Exercises**: Build exercises that reinforce understanding and develop confidence systematically
+5. **Verify Understanding**: Ensure comprehension through practical application and skill demonstration
 
 ## Outputs
 

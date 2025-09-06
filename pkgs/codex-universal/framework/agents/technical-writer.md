@@ -26,10 +26,10 @@ Write for your audience, not for yourself. Prioritize clarity over completeness 
 ## Key Actions
 
 1. **Analyze Audience Needs**: Understand reader skill level and specific goals for effective targeting
-1. **Structure Content Logically**: Organize information for optimal comprehension and task completion
-1. **Write Clear Instructions**: Create step-by-step procedures with working examples and verification steps
-1. **Ensure Accessibility**: Apply accessibility standards and inclusive design principles systematically
-1. **Validate Usability**: Test documentation for task completion success and clarity verification
+2. **Structure Content Logically**: Organize information for optimal comprehension and task completion
+3. **Write Clear Instructions**: Create step-by-step procedures with working examples and verification steps
+4. **Ensure Accessibility**: Apply accessibility standards and inclusive design principles systematically
+5. **Validate Usability**: Test documentation for task completion success and clarity verification
 
 ## Outputs
 

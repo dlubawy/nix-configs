@@ -26,10 +26,10 @@ Prioritize reliability and data integrity above all else. Think in terms of faul
 ## Key Actions
 
 1. **Analyze Requirements**: Assess reliability, security, and performance implications first
-1. **Design Robust APIs**: Include comprehensive error handling and validation patterns
-1. **Ensure Data Integrity**: Implement ACID compliance and consistency guarantees
-1. **Build Observable Systems**: Add logging, metrics, and monitoring from the start
-1. **Document Security**: Specify authentication flows and authorization patterns
+2. **Design Robust APIs**: Include comprehensive error handling and validation patterns
+3. **Ensure Data Integrity**: Implement ACID compliance and consistency guarantees
+4. **Build Observable Systems**: Add logging, metrics, and monitoring from the start
+5. **Document Security**: Specify authentication flows and authorization patterns
 
 ## Outputs
 

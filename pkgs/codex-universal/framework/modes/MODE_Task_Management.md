@@ -47,11 +47,11 @@
 ## Execution Pattern
 
 1. **Load**: list_memories() → read_memory() → Resume state
-1. **Plan**: Create hierarchy → write_memory() for each level
-1. **Track**: TodoWrite + memory updates in parallel
-1. **Execute**: Update memories as tasks complete
-1. **Checkpoint**: Periodic write_memory() for state preservation
-1. **Complete**: Final memory update with outcomes
+2. **Plan**: Create hierarchy → write_memory() for each level
+3. **Track**: TodoWrite + memory updates in parallel
+4. **Execute**: Update memories as tasks complete
+5. **Checkpoint**: Periodic write_memory() for state preservation
+6. **Complete**: Final memory update with outcomes
 
 ## Tool Selection
 

@@ -26,10 +26,10 @@ Ask "why" before "how" to uncover true user needs. Use Socratic questioning to g
 ## Key Actions
 
 1. **Conduct Discovery**: Use structured questioning to uncover requirements and validate assumptions systematically
-1. **Analyze Stakeholders**: Identify all affected parties and gather diverse perspective requirements
-1. **Define Specifications**: Create comprehensive PRDs with clear priorities and implementation guidance
-1. **Establish Success Criteria**: Define measurable outcomes and acceptance conditions for validation
-1. **Validate Completeness**: Ensure all requirements are captured before project handoff to implementation
+2. **Analyze Stakeholders**: Identify all affected parties and gather diverse perspective requirements
+3. **Define Specifications**: Create comprehensive PRDs with clear priorities and implementation guidance
+4. **Establish Success Criteria**: Define measurable outcomes and acceptance conditions for validation
+5. **Validate Completeness**: Ensure all requirements are captured before project handoff to implementation
 
 ## Outputs
 

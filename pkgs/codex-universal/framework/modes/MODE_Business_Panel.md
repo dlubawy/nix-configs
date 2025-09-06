@@ -7,9 +7,9 @@ Multi-expert business analysis mode with adaptive interaction strategies and int
 ### Core Components
 
 1. **Expert Engine**: 9 specialized business thought leader personas
-1. **Analysis Pipeline**: Three-phase adaptive methodology
-1. **Synthesis Engine**: Cross-framework pattern recognition and integration
-1. **Communication System**: Symbol-based efficiency with structured clarity
+2. **Analysis Pipeline**: Three-phase adaptive methodology
+3. **Synthesis Engine**: Cross-framework pattern recognition and integration
+4. **Communication System**: Symbol-based efficiency with structured clarity
 
 ### Mode Activation
 
@@ -28,10 +28,10 @@ Multi-expert business analysis mode with adaptive interaction strategies and int
 **Process**:
 
 1. **Document Ingestion**: Parse content for business context and strategic elements
-1. **Expert Selection**: Auto-select 3-5 most relevant experts based on content
-1. **Framework Application**: Each expert analyzes through their unique lens
-1. **Cross-Pollination**: Experts build upon and reference each other's insights
-1. **Pattern Recognition**: Identify convergent themes and complementary perspectives
+2. **Expert Selection**: Auto-select 3-5 most relevant experts based on content
+3. **Framework Application**: Each expert analyzes through their unique lens
+4. **Cross-Pollination**: Experts build upon and reference each other's insights
+5. **Pattern Recognition**: Identify convergent themes and complementary perspectives
 
 **Output Format**:
 
@@ -60,10 +60,10 @@ Multi-expert business analysis mode with adaptive interaction strategies and int
 **Process**:
 
 1. **Conflict Identification**: Detect areas of expert disagreement
-1. **Position Articulation**: Each expert defends their framework's perspective
-1. **Evidence Marshaling**: Support positions with framework-specific logic
-1. **Structured Rebuttal**: Respectful challenge with alternative interpretations
-1. **Synthesis Through Tension**: Extract insights from productive disagreement
+2. **Position Articulation**: Each expert defends their framework's perspective
+3. **Evidence Marshaling**: Support positions with framework-specific logic
+4. **Structured Rebuttal**: Respectful challenge with alternative interpretations
+5. **Synthesis Through Tension**: Extract insights from productive disagreement
 
 **Output Format**:
 
@@ -95,10 +95,10 @@ Multi-expert business analysis mode with adaptive interaction strategies and int
 **Process**:
 
 1. **Question Generation**: Each expert formulates probing questions from their framework
-1. **Question Clustering**: Group related questions by strategic themes
-1. **User Interaction**: Present questions for user reflection and response
-1. **Follow-up Inquiry**: Experts respond to user answers with deeper questions
-1. **Learning Synthesis**: Extract strategic thinking patterns and insights
+2. **Question Clustering**: Group related questions by strategic themes
+3. **User Interaction**: Present questions for user reflection and response
+4. **Follow-up Inquiry**: Experts respond to user answers with deeper questions
+5. **Learning Synthesis**: Extract strategic thinking patterns and insights
 
 **Output Format**:
 
@@ -174,10 +174,10 @@ organizational_focus:
 **Selection Process**:
 
 1. **Content Classification**: Identify primary business domains in document
-1. **Relevance Scoring**: Score each expert's framework relevance to content
-1. **Diversity Optimization**: Ensure complementary perspectives are represented
-1. **Interaction Dynamics**: Select experts with productive interaction patterns
-1. **Final Validation**: Verify selected panel can address all key aspects
+2. **Relevance Scoring**: Score each expert's framework relevance to content
+3. **Diversity Optimization**: Ensure complementary perspectives are represented
+4. **Interaction Dynamics**: Select experts with productive interaction patterns
+5. **Final Validation**: Verify selected panel can address all key aspects
 
 ### Document Type Recognition
 
