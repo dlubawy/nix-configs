@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Initialize**: Establish Serena MCP connection and session context management
-1. **Discover**: Analyze project structure and identify context loading requirements
-1. **Load**: Retrieve project memories, checkpoints, and cross-session persistence data
-1. **Activate**: Establish project context and prepare for development workflow
-1. **Validate**: Ensure loaded context integrity and session readiness
+2. **Discover**: Analyze project structure and identify context loading requirements
+3. **Load**: Retrieve project memories, checkpoints, and cross-session persistence data
+4. **Activate**: Establish project context and prepare for development workflow
+5. **Validate**: Ensure loaded context integrity and session readiness
 
 Key behaviors:
 

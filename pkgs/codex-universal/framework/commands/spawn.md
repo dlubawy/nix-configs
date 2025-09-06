@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Parse complex operation requirements and assess scope across domains
-1. **Decompose**: Break down operation into coordinated subtask hierarchies
-1. **Orchestrate**: Execute tasks using optimal coordination strategy (parallel/sequential)
-1. **Monitor**: Track progress across task hierarchies with dependency management
-1. **Integrate**: Aggregate results and provide comprehensive orchestration summary
+2. **Decompose**: Break down operation into coordinated subtask hierarchies
+3. **Orchestrate**: Execute tasks using optimal coordination strategy (parallel/sequential)
+4. **Monitor**: Track progress across task hierarchies with dependency management
+5. **Integrate**: Aggregate results and provide comprehensive orchestration summary
 
 Key behaviors:
 

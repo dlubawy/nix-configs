@@ -5,6 +5,26 @@ let
   agentFiles = (import ./agents { inherit pkgs codexHome; });
   commandFiles = (import ./commands { inherit pkgs codexHome; });
   frameworkBase = ''
+    # Tool Guidelines
+
+    ## browser
+
+    You have access to a special tool called `browser`.
+    It is ONLY for retrieving information from the internet in real time.
+    It cannot open or read local files, documents, or code.
+    Never interpret `browser.open` as opening a file. It strictly means opening a web page.
+
+    The browser tool supports only three methods:
+    - `search` → Perform a web search using a query string.
+    - `open` → Open a specific web page by its link `id` or URL (http/https). This does not open local files or directories.
+    - `find` → Search for text within the currently opened web page.
+
+    Always use these methods only for online browsing.
+    Do not try to use the browser tool for local file access, uploads, downloads, or code execution.
+
+    If a request cannot be fulfilled with these three methods, respond without using the browser.
+
+
     # ═══════════════════════════════════════════════════
     # Framework
     # ═══════════════════════════════════════════════════

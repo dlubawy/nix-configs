@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine target code, concept, or system for comprehensive understanding
-1. **Assess**: Determine audience level and appropriate explanation depth and format
-1. **Structure**: Plan explanation sequence with progressive complexity and logical flow
-1. **Generate**: Create clear explanations with examples, diagrams, and interactive elements
-1. **Validate**: Verify explanation accuracy and educational effectiveness
+2. **Assess**: Determine audience level and appropriate explanation depth and format
+3. **Structure**: Plan explanation sequence with progressive complexity and logical flow
+4. **Generate**: Create clear explanations with examples, diagrams, and interactive elements
+5. **Validate**: Verify explanation accuracy and educational effectiveness
 
 Key behaviors:
 

@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Discover**: Categorize available tests using runner patterns and conventions
-1. **Configure**: Set up appropriate test environment and execution parameters
-1. **Execute**: Run tests with monitoring and real-time progress tracking
-1. **Analyze**: Generate coverage reports and failure diagnostics
-1. **Report**: Provide actionable recommendations and quality metrics
+2. **Configure**: Set up appropriate test environment and execution parameters
+3. **Execute**: Run tests with monitoring and real-time progress tracking
+4. **Analyze**: Generate coverage reports and failure diagnostics
+5. **Report**: Provide actionable recommendations and quality metrics
 
 Key behaviors:
 

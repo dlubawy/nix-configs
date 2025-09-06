@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine target component structure, interfaces, and functionality
-1. **Identify**: Determine documentation requirements and target audience context
-1. **Generate**: Create appropriate documentation content based on type and style
-1. **Format**: Apply consistent structure and organizational patterns
-1. **Integrate**: Ensure compatibility with existing project documentation ecosystem
+2. **Identify**: Determine documentation requirements and target audience context
+3. **Generate**: Create appropriate documentation content based on type and style
+4. **Format**: Apply consistent structure and organizational patterns
+5. **Integrate**: Ensure compatibility with existing project documentation ecosystem
 
 Key behaviors:
 

@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine codebase for improvement opportunities and quality issues
-1. **Plan**: Choose improvement approach and activate relevant personas for expertise
-1. **Execute**: Apply systematic improvements with domain-specific best practices
-1. **Validate**: Ensure improvements preserve functionality and meet quality standards
-1. **Document**: Generate improvement summary and recommendations for future work
+2. **Plan**: Choose improvement approach and activate relevant personas for expertise
+3. **Execute**: Apply systematic improvements with domain-specific best practices
+4. **Validate**: Ensure improvements preserve functionality and meet quality standards
+5. **Document**: Generate improvement summary and recommendations for future work
 
 Key behaviors:
 

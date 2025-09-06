@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Parse**: Analyze operation type, scope, file count, and complexity indicators
-1. **Score**: Apply multi-dimensional complexity scoring across various operation factors
-1. **Match**: Compare operation requirements against Serena and Morphllm capabilities
-1. **Select**: Choose optimal tool based on scoring matrix and performance requirements
-1. **Validate**: Verify selection accuracy and provide confidence metrics
+2. **Score**: Apply multi-dimensional complexity scoring across various operation factors
+3. **Match**: Compare operation requirements against Serena and Morphllm capabilities
+4. **Select**: Choose optimal tool based on scoring matrix and performance requirements
+5. **Validate**: Verify selection accuracy and provide confidence metrics
 
 Key behaviors:
 

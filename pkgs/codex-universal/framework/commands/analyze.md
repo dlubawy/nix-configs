@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Discover**: Categorize source files using language detection and project analysis
-1. **Scan**: Apply domain-specific analysis techniques and pattern matching
-1. **Evaluate**: Generate prioritized findings with severity ratings and impact assessment
-1. **Recommend**: Create actionable recommendations with implementation guidance
-1. **Report**: Present comprehensive analysis with metrics and improvement roadmap
+2. **Scan**: Apply domain-specific analysis techniques and pattern matching
+3. **Evaluate**: Generate prioritized findings with severity ratings and impact assessment
+4. **Recommend**: Create actionable recommendations with implementation guidance
+5. **Report**: Present comprehensive analysis with metrics and improvement roadmap
 
 Key behaviors:
 

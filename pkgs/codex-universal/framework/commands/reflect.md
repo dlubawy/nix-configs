@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine current task state and session progress using Serena reflection tools
-1. **Validate**: Assess task adherence, completion quality, and requirement fulfillment
-1. **Reflect**: Apply deep analysis of collected information and session insights
-1. **Document**: Update session metadata and capture learning insights
-1. **Optimize**: Provide recommendations for process improvement and quality enhancement
+2. **Validate**: Assess task adherence, completion quality, and requirement fulfillment
+3. **Reflect**: Apply deep analysis of collected information and session insights
+4. **Document**: Update session metadata and capture learning insights
+5. **Optimize**: Provide recommendations for process improvement and quality enhancement
 
 Key behaviors:
 

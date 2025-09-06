@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine scope, complexity factors, dependencies, and framework patterns
-1. **Calculate**: Apply estimation methodology with historical benchmarks and complexity scoring
-1. **Validate**: Cross-reference estimates with project patterns and domain expertise
-1. **Present**: Provide detailed breakdown with confidence intervals and risk assessment
-1. **Track**: Document estimation accuracy for continuous methodology improvement
+2. **Calculate**: Apply estimation methodology with historical benchmarks and complexity scoring
+3. **Validate**: Cross-reference estimates with project patterns and domain expertise
+4. **Present**: Provide detailed breakdown with confidence intervals and risk assessment
+5. **Track**: Document estimation accuracy for continuous methodology improvement
 
 Key behaviors:
 

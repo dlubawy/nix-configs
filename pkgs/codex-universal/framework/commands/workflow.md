@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Parse PRD and feature specifications to understand implementation requirements
-1. **Plan**: Generate comprehensive workflow structure with dependency mapping and task orchestration
-1. **Coordinate**: Activate multiple personas for domain expertise and implementation strategy
-1. **Execute**: Create structured step-by-step workflows with automated task coordination
-1. **Validate**: Apply quality gates and ensure workflow completeness across domains
+2. **Plan**: Generate comprehensive workflow structure with dependency mapping and task orchestration
+3. **Coordinate**: Activate multiple personas for domain expertise and implementation strategy
+4. **Execute**: Create structured step-by-step workflows with automated task coordination
+5. **Validate**: Apply quality gates and ensure workflow completeness across domains
 
 Key behaviors:
 

@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine issue description and gather relevant system state information
-1. **Investigate**: Identify potential root causes through systematic pattern analysis
-1. **Debug**: Execute structured debugging procedures including log and state examination
-1. **Propose**: Validate solution approaches with impact assessment and risk evaluation
-1. **Resolve**: Apply appropriate fixes and verify resolution effectiveness
+2. **Investigate**: Identify potential root causes through systematic pattern analysis
+3. **Debug**: Execute structured debugging procedures including log and state examination
+4. **Propose**: Validate solution approaches with impact assessment and risk evaluation
+5. **Resolve**: Apply appropriate fixes and verify resolution effectiveness
 
 Key behaviors:
 

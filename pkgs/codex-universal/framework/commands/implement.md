@@ -24,10 +24,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine implementation requirements and detect technology context
-1. **Plan**: Choose approach and activate relevant personas for domain expertise
-1. **Generate**: Create implementation code with framework-specific best practices
-1. **Validate**: Apply security and quality validation throughout development
-1. **Integrate**: Update documentation and provide testing recommendations
+2. **Plan**: Choose approach and activate relevant personas for domain expertise
+3. **Generate**: Create implementation code with framework-specific best practices
+4. **Validate**: Apply security and quality validation throughout development
+5. **Integrate**: Update documentation and provide testing recommendations
 
 Key behaviors:
 

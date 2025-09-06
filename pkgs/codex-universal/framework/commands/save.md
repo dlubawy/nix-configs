@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine session progress and identify discoveries worth preserving
-1. **Persist**: Save session context and learnings using Serena MCP memory management
-1. **Checkpoint**: Create recovery points for complex sessions and progress tracking
-1. **Validate**: Ensure session data integrity and cross-session compatibility
-1. **Prepare**: Ready session context for seamless continuation in future sessions
+2. **Persist**: Save session context and learnings using Serena MCP memory management
+3. **Checkpoint**: Create recovery points for complex sessions and progress tracking
+4. **Validate**: Ensure session data integrity and cross-session compatibility
+5. **Prepare**: Ready session context for seamless continuation in future sessions
 
 Key behaviors:
 

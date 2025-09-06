@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Examine project structure and identify key documentation components
-1. **Organize**: Apply intelligent organization patterns and cross-referencing strategies
-1. **Generate**: Create comprehensive documentation with framework-specific patterns
-1. **Validate**: Ensure documentation completeness and quality standards
-1. **Maintain**: Update existing documentation while preserving manual additions and customizations
+2. **Organize**: Apply intelligent organization patterns and cross-referencing strategies
+3. **Generate**: Create comprehensive documentation with framework-specific patterns
+4. **Validate**: Ensure documentation completeness and quality standards
+5. **Maintain**: Update existing documentation while preserving manual additions and customizations
 
 Key behaviors:
 

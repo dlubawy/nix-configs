@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Check repository state and working directory changes
-1. **Validate**: Ensure operation is appropriate for current Git context
-1. **Execute**: Run Git command with intelligent automation
-1. **Optimize**: Apply smart commit messages and workflow patterns
-1. **Report**: Provide status and next steps guidance
+2. **Validate**: Ensure operation is appropriate for current Git context
+3. **Execute**: Run Git command with intelligent automation
+4. **Optimize**: Apply smart commit messages and workflow patterns
+5. **Report**: Provide status and next steps guidance
 
 Key behaviors:
 

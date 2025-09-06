@@ -24,10 +24,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Explore**: Transform ambiguous ideas through Socratic dialogue and systematic questioning
-1. **Analyze**: Coordinate multiple personas for domain expertise and comprehensive analysis
-1. **Validate**: Apply feasibility assessment and requirement validation across domains
-1. **Specify**: Generate concrete specifications with cross-session persistence capabilities
-1. **Handoff**: Create actionable briefs ready for implementation or further development
+2. **Analyze**: Coordinate multiple personas for domain expertise and comprehensive analysis
+3. **Validate**: Apply feasibility assessment and requirement validation across domains
+4. **Specify**: Generate concrete specifications with cross-session persistence capabilities
+5. **Handoff**: Create actionable briefs ready for implementation or further development
 
 Key behaviors:
 

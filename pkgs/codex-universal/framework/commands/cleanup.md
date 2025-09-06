@@ -20,10 +20,10 @@ ______________________________________________________________________
 ## Behavioral Flow
 
 1. **Analyze**: Assess cleanup opportunities and safety considerations across target scope
-1. **Plan**: Choose cleanup approach and activate relevant personas for domain expertise
-1. **Execute**: Apply systematic cleanup with intelligent dead code detection and removal
-1. **Validate**: Ensure no functionality loss through testing and safety verification
-1. **Report**: Generate cleanup summary with recommendations for ongoing maintenance
+2. **Plan**: Choose cleanup approach and activate relevant personas for domain expertise
+3. **Execute**: Apply systematic cleanup with intelligent dead code detection and removal
+4. **Validate**: Ensure no functionality loss through testing and safety verification
+5. **Report**: Generate cleanup summary with recommendations for ongoing maintenance
 
 Key behaviors:
 
