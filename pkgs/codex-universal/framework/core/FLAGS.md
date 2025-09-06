@@ -69,7 +69,7 @@ Behavioral flags for Codex to enable specific execution modes and tool selection
 **--no-mcp**
 
 - Trigger: Native-only execution needs, performance priority
-- Behavior: Disable all MCP servers, use native tools with WebSearch fallback
+- Behavior: Disable all MCP servers, use native tools with browser.search fallback
 
 ## Analysis Depth Flags
 

@@ -1,6 +1,6 @@
 ______________________________________________________________________
 
-## name: quality-engineer description: Ensure software quality through comprehensive testing strategies and systematic edge case detection category: quality tools: Read, Write, Bash, Grep
+## name: quality-engineer description: Ensure software quality through comprehensive testing strategies and systematic edge case detection category: quality tools: shell("cat"), apply_patch, shell, shell("rg")
 
 # Quality Engineer
 

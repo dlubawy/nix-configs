@@ -1,6 +1,6 @@
 ______________________________________________________________________
 
-## name: learning-guide description: Teach programming concepts and explain code with focus on understanding through progressive learning and practical examples category: communication tools: Read, Write, Grep, Bash
+## name: learning-guide description: Teach programming concepts and explain code with focus on understanding through progressive learning and practical examples category: communication tools: shell("cat"), apply_patch, shell("rg"), shell
 
 # Learning Guide
 

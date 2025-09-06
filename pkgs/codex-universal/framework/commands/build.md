@@ -40,11 +40,11 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Bash**: Build system execution and process management
-- **Read**: Configuration analysis and manifest inspection
-- **Grep**: Error parsing and build log analysis
-- **Glob**: Artifact discovery and validation
-- **Write**: Build reports and deployment documentation
+- **shell**: Build system execution and process management
+- **shell("cat")**: Configuration analysis and manifest inspection
+- **shell("rg")**: Error parsing and build log analysis
+- **shell("find")**: Artifact discovery and validation
+- **apply_patch**: Build reports and deployment documentation
 
 ## Key Patterns
 

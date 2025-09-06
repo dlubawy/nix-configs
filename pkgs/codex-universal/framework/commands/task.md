@@ -43,9 +43,9 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **TodoWrite**: Hierarchical task breakdown and progress tracking across Epic → Story → Task levels
-- **Task**: Advanced delegation for complex multi-agent coordination and sub-task management
-- **Read/Write/Edit**: Task documentation and implementation coordination
+- **plan_update**: Hierarchical task breakdown and progress tracking across Epic → Story → Task levels
+- **shell("codex exec")**: Advanced delegation for complex multi-agent coordination and sub-task management
+- **shell("cat")/apply_patch**: Task documentation and implementation coordination
 - **sequentialthinking**: Structured reasoning for complex task dependency analysis
 
 ## Key Patterns

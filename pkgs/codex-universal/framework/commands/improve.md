@@ -40,10 +40,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read/Grep/Glob**: Code analysis and improvement opportunity identification
-- **Edit/MultiEdit**: Safe code modification and systematic refactoring
-- **TodoWrite**: Progress tracking for complex multi-file improvement operations
-- **Task**: Delegation for large-scale improvement workflows requiring systematic coordination
+- **shell("cat")/shell("rg")/shell("find")**: Code analysis and improvement opportunity identification
+- **apply_patch**: Safe code modification and systematic refactoring
+- **plan_update**: Progress tracking for complex multi-file improvement operations
+- **shell("codex exec")**: Delegation for large-scale improvement workflows requiring systematic coordination
 
 ## Key Patterns
 

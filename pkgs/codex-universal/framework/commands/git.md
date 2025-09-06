@@ -34,10 +34,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Bash**: Git command execution and repository operations
-- **Read**: Repository state analysis and configuration review
-- **Grep**: Log parsing and status analysis
-- **Write**: Commit message generation and documentation
+- **shell**: Git command execution and repository operations
+- **shell("cat")**: Repository state analysis and configuration review
+- **shell("rg")**: Log parsing and status analysis
+- **apply_patch**: Commit message generation and documentation
 
 ## Key Patterns
 

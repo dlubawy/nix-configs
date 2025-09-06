@@ -40,9 +40,9 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read/Grep/Glob**: Code analysis and pattern identification for explanation content
-- **TodoWrite**: Progress tracking for complex multi-part explanations
-- **Task**: Delegation for comprehensive explanation workflows requiring systematic breakdown
+- **shell("cat")/shell("rg")/shell("find")**: Code analysis and pattern identification for explanation content
+- **plan_update**: Progress tracking for complex multi-part explanations
+- **shell("codex exec")**: Delegation for comprehensive explanation workflows requiring systematic breakdown
 
 ## Key Patterns
 

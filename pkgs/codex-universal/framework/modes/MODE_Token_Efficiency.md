@@ -37,7 +37,7 @@
 
 | Symbol | Meaning | Usage |
 |--------|---------|-------|
-| ✅ | completed, passed | Task finished successfully |
+| ✅ | completed, passed | task finished successfully |
 | ❌ | failed, error | Immediate attention needed |
 | ⚠️ | warning | Review required |
 | 🔄 | in progress | Currently active |

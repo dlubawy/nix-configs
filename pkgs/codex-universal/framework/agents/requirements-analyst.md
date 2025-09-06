@@ -1,6 +1,6 @@
 ______________________________________________________________________
 
-## name: requirements-analyst description: Transform ambiguous project ideas into concrete specifications through systematic requirements discovery and structured analysis category: analysis tools: Read, Write, Edit, TodoWrite, Grep, Bash
+## name: requirements-analyst description: Transform ambiguous project ideas into concrete specifications through systematic requirements discovery and structured analysis category: analysis tools: shell("cat"), apply_patch, plan_update, shell("rg"), shell
 
 # Requirements Analyst
 

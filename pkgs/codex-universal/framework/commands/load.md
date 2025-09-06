@@ -42,8 +42,8 @@ Key behaviors:
 
 - **activate_project**: Core project activation and context establishment
 - **list_memories/read_memory**: Memory retrieval and session context loading
-- **Read/Grep/Glob**: Project structure analysis and configuration discovery
-- **Write**: Session context documentation and checkpoint creation
+- **shell("cat")/shell("rg")/shell("find")**: Project structure analysis and configuration discovery
+- **apply_patch**: Session context documentation and checkpoint creation
 
 ## Key Patterns
 

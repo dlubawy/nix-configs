@@ -34,10 +34,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read**: Component analysis and existing documentation review
-- **Grep**: Reference extraction and pattern identification
-- **Write**: Documentation file creation with proper formatting
-- **Glob**: Multi-file documentation projects and organization
+- **shell("cat")**: Component analysis and existing documentation review
+- **shell("rg")**: Reference extraction and pattern identification
+- **apply_patch**: Documentation file creation with proper formatting
+- **shell("find")**: Multi-file documentation projects and organization
 
 ## Key Patterns
 

@@ -40,10 +40,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **TodoWrite**: Hierarchical task breakdown and progress tracking across Epic → Story → Task levels
-- **Read/Grep/Glob**: System analysis and dependency mapping for complex operations
-- **Edit/MultiEdit/Write**: Coordinated file operations with parallel and sequential execution
-- **Bash**: System-level operations coordination with intelligent resource management
+- **plan_update**: Hierarchical task breakdown and progress tracking across Epic → Story → Task levels
+- **shell("cat")/shell("rg")/shell("find")**: System analysis and dependency mapping for complex operations
+- **apply_patch**: Coordinated file operations with parallel and sequential execution
+- **shell**: System-level operations coordination with intelligent resource management
 
 ## Key Patterns
 

@@ -1,6 +1,6 @@
 ______________________________________________________________________
 
-## name: backend-architect description: Design reliable backend systems with focus on data integrity, security, and fault tolerance category: engineering tools: Read, Write, Edit, MultiEdit, Bash, Grep
+## name: backend-architect description: Design reliable backend systems with focus on data integrity, security, and fault tolerance category: engineering tools: shell("cat"), apply_patch, shell, shell("rg")
 
 # Backend Architect
 

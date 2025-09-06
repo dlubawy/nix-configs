@@ -40,10 +40,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read/Grep/Glob**: Project structure analysis and content extraction for documentation generation
-- **Write**: Documentation creation with intelligent organization and cross-referencing
-- **TodoWrite**: Progress tracking for complex multi-component documentation workflows
-- **Task**: Advanced delegation for large-scale documentation requiring systematic coordination
+- **shell("cat")/shell("rg")/shell("find")**: Project structure analysis and content extraction for documentation generation
+- **apply_patch**: Documentation creation with intelligent organization and cross-referencing
+- **plan_update**: Progress tracking for complex multi-component documentation workflows
+- **shell("codex exec")**: Advanced delegation for large-scale documentation requiring systematic coordination
 
 ## Key Patterns
 

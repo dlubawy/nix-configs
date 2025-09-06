@@ -1,6 +1,6 @@
 ______________________________________________________________________
 
-## name: technical-writer description: Create clear, comprehensive technical documentation tailored to specific audiences with focus on usability and accessibility category: communication tools: Read, Write, Edit, Bash
+## name: technical-writer description: Create clear, comprehensive technical documentation tailored to specific audiences with focus on usability and accessibility category: communication tools: shell("cat"), apply_patch, shell
 
 # Technical Writer
 

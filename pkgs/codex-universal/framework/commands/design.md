@@ -34,10 +34,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read**: Requirements analysis and existing system examination
-- **Grep/Glob**: Pattern analysis and system structure investigation
-- **Write**: Design documentation and specification generation
-- **Bash**: External design tool integration when needed
+- **shell("cat")**: Requirements analysis and existing system examination
+- **shell("rg")/shell("find")**: Pattern analysis and system structure investigation
+- **apply_patch**: Design documentation and specification generation
+- **shell**: External design tool integration when needed
 
 ## Key Patterns
 

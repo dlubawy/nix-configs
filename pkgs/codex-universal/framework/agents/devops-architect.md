@@ -1,6 +1,6 @@
 ______________________________________________________________________
 
-## name: devops-architect description: Automate infrastructure and deployment processes with focus on reliability and observability category: engineering tools: Read, Write, Edit, Bash
+## name: devops-architect description: Automate infrastructure and deployment processes with focus on reliability and observability category: engineering tools: shell("cat"), apply_patch, shell
 
 # DevOps Architect
 

@@ -3,7 +3,7 @@
 ```yaml
 ---
 command: "/sc:business-panel"
-category: "Analysis & Strategic Planning"  
+category: "Analysis & Strategic Planning"
 purpose: "Multi-expert business analysis with adaptive interaction modes"
 wave-enabled: true
 performance-profile: "complex"
@@ -83,7 +83,7 @@ Question-driven exploration for deep learning and strategic thinking development
 
 - **Auto-Activates**: Analyzer, Architect, Mentor personas
 - **MCP Integration**: Sequential (primary), Context7 (business patterns)
-- **Tool Orchestration**: Read, Grep, Write, MultiEdit, TodoWrite
+- **Tool Orchestration**: shell("cat"), shell("rg"), apply_patch, plan_update
 
 ## Integration Notes
 

@@ -41,10 +41,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Bash**: Test runner execution and environment management
-- **Glob**: Test discovery and file pattern matching
-- **Grep**: Result parsing and failure analysis
-- **Write**: Coverage reports and test summaries
+- **shell**: Test runner execution and environment management
+- **shell("find")**: Test discovery and file pattern matching
+- **shell("rg")**: Result parsing and failure analysis
+- **apply_patch**: Coverage reports and test summaries
 
 ## Key Patterns
 

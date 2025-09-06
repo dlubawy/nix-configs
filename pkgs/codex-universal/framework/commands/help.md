@@ -27,10 +27,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Glob**: File discovery and project structure analysis
-- **Grep**: Pattern analysis and code search operations
-- **Read**: Source code inspection and configuration analysis
-- **Bash**: External analysis tool execution and validation
+- **shell("find")**: File discovery and project structure analysis
+- **shell("rg")**: Pattern analysis and code search operations
+- **shell("cat")**: Source code inspection and configuration analysis
+- **shell**: External analysis tool execution and validation
 
 ## Key Patterns
 

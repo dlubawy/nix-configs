@@ -40,10 +40,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read/Grep/Glob**: Codebase analysis for complexity assessment and scope evaluation
-- **TodoWrite**: Estimation breakdown and progress tracking for complex estimation workflows
-- **Task**: Advanced delegation for multi-domain estimation requiring systematic coordination
-- **Bash**: Project analysis and dependency evaluation for accurate complexity scoring
+- **shell("cat")/shell("rg")/shell("find")**: Codebase analysis for complexity assessment and scope evaluation
+- **plan_update**: Estimation breakdown and progress tracking for complex estimation workflows
+- **shell("codex exec")**: Advanced delegation for multi-domain estimation requiring systematic coordination
+- **shell**: Project analysis and dependency evaluation for accurate complexity scoring
 
 ## Key Patterns
 

@@ -42,7 +42,7 @@ Key behaviors:
 
 - **get_current_config**: System configuration analysis for tool capability assessment
 - **execute_sketched_edit**: Operation testing and validation for selection accuracy
-- **Read/Grep**: Operation context analysis and complexity factor identification
+- **shell("cat")/shell("rg")**: Operation context analysis and complexity factor identification
 - **Integration**: Automatic selection logic used by refactor, edit, implement, and improve commands
 
 ## Key Patterns
@@ -62,7 +62,7 @@ Key behaviors:
 # Selection: Serena MCP (LSP capabilities, semantic understanding)
 ```
 
-### Pattern-Based Bulk Edit
+### Pattern-Based Bulk apply_patch
 
 ```
 /sc:select-tool "update console.log to logger.info across project" --explain

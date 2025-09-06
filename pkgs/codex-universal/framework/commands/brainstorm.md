@@ -47,10 +47,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read/Write/Edit**: Requirements documentation and specification generation
-- **TodoWrite**: Progress tracking for complex multi-phase exploration
-- **Task**: Advanced delegation for parallel exploration paths and multi-agent coordination
-- **WebSearch**: Market research, competitive analysis, and technology validation
+- **shell("cat")/apply_patch**: Requirements documentation and specification generation
+- **plan_update**: Progress tracking for complex multi-phase exploration
+- **shell("codex exec")**: Advanced delegation for parallel exploration paths and multi-agent coordination
+- **browser.search**: Market research, competitive analysis, and technology validation
 - **sequentialthinking**: Structured reasoning for complex requirements analysis
 
 ## Key Patterns

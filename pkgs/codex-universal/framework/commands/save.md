@@ -43,7 +43,7 @@ Key behaviors:
 - **write_memory/read_memory**: Core session context persistence and retrieval
 - **think_about_collected_information**: Session analysis and discovery identification
 - **summarize_changes**: Session summary generation and progress documentation
-- **TodoRead**: Task completion tracking for automatic checkpoint triggers
+- **plan_update**: Task completion tracking for automatic checkpoint triggers
 
 ## Key Patterns
 

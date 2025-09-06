@@ -34,10 +34,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read**: Log analysis and system state examination
-- **Bash**: Diagnostic command execution and system investigation
-- **Grep**: Error pattern detection and log analysis
-- **Write**: Diagnostic reports and resolution documentation
+- **shell("cat")**: Log analysis and system state examination
+- **shell**: Diagnostic command execution and system investigation
+- **shell("rg")**: Error pattern detection and log analysis
+- **apply_patch**: Diagnostic reports and resolution documentation
 
 ## Key Patterns
 

@@ -28,7 +28,7 @@ ______________________________________________________________________
 Key behaviors:
 
 - Serena MCP integration for comprehensive reflection analysis and task validation
-- Bridge between TodoWrite patterns and advanced Serena analysis capabilities
+- Bridge between plan_update patterns and advanced Serena analysis capabilities
 - Session lifecycle integration with cross-session persistence and learning capture
 - Performance-critical operations with \<200ms core reflection and validation
 
@@ -41,7 +41,7 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **TodoRead/TodoWrite**: Bridge between traditional task management and advanced reflection analysis
+- **TodoRead/plan_update**: Bridge between traditional task management and advanced reflection analysis
 - **think_about_task_adherence**: Validates current approach against project goals and session objectives
 - **think_about_collected_information**: Analyzes session work and information gathering completeness
 - **think_about_whether_you_are_done**: Evaluates task completion criteria and remaining work identification
@@ -85,7 +85,7 @@ Key behaviors:
 **Will:**
 
 - Perform comprehensive task reflection and validation using Serena MCP analysis tools
-- Bridge TodoWrite patterns with advanced reflection capabilities for enhanced task management
+- Bridge plan_update patterns with advanced reflection capabilities for enhanced task management
 - Provide cross-session learning capture and session lifecycle integration
 
 **Will Not:**

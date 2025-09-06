@@ -40,10 +40,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read/Grep/Glob**: Code analysis and pattern detection for cleanup opportunities
-- **Edit/MultiEdit**: Safe code modification and structure optimization
-- **TodoWrite**: Progress tracking for complex multi-file cleanup operations
-- **Task**: Delegation for large-scale cleanup workflows requiring systematic coordination
+- **shell("cat")/shell("rg")/shell("find")**: Code analysis and pattern detection for cleanup opportunities
+- **apply_patch**: Safe code modification and structure optimization
+- **plan_update**: Progress tracking for complex multi-file cleanup operations
+- **shell("codex exec")**: Delegation for large-scale cleanup workflows requiring systematic coordination
 
 ## Key Patterns
 

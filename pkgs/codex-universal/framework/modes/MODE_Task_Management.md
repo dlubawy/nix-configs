@@ -15,7 +15,7 @@
 📋 **Plan** → write_memory("plan", goal_statement)
 → 🎯 **Phase** → write_memory("phase_X", milestone)
 → 📦 **Task** → write_memory("task_X.Y", deliverable)
-→ ✓ **Todo** → TodoWrite + write_memory("todo_X.Y.Z", status)
+→ ✓ **Todo** → plan_update + write_memory("todo_X.Y.Z", status)
 
 ## Memory Operations
 
@@ -32,7 +32,7 @@
 ```
 1. write_memory("task_2.1", "completed: auth middleware")
 2. think_about_task_adherence() → Verify on track
-3. Update TodoWrite status in parallel
+3. Update plan_update status in parallel
 4. write_memory("checkpoint", current_state) every 30min
 ```
 
@@ -48,7 +48,7 @@
 
 1. **Load**: list_memories() → read_memory() → Resume state
 2. **Plan**: Create hierarchy → write_memory() for each level
-3. **Track**: TodoWrite + memory updates in parallel
+3. **Track**: plan_update + memory updates in parallel
 4. **Execute**: Update memories as tasks complete
 5. **Checkpoint**: Periodic write_memory() for state preservation
 6. **Complete**: Final memory update with outcomes
@@ -58,7 +58,7 @@
 | Task Type | Primary Tool | Memory Key |
 |-----------|-------------|------------|
 | Analysis | Sequential MCP | "analysis_results" |
-| Implementation | MultiEdit/Morphllm | "code_changes" |
+| Implementation | Morphllm | "code_changes" |
 | UI Components | Magic MCP | "ui_components" |
 | Testing | Playwright MCP | "test_results" |
 | Documentation | Context7 MCP | "doc_patterns" |
@@ -84,7 +84,7 @@ list_memories() → Empty
 write_memory("plan_auth", "Implement JWT authentication system")
 write_memory("phase_1", "Analysis - security requirements review")
 write_memory("task_1.1", "pending: Review existing auth patterns")
-TodoWrite: Create 5 specific todos
+plan_update: Create 5 specific todos
 Execute task 1.1 → write_memory("task_1.1", "completed: Found 3 patterns")
 ```
 

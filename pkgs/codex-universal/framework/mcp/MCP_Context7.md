@@ -12,7 +12,7 @@
 
 ## Choose When
 
-- **Over WebSearch**: When you need curated, version-specific documentation
+- **Over browser.search**: When you need curated, version-specific documentation
 - **Over native knowledge**: When implementation must follow official patterns
 - **For frameworks**: React hooks, Vue composition API, Angular services
 - **For libraries**: Correct API usage, authentication flows, configuration

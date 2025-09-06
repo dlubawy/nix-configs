@@ -43,10 +43,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Read/Write/Edit**: PRD analysis and workflow documentation generation
-- **TodoWrite**: Progress tracking for complex multi-phase workflow execution
-- **Task**: Advanced delegation for parallel workflow generation and multi-agent coordination
-- **WebSearch**: Technology research, framework validation, and implementation strategy analysis
+- **shell("cat")/apply_patch**: PRD analysis and workflow documentation generation
+- **plan_update**: Progress tracking for complex multi-phase workflow execution
+- **shell("codex exec")**: Advanced delegation for parallel workflow generation and multi-agent coordination
+- **browser.search**: Technology research, framework validation, and implementation strategy analysis
 - **sequentialthinking**: Structured reasoning for complex workflow dependency analysis
 
 ## Key Patterns

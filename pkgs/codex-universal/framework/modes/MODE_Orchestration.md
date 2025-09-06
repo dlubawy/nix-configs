@@ -26,7 +26,6 @@
 | Pattern edits | Morphllm MCP | Individual edits |
 | Documentation | Context7 MCP | Web search |
 | Browser testing | Playwright MCP | Unit tests |
-| Multi-file edits | MultiEdit | Sequential Edits |
 
 ## Resource Management
 
@@ -51,6 +50,6 @@
 ## Parallel Execution Triggers
 
 - **3+ files**: Auto-suggest parallel processing
-- **Independent operations**: Batch Read calls, parallel edits
+- **Independent operations**: Batch shell("cat") calls, parallel edits
 - **Multi-directory scope**: Enable delegation mode
 - **Performance requests**: Parallel-first approach

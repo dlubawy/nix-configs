@@ -45,10 +45,10 @@ Key behaviors:
 
 ## Tool Coordination
 
-- **Write/Edit/MultiEdit**: Code generation and modification for implementation
-- **Read/Grep/Glob**: Project analysis and pattern detection for consistency
-- **TodoWrite**: Progress tracking for complex multi-file implementations
-- **Task**: Delegation for large-scale feature development requiring systematic coordination
+- **apply_patch**: Code generation and modification for implementation
+- **shell("cat")/shell("rg")/shell("find")**: Project analysis and pattern detection for consistency
+- **plan_update**: Progress tracking for complex multi-file implementations
+- **shell("codex exec")**: Delegation for large-scale feature development requiring systematic coordination
 
 ## Key Patterns
 
