@@ -51,8 +51,8 @@ rec {
     };
 
     # Custom package flakes
-    openai-responses = {
-      url = "github:dlubawy/openai-responses/main";
+    codex-universal = {
+      url = "github:dlubawy/nix-codex-universal/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
