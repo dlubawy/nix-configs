@@ -1,4 +1,4 @@
-Repository Guidelines
+# Repository Guidelines
 
 This document provides a quick reference for contributors working on this
 Nix‑flake based repository. It covers the layout, build workflow, coding
