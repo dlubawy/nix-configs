@@ -34,11 +34,11 @@
         "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {
-        "lastModified": 1757216739,
-        "narHash": "sha256-uERTV7NXDXoZBuCM/3UcvwiTiCYatQDlg+nmsj+y44E=",
+        "lastModified": 1757217199,
+        "narHash": "sha256-H3wOSk3kDNkjzTshcByvqKSEfaxUFdX5rUb4rKrULAM=",
         "owner": "dlubawy",
         "repo": "nix-codex-universal",
-        "rev": "0be661ea966c75986944c75c6831f1a9e95a0875",
+        "rev": "0b5fb534377a93cd7a33c3a9df006d54e90ccd04",
         "type": "github"
       },
       "original": {
