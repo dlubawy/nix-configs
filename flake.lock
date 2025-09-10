@@ -34,11 +34,11 @@
         "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {
-        "lastModified": 1757393425,
-        "narHash": "sha256-sPYAgT6a95iFQDMntBHHZmfRdUcK8I3/k12oBNJOXaM=",
+        "lastModified": 1757486110,
+        "narHash": "sha256-YKMjiFIepuU1UBAh16AT8n3YW1RuYIv6yuc8SfRspGU=",
         "owner": "dlubawy",
         "repo": "nix-codex-universal",
-        "rev": "1dd6c1bd9812d3aa3f3540cb2a925af54982a413",
+        "rev": "237394b5f37cd68d07fc991a000bef2d18bb484f",
         "type": "github"
       },
       "original": {
@@ -597,11 +597,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1757393378,
-        "narHash": "sha256-huAHeqTOmaj7crKEjb5v378wCwdTyC5nafrMrFS2Fus=",
+        "lastModified": 1757486000,
+        "narHash": "sha256-cTExr8wxH5zEegD7qk8IIKNwSuO8SV1bqaNuL0bSjN0=",
         "owner": "dlubawy",
         "repo": "openai-responses",
-        "rev": "9f88534af2a5f7760d931476c1a78ec2c40c8197",
+        "rev": "abbe9f9aef8f2c7a047645f0e42f93ed46219204",
         "type": "github"
       },
       "original": {
