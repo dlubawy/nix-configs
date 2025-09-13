@@ -15,6 +15,7 @@ in
 {
   programs.ssh = {
     enable = true;
+    # NOTE: PubkeyAuthentication unbound set because of: https://www.osso.nl/blog/2024/gpg-agent-ssh-ed25519-agent-refused/
     extraConfig = ''
       AddressFamily = "inet"
       VisualHostKey = "yes"
@@ -28,6 +29,7 @@ in
       MACs = "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com"
       KexAlgorithms = "curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256"
       HostKeyAlgorithms = "rsa-sha2-512,rsa-sha2-256,ssh-ed25519"
+      PubkeyAuthentication = "unbound"
     '';
     hashKnownHosts = true;
     forwardAgent = false;
@@ -57,10 +59,6 @@ in
         user = "${username}";
         extraOptions = {
           ControlMaster = "no";
-          # FIXME: there is an issue with key length on the host when using a YubiKey with SSH.
-          # So we force it to ssh-ed25519, but the root cause should be fixed if possible.
-          # Might be related: https://github.com/djmdjm/openssh-portable-wip/pull/9
-          HostKeyAlgorithms = "ssh-ed25519";
         };
         identitiesOnly = true;
         identityFile = [ ] ++ sshKeys;
@@ -71,10 +69,6 @@ in
         user = "${username}";
         extraOptions = {
           ControlMaster = "no";
-          # FIXME: there is an issue with key length on the host when using a YubiKey with SSH.
-          # So we force it to ssh-ed25519, but the root cause should be fixed if possible.
-          # Might be related: https://github.com/djmdjm/openssh-portable-wip/pull/9
-          HostKeyAlgorithms = "ssh-ed25519";
         };
         identitiesOnly = true;
         identityFile = [ ] ++ sshKeys;
