@@ -25,16 +25,6 @@
         nvimSkipModules = [ "render-markdown.config.patterns" ];
       });
     };
-    # FIXME: ISSUE[#91] remove when v257.9 is backported
-    systemd = prev.systemd.overrideAttrs (_: rec {
-      version = "257.7";
-      src = prev.pkgs.fetchFromGitHub {
-        owner = "systemd";
-        repo = "systemd";
-        rev = "v${version}";
-        hash = "sha256-9OnjeMrfV5DSAoX/aetI4r/QLPYITUd2aOY0DYfkTzQ=";
-      };
-    });
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
