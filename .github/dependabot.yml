@@ -8,3 +8,7 @@ updates:
       # Check for updates to GitHub Actions every week
       interval: "weekly"
     open-pull-requests-limit: 10
+    groups:
+      github-actions:
+        patterns:
+          - "*"
