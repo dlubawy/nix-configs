@@ -41,14 +41,6 @@ in
     system.etc.overlay.enable = lib.mkForce false;
     systemd.sysusers.enable = lib.mkForce false;
 
-    # FIXME: ISSUE[#91] remove when systemd v257.9 is backported
-    system = {
-      autoUpgrade = {
-        enable = lib.mkForce false;
-        allowReboot = lib.mkForce false;
-      };
-    };
-
     # FIXME: System seems unstable after 24h uptime so let's reboot everyday
     systemd.timers = {
       "scheduled-reboot" = {
