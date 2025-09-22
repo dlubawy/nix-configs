@@ -1,12 +1,17 @@
 # Custom packages, that can be defined similarly to ones from nixpkgs
 # You can build them using 'nix build .#example'
-system:
+system: inputs:
 let
   allPackages = {
-    aarch64-darwin = pkgs: {
-      # example = pkgs.callPackage ./example { };
-      fuse-t = pkgs.callPackage ./fuse-t { };
-    };
+    aarch64-darwin =
+      pkgs:
+      let
+      in
+      {
+        # example = pkgs.callPackage ./example { };
+        codex-universal = inputs.codex-universal.packages.aarch64-darwin.default;
+        fuse-t = pkgs.callPackage ./fuse-t { };
+      };
     x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {
       iwinfo-lite = pkgs.callPackage ./iwinfo-lite { };

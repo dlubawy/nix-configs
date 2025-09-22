@@ -49,6 +49,12 @@ rec {
       url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Custom package flakes
+    codex-universal = {
+      url = "github:dlubawy/nix-codex-universal/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -119,7 +125,7 @@ rec {
         };
     in
     rec {
-      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system) pkgs);
+      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system inputs) pkgs);
       formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
 
       overlays = import ./overlays { inherit inputs; };

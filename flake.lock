@@ -24,6 +24,30 @@
         "type": "github"
       }
     },
+    "codex-universal": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "openai-responses": "openai-responses",
+        "pre-commit-hooks": "pre-commit-hooks_2"
+      },
+      "locked": {
+        "lastModified": 1759330652,
+        "narHash": "sha256-OmvOYoQ6S5juYNdQU/72hkocU03vZLqMZqaOIqCfhR8=",
+        "owner": "dlubawy",
+        "repo": "nix-codex-universal",
+        "rev": "688b791cae12ba690f172571b2d1015205102b50",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dlubawy",
+        "ref": "main",
+        "repo": "nix-codex-universal",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -123,6 +147,38 @@
     "flake-compat_3": {
       "flake": false,
       "locked": {
+        "lastModified": 1696426674,
+        "narHash": "sha256-kvjfFW7WAETZlt09AgDn1MrtKzP7t90Vf7vypd3OL1U=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "0f9255e01c2351cc7d116c072cb317785dd33b33",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_4": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1747046372,
+        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_5": {
+      "flake": false,
+      "locked": {
         "lastModified": 1747046372,
         "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
         "owner": "edolstra",
@@ -196,7 +252,8 @@
     "gitignore": {
       "inputs": {
         "nixpkgs": [
-          "nix-topology",
+          "codex-universal",
+          "openai-responses",
           "pre-commit-hooks",
           "nixpkgs"
         ]
@@ -216,6 +273,50 @@
       }
     },
     "gitignore_2": {
+      "inputs": {
+        "nixpkgs": [
+          "codex-universal",
+          "pre-commit-hooks",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709087332,
+        "narHash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
+    "gitignore_3": {
+      "inputs": {
+        "nixpkgs": [
+          "nix-topology",
+          "pre-commit-hooks",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709087332,
+        "narHash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
+    "gitignore_4": {
       "inputs": {
         "nixpkgs": [
           "pre-commit-hooks",
@@ -313,7 +414,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "pre-commit-hooks": "pre-commit-hooks"
+        "pre-commit-hooks": "pre-commit-hooks_3"
       },
       "locked": {
         "lastModified": 1744142264,
@@ -353,7 +454,7 @@
     },
     "nixos-wsl": {
       "inputs": {
-        "flake-compat": "flake-compat_2",
+        "flake-compat": "flake-compat_4",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -406,6 +507,22 @@
       }
     },
     "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1757745802,
+        "narHash": "sha256-hLEO2TPj55KcUFUU1vgtHE9UEIOjRcH/4QbmfHNF820=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c23193b943c6c689d70ee98ce3128239ed9e32d1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-unstable_2": {
       "locked": {
         "lastModified": 1758690382,
         "narHash": "sha256-NY3kSorgqE5LMm1LqNwGne3ZLMF2/ILgLpFr1fS4X3o=",
@@ -468,10 +585,85 @@
         "type": "github"
       }
     },
+    "openai-responses": {
+      "inputs": {
+        "nixpkgs": [
+          "codex-universal",
+          "nixpkgs"
+        ],
+        "pre-commit-hooks": "pre-commit-hooks",
+        "pyproject-build-systems": "pyproject-build-systems",
+        "pyproject-nix": "pyproject-nix",
+        "uv2nix": "uv2nix"
+      },
+      "locked": {
+        "lastModified": 1759250858,
+        "narHash": "sha256-bpgFNtMxun0/NDNBF8bl31D86BS5/xFB43XKY5OMl5Y=",
+        "owner": "dlubawy",
+        "repo": "openai-responses",
+        "rev": "6a98b5041d714d31ca000b8c6c03c3023ea5abb7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dlubawy",
+        "ref": "main",
+        "repo": "openai-responses",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
         "gitignore": "gitignore",
+        "nixpkgs": [
+          "codex-universal",
+          "openai-responses",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1754416808,
+        "narHash": "sha256-c6yg0EQ9xVESx6HGDOCMcyRSjaTpNJP10ef+6fRcofA=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "9c52372878df6911f9afc1e2a1391f55e4dfc864",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "ref": "master",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
+    "pre-commit-hooks_2": {
+      "inputs": {
+        "flake-compat": "flake-compat_2",
+        "gitignore": "gitignore_2",
+        "nixpkgs": [
+          "codex-universal",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1755960406,
+        "narHash": "sha256-RF7j6C1TmSTK9tYWO6CdEMtg6XZaUKcvZwOCD2SICZs=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "e891a93b193fcaf2fc8012d890dc7f0befe86ec2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "ref": "master",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
+    "pre-commit-hooks_3": {
+      "inputs": {
+        "flake-compat": "flake-compat_3",
+        "gitignore": "gitignore_3",
         "nixpkgs": [
           "nix-topology",
           "nixpkgs"
@@ -495,10 +687,10 @@
         "type": "github"
       }
     },
-    "pre-commit-hooks_2": {
+    "pre-commit-hooks_4": {
       "inputs": {
-        "flake-compat": "flake-compat_3",
-        "gitignore": "gitignore_2",
+        "flake-compat": "flake-compat_5",
+        "gitignore": "gitignore_4",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -518,9 +710,64 @@
         "type": "github"
       }
     },
+    "pyproject-build-systems": {
+      "inputs": {
+        "nixpkgs": [
+          "codex-universal",
+          "openai-responses",
+          "nixpkgs"
+        ],
+        "pyproject-nix": [
+          "codex-universal",
+          "openai-responses",
+          "pyproject-nix"
+        ],
+        "uv2nix": [
+          "codex-universal",
+          "openai-responses",
+          "uv2nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1754838072,
+        "narHash": "sha256-8T+uGCu5Ouch8Z9jdiIc1k4gntZKnyzoCZ9ztpgRV+Q=",
+        "owner": "pyproject-nix",
+        "repo": "build-system-pkgs",
+        "rev": "e13fc3881e6b9bfce26e5a8bea0796f4da3d0d4a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pyproject-nix",
+        "repo": "build-system-pkgs",
+        "type": "github"
+      }
+    },
+    "pyproject-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "codex-universal",
+          "openai-responses",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1754287816,
+        "narHash": "sha256-kDt0HB89oWTlTQMnTwDxx3BlRHK1AdAJ1kMcVYGuccs=",
+        "owner": "nix-community",
+        "repo": "pyproject.nix",
+        "rev": "efe944d0902f406c28b4e8662312292a37e4de87",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "pyproject.nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "codex-universal": "codex-universal",
         "darwin": "darwin_2",
         "home-manager": "home-manager_2",
         "nix-topology": "nix-topology",
@@ -528,9 +775,9 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "nixpkgs-darwin": "nixpkgs-darwin",
-        "nixpkgs-unstable": "nixpkgs-unstable",
+        "nixpkgs-unstable": "nixpkgs-unstable_2",
         "nixvim": "nixvim",
-        "pre-commit-hooks": "pre-commit-hooks_2"
+        "pre-commit-hooks": "pre-commit-hooks_4"
       }
     },
     "systems": {
@@ -590,6 +837,33 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "uv2nix": {
+      "inputs": {
+        "nixpkgs": [
+          "codex-universal",
+          "openai-responses",
+          "nixpkgs"
+        ],
+        "pyproject-nix": [
+          "codex-universal",
+          "openai-responses",
+          "pyproject-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1754719699,
+        "narHash": "sha256-Ek6WILkhVMDWm9j0L23gxHhDt62z1+A68D+pPt0ghao=",
+        "owner": "pyproject-nix",
+        "repo": "uv2nix",
+        "rev": "38ead6a16ba1be029dd40fe17fc064d6934847d2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pyproject-nix",
+        "repo": "uv2nix",
         "type": "github"
       }
     }
