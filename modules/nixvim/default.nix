@@ -82,6 +82,7 @@
       gawk
       gnused
       nodePackages.prettier
+      python313Packages.pylatexenc
       ripgrep
       stylua
     ]
@@ -91,24 +92,8 @@
 
   extraPlugins = with pkgs.vimPlugins; [
     vim-mundo
-    (pkgs.vimUtils.buildVimPlugin {
-      name = "rainbow_csv";
-      src = pkgs.fetchFromGitHub {
-        owner = "mechatroner";
-        repo = "rainbow_csv";
-        rev = "6b914b420fd390103d9d98b3d6a67648ebe59274";
-        sha256 = "qhwTALQw0rlruAqpWM3UifF9JEEmwlgCsfFZ7MXq0TQ=";
-      };
-    })
-    (pkgs.vimUtils.buildVimPlugin {
-      name = "vim-table-mode";
-      src = pkgs.fetchFromGitHub {
-        owner = "dhruvasagar";
-        repo = "vim-table-mode";
-        rev = "v4.8.1";
-        sha256 = "2p92xLlYYl9HQjFha/qRUwiJCB2MUwbt3ADz0uWyGcw=";
-      };
-    })
+    rainbow_csv
+    vim-table-mode
   ];
 
   plugins = {
@@ -122,21 +107,6 @@
     cmp_luasnip.enable = true;
     nvim-autopairs.enable = true;
     comment.enable = true;
-    copilot-lua = {
-      enable = true;
-      settings = {
-        panel.enabled = false;
-        suggestion.enabled = false;
-        filetypes = {
-          "*" = false;
-        };
-      };
-    };
-    copilot-cmp.enable = true;
-    copilot-chat = {
-      enable = true;
-      settings.model = "claude-3.5-sonnet";
-    };
     lspkind = {
       enable = true;
       symbolMap = {
@@ -195,9 +165,13 @@
       enable = true;
       settings = {
         indent.enable = true;
-        highlight.disable = [ "csv" ];
+        highlight = {
+          enable = true;
+          disable = [ "csv" ];
+        };
       };
       grammarPackages = config.plugins.treesitter.package.passthru.allGrammars ++ [
+        pkgs.tree-sitter-grammars.tree-sitter-org-nvim
         pkgs.tree-sitter-grammars.tree-sitter-norg-meta
       ];
     };

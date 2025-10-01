@@ -20,17 +20,9 @@
   plugins.which-key = {
     settings.spec = [
       {
-        __unkeyed = "]";
-        group = "next";
-      }
-      {
         __unkeyed-1 = "]b";
         __unkeyed-2 = ''<cmd>BufferLineCycleNext<CR>'';
         desc = "Next buffer";
-      }
-      {
-        __unkeyed = "[";
-        group = "prev";
       }
       {
         __unkeyed-1 = "[b";

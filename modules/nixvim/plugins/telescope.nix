@@ -12,6 +12,7 @@
           case_mode = "smart_case";
         };
       };
+      ui-select.enable = true;
     };
     keymaps = {
       "<leader>/" = {
@@ -108,10 +109,6 @@
         desc = "Switch Buffer";
       }
       {
-        __unkeyed = "<leader>f";
-        group = "file/find";
-      }
-      {
         __unkeyed-1 = "<leader>fb";
         __unkeyed-2 = ''<cmd>require("telescope.builtin").buffers({sort_mru=true, sort_lastused=true})<CR>'';
         desc = "Buffers";
@@ -130,10 +127,6 @@
         __unkeyed-1 = "<leader>fR";
         __unkeyed-2 = ''<cmd>require("telescope.builtin").oldfiles({cwd=vim.loop.cwd()})<CR>'';
         desc = "Recent (cwd)";
-      }
-      {
-        __unkeyed = "<leader>s";
-        group = "search";
       }
       {
         __unkeyed-1 = "<leader>sd";
@@ -162,10 +155,6 @@
           "n"
           "v"
         ];
-      }
-      {
-        __unkeyed = "<leader>u";
-        group = "ui";
       }
       {
         __unkeyed-1 = "<leader>uc";
