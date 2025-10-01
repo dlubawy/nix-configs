@@ -295,15 +295,6 @@ in
         vimPlugins.telescope-nvim
       ];
     })
-    (vimUtils.buildVimPlugin {
-      name = "org-roam";
-      src = fetchFromGitHub {
-        owner = "chipsenkbeil";
-        repo = "org-roam.nvim";
-        rev = "0.1.1";
-        hash = "sha256-TrRbZC9PCxtNv4w0rt5WB9sE/iOMY1jCDnP5qwLzRyE=";
-      };
-      buildInputs = [ vimPlugins.orgmode ];
-    })
+    vimPlugins.org-roam-nvim
   ];
 }

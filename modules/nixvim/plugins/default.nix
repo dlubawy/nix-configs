@@ -5,6 +5,7 @@
     ./bufferline.nix
     ./cmp.nix
     ./conform-nvim.nix
+    ./copilot.nix
     ./image.nix
     ./lsp.nix
     ./neorg.nix
