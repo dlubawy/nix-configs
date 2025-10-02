@@ -128,6 +128,7 @@
                 uapsd_advertisement_enabled = 1;
                 sae_confirm_immediate = 1;
                 ieee80211w = lib.mkForce 2;
+                qos_map_set = "0,0,2,16,1,1,255,255,18,22,24,38,40,40,44,46,48,56";
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -175,6 +176,7 @@
                 chan_util_avg_period = 600;
                 preamble = 1;
                 uapsd_advertisement_enabled = 1;
+                qos_map_set = "0,0,2,16,1,1,255,255,18,22,24,38,40,40,44,46,48,56";
 
                 # VLAN
                 dynamic_vlan = 2;
@@ -229,6 +231,7 @@
                 uapsd_advertisement_enabled = 1;
                 sae_confirm_immediate = 1;
                 ieee80211w = lib.mkForce 2;
+                qos_map_set = "0,0,2,16,1,1,255,255,18,22,24,38,40,40,44,46,48,56";
 
                 # VLAN
                 dynamic_vlan = 2;
