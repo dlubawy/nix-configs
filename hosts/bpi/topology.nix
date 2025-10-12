@@ -17,6 +17,7 @@ with config.lib.topology;
         interfaceGroups = [ [ "wifi" ] ];
         interfaces.wifi = {
           addresses = [ "192.168.20.10" ];
+          mac = "8c:3b:4a:a7:9d:89";
           physicalConnections = [
             (mkConnection "bpi" "wlan0.20")
             (mkConnection "bpi" "wlan1.20")
@@ -24,19 +25,44 @@ with config.lib.topology;
         };
         icon = "devices.laptop";
       };
+      gamingPC = mkDevice "👾 Gaming PC" {
+        interfaceGroups = [ [ "wifi" ] ];
+        interfaces.wifi = {
+          addresses = [ "192.168.20.11" ];
+          mac = "08:b4:d2:6b:5e:0e";
+          physicalConnections = [
+            (mkConnection "bpi" "wlan0.20")
+            (mkConnection "bpi" "wlan1.20")
+          ];
+        };
+      };
       printer = mkDevice "🖨️ Printer" {
         interfaceGroups = [ [ "wifi" ] ];
         connections.wifi = mkConnection "bpi" "wlan0-1.30";
-        interfaces.wifi.addresses = [ "192.168.30.10" ];
+        interfaces.wifi = {
+          addresses = [ "192.168.30.10" ];
+          mac = "c8:d9:d2:e8:38:6a";
+        };
       };
       tv = mkDevice "📺 TV" {
         interfaceGroups = [ [ "wifi" ] ];
-        interfaces.wifi = {
-          addresses = [ "192.168.30.11" ];
-          physicalConnections = [
-            (mkConnection "bpi" "wlan0.30")
-            (mkConnection "bpi" "wlan1.30")
-          ];
+        interfaces = {
+          wifi = {
+            addresses = [ "192.168.30.11" ];
+            mac = "c2:08:44:c7:48:a9";
+            physicalConnections = [
+              (mkConnection "bpi" "wlan0.30")
+              (mkConnection "bpi" "wlan1.30")
+            ];
+          };
+          wifi2 = {
+            addresses = [ "192.168.30.12" ];
+            mac = "d8:e3:5e:52:16:9a";
+            physicalConnections = [
+              (mkConnection "bpi" "wlan0.30")
+              (mkConnection "bpi" "wlan1.30")
+            ];
+          };
         };
       };
       iot = mkDevice "🤖 IoT Devices" {
