@@ -4,6 +4,15 @@
   config,
   ...
 }:
+let
+  gamingPC = config.topology.nodes.gamingPC.interfaces.wifi;
+  laptop = config.topology.nodes.laptop.interfaces.wifi;
+  printer = config.topology.nodes.printer.interfaces.wifi;
+  tv = config.topology.nodes.tv.interfaces.wifi;
+  tv2 = config.topology.nodes.tv.interfaces.wifi2;
+
+  getAddress = node: (builtins.elemAt node.addresses 0);
+in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
   environment.systemPackages = with pkgs; [ ldns ];
@@ -23,6 +32,10 @@
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
         ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
+        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } tcp dport { 27036, 27037 } accept comment "Allow TV forward to gaming PC for Steam Link"''
+        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } udp dport { 27031, 27036 } accept comment "Allow TV forward to gaming PC for Steam Link"''
+        ''ip saddr { ${getAddress tv2} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } tcp sport { 7000 } accept comment "Allow TV forward to user and guest for AirPlay"''
+        ''ip saddr { ${getAddress tv2} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } udp sport { 6002, 49152-65535 } accept comment "Allow TV forward to user and guest for AirPlay"''
         ''iifname { "vl-iot" } oifname { "vl-lan", "vl-user", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject IoT forwarding outside itself"''
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject guest and tailscale forwarding to all internal networks"''
       ];
@@ -277,8 +290,13 @@
         };
         dhcpServerStaticLeases = [
           {
-            Address = "192.168.20.10";
-            MACAddress = "8c:3b:4a:a7:9d:89";
+            Address = getAddress laptop;
+            MACAddress = laptop.mac;
+          }
+          # Gaming PC
+          {
+            Address = getAddress gamingPC;
+            MACAddress = gamingPC.mac;
           }
         ];
       };
@@ -301,14 +319,16 @@
         };
         dhcpServerStaticLeases = [
           {
-            # Printer
-            Address = "192.168.30.10";
-            MACAddress = "c8:d9:d2:e8:38:6a";
+            Address = getAddress printer;
+            MACAddress = printer.mac;
           }
           {
-            # TV
-            Address = "192.168.30.11";
-            MACAddress = "c2:08:44:c7:48:a9";
+            Address = getAddress tv;
+            MACAddress = tv.mac;
+          }
+          {
+            Address = getAddress tv2;
+            MACAddress = tv2.mac;
           }
         ];
       };
