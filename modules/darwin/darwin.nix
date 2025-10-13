@@ -60,6 +60,7 @@
           sudoedit = "sudo -Hu laplace sudo -e ";
           "${systemName}" =
             "sudo -Hu ${systemName} sudo darwin-rebuild switch --flake ${vars.flake}#${systemName}";
+          nixos-rebuild = "${pkgs.nixos-rebuild-ng}/bin/nixos-rebuild-ng";
         };
         variables = {
           EDITOR = "nvim";
@@ -74,6 +75,7 @@
           fuse-ext2
           fuse-t
           git
+          nixos-rebuild-ng
           ntfs3g
         ];
       };
