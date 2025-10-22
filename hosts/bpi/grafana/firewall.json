@@ -1,0 +1,311 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 25,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "FECRLA1BDO9OGF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "FECRLA1BDO9OGF"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count (count_over_time({service_name=\"systemd-journal\", unit!=\"grafana.service\", unit!=\"loki.service\"} |= `refused connection:` | pattern `<message>: IN=<in> OUT=<out> MAC=<mac> SRC=<src> DST=<dst> LEN=<len> TOS=<tos> PREC=<prec> TTL=<ttl> ID=<id> PROTO=<proto> SPT=<spt> DPT=<dpt> WINDOW=<window> RES=<res> URGP=<urgp>` [$__auto]))",
+          "hide": false,
+          "legendFormat": "nftable",
+          "queryType": "range",
+          "refId": "nftable"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "FECRLA1BDO9OGF"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count (count_over_time({unit!=\"grafana.service\", unit!=\"loki.service\", service_name=\"systemd-journal\"} |= `Drop:` | pattern `<message>: <prot>{<src>:<spt> > <dst>:<dpt>} <resp>` | line_format \"🚫 {{.message}} 📢 {{.src}}:{{.spt}} ⌁ {{.dst}}:{{.dpt}}\" [$__auto]))",
+          "hide": false,
+          "legendFormat": "tailscale",
+          "queryType": "range",
+          "refId": "tailscale"
+        }
+      ],
+      "title": "Rejections",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "FECRLA1BDO9OGF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "FECRLA1BDO9OGF"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "count by(src) (count_over_time({service_name=\"systemd-journal\", unit!=\"grafana.service\", unit!=\"loki.service\"} |= `refused connection:` | pattern `<message>: IN=<in> OUT=<out> MAC=<mac> SRC=<src> DST=<dst> LEN=<len> TOS=<tos> PREC=<prec> TTL=<ttl> ID=<id> PROTO=<proto> SPT=<spt> DPT=<dpt> WINDOW=<window> RES=<res> URGP=<urgp>` [$__auto]))",
+          "legendFormat": "{{src}}",
+          "queryType": "range",
+          "refId": "nftable"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "FECRLA1BDO9OGF"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count by(src) (count_over_time({unit!=\"grafana.service\", unit!=\"loki.service\", service_name=\"systemd-journal\"} |= `Drop:` | pattern `<message>: <prot>{<src>:<spt> > <dst>:<dpt>} <resp>` | line_format \"🚫 {{.message}} 📢 {{.src}}:{{.spt}} ⌁ {{.dst}}:{{.dpt}}\" [$__auto]))",
+          "hide": false,
+          "legendFormat": "{{src}}",
+          "queryType": "range",
+          "refId": "tailscale"
+        }
+      ],
+      "title": "Rejected IP",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "FECRLA1BDO9OGF"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 1,
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "12.0.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "FECRLA1BDO9OGF"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{service_name=\"systemd-journal\", unit!=\"grafana.service\", unit!=\"loki.service\"} |= `refused connection:` | pattern `<message>: IN=<in> OUT=<out> MAC=<mac> SRC=<src> DST=<dst> LEN=<len> TOS=<tos> PREC=<prec> TTL=<ttl> ID=<id> PROTO=<proto> SPT=<spt> DPT=<dpt> WINDOW=<window> RES=<res> URGP=<urgp>` | line_format \"🚫 {{.message}} 📡 {{.in}} 🆔 {{.mac}} 📢 {{.src}}:{{.spt}} ⌁ {{.dst}}:{{.dpt}}\"",
+          "legendFormat": "",
+          "queryType": "range",
+          "refId": "nftable"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "FECRLA1BDO9OGF"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{unit!=\"grafana.service\", unit!=\"loki.service\", service_name=\"systemd-journal\"} |= `Drop:` | pattern `<message>: <prot>{<src>:<spt> > <dst>:<dpt>} <resp>` | line_format \"🚫 {{.message}} 📢 {{.src}}:{{.spt}} ⌁ {{.dst}}:{{.dpt}}\"",
+          "hide": false,
+          "queryType": "range",
+          "refId": "tailscale"
+        }
+      ],
+      "title": "Recent Logs",
+      "type": "logs"
+    }
+  ],
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 41,
+  "tags": [
+    "linux",
+    "nftable"
+  ],
+  "templating": {
+    "list": [
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "FECRLA1BDO9OGF"
+        },
+        "filters": [],
+        "name": "Filters",
+        "type": "adhoc"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Firewall",
+  "uid": "6e3867d9-1d79-4c86-ac9d-42dbf79dcc44",
+  "version": 6
+}
