@@ -90,6 +90,11 @@ in
       group = "grafana";
       user = "grafana";
     };
+    "grafana/dashboards/firewall.json" = {
+      source = ./firewall.json;
+      group = "grafana";
+      user = "grafana";
+    };
     "grafana/alerting.yaml" = {
       source = ./alerting.yaml;
       group = "grafana";
