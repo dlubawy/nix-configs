@@ -49,6 +49,10 @@ rec {
       url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko/v1.11.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -62,6 +66,7 @@ rec {
       agenix,
       pre-commit-hooks,
       nix-topology,
+      disko,
       ...
     }@inputs:
     let
@@ -145,6 +150,16 @@ rec {
         bpi = mkSystem {
           name = "bpi";
           system = "aarch64-linux";
+        };
+
+        # WIP: Testing out some ideas
+        lil-nas-btrfs = mkSystem {
+          name = "lil-nas-btrfs";
+          system = "x86_64-linux";
+        };
+        lil-nas-zfs = mkSystem {
+          name = "lil-nas-zfs";
+          system = "x86_64-linux";
         };
       };
 
