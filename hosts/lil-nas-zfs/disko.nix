@@ -10,18 +10,12 @@
           content = {
             type = "gpt";
             partitions = {
-              boot1 = {
+              ESP = {
                 size = "1G";
                 type = "ef00";
                 content = {
-                  type = "filesystem";
-                  format = "vfat";
-                  extraArgs = [ "-n BOOT" ];
-                  mountpoint = "/boot";
-                  mountOptions = [
-                    "fmask=0022"
-                    "dmask=0022"
-                  ];
+                  type = "mdraid";
+                  name = "boot";
                 };
               };
               # swap1 = {
@@ -49,19 +43,12 @@
           content = {
             type = "gpt";
             partitions = {
-              boot1 = {
+              ESP = {
                 size = "1G";
                 type = "ef00";
                 content = {
-                  type = "filesystem";
-                  format = "vfat";
-                  extraArgs = [ "-n BOOTBACKUP" ];
-                  mountpoint = "/.bootbackup";
-                  mountOptions = [
-                    "fmask=0022"
-                    "dmask=0022"
-                    "nofail"
-                  ];
+                  type = "mdraid";
+                  name = "boot";
                 };
               };
               # swap2 = {
@@ -81,6 +68,22 @@
                 };
               };
             };
+          };
+        };
+      };
+      mdadm = {
+        boot = {
+          type = "mdadm";
+          level = 1;
+          metadata = "1.0";
+          content = {
+            type = "filesystem";
+            format = "vfat";
+            mountPoint = "/boot";
+            mountOptions = [
+              "dmask=0022"
+              "fmask=0022"
+            ];
           };
         };
       };
