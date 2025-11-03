@@ -161,6 +161,12 @@ rec {
           name = "bpi";
           system = "aarch64-linux";
         };
+
+        # WIP: Testing out some ideas
+        lil-nas = mkSystem {
+          name = "lil-nas";
+          system = "x86_64-linux";
+        };
       };
 
       darwinConfigurations = {
