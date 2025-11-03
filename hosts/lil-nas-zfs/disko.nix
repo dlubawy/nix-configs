@@ -16,6 +16,7 @@
                 content = {
                   type = "filesystem";
                   format = "vfat";
+                  extraArgs = [ "-n BOOT" ];
                   mountpoint = "/boot";
                   mountOptions = [
                     "fmask=0022"
@@ -32,7 +33,7 @@
               #     mountOptions = [ "nofail" ];
               #   };
               # };
-              root1 = {
+              zfs = {
                 size = "100%";
                 content = {
                   type = "zfs";
@@ -54,6 +55,7 @@
                 content = {
                   type = "filesystem";
                   format = "vfat";
+                  extraArgs = [ "-n BOOTBACKUP" ];
                   mountpoint = "/.bootbackup";
                   mountOptions = [
                     "fmask=0022"
@@ -71,7 +73,7 @@
               #     mountOptions = [ "nofail" ];
               #   };
               # };
-              root2 = {
+              zfs = {
                 size = "100%";
                 content = {
                   type = "zfs";
@@ -106,7 +108,7 @@
             xattr = "sa";
             "com.sun:auto-snapshot" = "true";
           };
-          options.ashift = 12;
+          options.ashift = "12";
           datasets = {
             "root" = {
               type = "zfs_fs";
