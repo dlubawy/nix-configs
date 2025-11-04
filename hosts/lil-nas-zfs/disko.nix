@@ -18,15 +18,6 @@
                   name = "boot";
                 };
               };
-              # swap1 = {
-              #   size = "4G";
-              #   type = "8200";
-              #   content = {
-              #     type = "swap";
-              #     randomEncryption = true;
-              #     mountOptions = [ "nofail" ];
-              #   };
-              # };
               zfs = {
                 size = "100%";
                 content = {
@@ -51,15 +42,6 @@
                   name = "boot";
                 };
               };
-              # swap2 = {
-              #   size = "4G";
-              #   type = "8200";
-              #   content = {
-              #     type = "swap";
-              #     randomEncryption = true;
-              #     mountOptions = [ "nofail" ];
-              #   };
-              # };
               zfs = {
                 size = "100%";
                 content = {

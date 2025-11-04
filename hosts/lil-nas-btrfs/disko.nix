@@ -10,20 +10,15 @@
           content = {
             type = "gpt";
             partitions = {
-              boot1 = {
+              ESP = {
                 size = "1G";
                 type = "ef00";
                 content = {
-                  type = "filesystem";
-                  format = "vfat";
-                  mountpoint = "/boot";
-                  mountOptions = [
-                    "fmask=0022"
-                    "dmask=0022"
-                  ];
+                  type = "mdraid";
+                  name = "boot";
                 };
               };
-              swap1 = {
+              swap = {
                 size = "4G";
                 type = "8200";
                 content = {
@@ -32,7 +27,7 @@
                   mountOptions = [ "nofail" ];
                 };
               };
-              cryptRoot1 = {
+              crypt = {
                 size = "100%";
                 content = {
                   type = "luks";
@@ -48,21 +43,15 @@
           content = {
             type = "gpt";
             partitions = {
-              boot1 = {
+              ESP = {
                 size = "1G";
                 type = "ef00";
                 content = {
-                  type = "filesystem";
-                  format = "vfat";
-                  mountpoint = "/.bootbackup";
-                  mountOptions = [
-                    "fmask=0022"
-                    "dmask=0022"
-                    "nofail"
-                  ];
+                  type = "mdraid";
+                  name = "boot";
                 };
               };
-              swap2 = {
+              swap = {
                 size = "4G";
                 type = "8200";
                 content = {
@@ -71,7 +60,7 @@
                   mountOptions = [ "nofail" ];
                 };
               };
-              cryptRoot2 = {
+              crypt = {
                 size = "100%";
                 content = {
                   type = "luks";
@@ -107,6 +96,22 @@
                 };
               };
             };
+          };
+        };
+      };
+      mdadm = {
+        boot = {
+          type = "mdadm";
+          level = 1;
+          metadata = "1.0";
+          content = {
+            type = "filesystem";
+            format = "vfat";
+            mountpoint = "/boot";
+            mountOptions = [
+              "dmask=0022"
+              "fmask=0022"
+            ];
           };
         };
       };
