@@ -89,7 +89,7 @@ in
             Service = {
               Type = "oneshot";
               RemainAfterExit = true;
-              ExecStart = "${config.services.tailscale.package}/bin/tailscale drive %h/Documents/org";
+              ExecStart = "${config.services.tailscale.package}/bin/tailscale drive share org %h/Documents/org";
             };
           };
         };
