@@ -24,7 +24,10 @@ in
             "wheel"
             "networkmanager"
           ];
-          initialPassword = value.name;
+          initialPassword = if (value.initialHashedPassword == null) then value.name else null;
+          initialHashedPassword = value.initialHashedPassword;
+          hashedPasswordFile = value.hashedPasswordFile;
+
           openssh.authorizedKeys.keys = [ ] ++ (lib.optionals (value.sshKey != null) [ value.sshKey ]);
         };
       }) nixConfigsUsers
