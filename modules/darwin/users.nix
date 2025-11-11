@@ -34,37 +34,39 @@ in
       );
     };
 
-    home-manager.users = lib.concatMapAttrs (name: _: {
-      ${name} = {
-        gui.enable = true;
-        targets.darwin.defaults = {
-          NSGlobalDomain = {
-            "com.apple.swipescrolldirection" = false;
-            NSDocumentSaveNewDocumentsToCloud = false;
-          };
-          "com.apple.dock" = {
-            autohide = false;
-            largesize = 72;
-            tilesize = 48;
-            magnification = true;
-            mineffect = "genie";
-            orientation = "bottom";
-            showhidden = false;
-            show-recents = false;
-          };
-          "com.apple.finder" = {
-            QuitMenuItem = false;
-          };
-          "com.apple.screensaver" = {
-            askForPassword = true;
-            askForPasswordDelay = 0;
-          };
-          "com.apple.AppleMultitouchTrackpad" = {
-            Clicking = true;
-            TrackpadRightClick = true;
+    home-manager = {
+      gui.enable = true;
+      users = lib.concatMapAttrs (name: _: {
+        ${name} = {
+          targets.darwin.defaults = {
+            NSGlobalDomain = {
+              "com.apple.swipescrolldirection" = false;
+              NSDocumentSaveNewDocumentsToCloud = false;
+            };
+            "com.apple.dock" = {
+              autohide = false;
+              largesize = 72;
+              tilesize = 48;
+              magnification = true;
+              mineffect = "genie";
+              orientation = "bottom";
+              showhidden = false;
+              show-recents = false;
+            };
+            "com.apple.finder" = {
+              QuitMenuItem = false;
+            };
+            "com.apple.screensaver" = {
+              askForPassword = true;
+              askForPasswordDelay = 0;
+            };
+            "com.apple.AppleMultitouchTrackpad" = {
+              Clicking = true;
+              TrackpadRightClick = true;
+            };
           };
         };
-      };
-    }) nixConfigUsers;
+      }) nixConfigUsers;
+    };
   };
 }

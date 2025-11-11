@@ -24,9 +24,11 @@
       defaultUser = "${username}";
     };
 
-  home-manager.users = (
-    lib.concatMapAttrs (name: _: {
-      ${name}.gui.enable = false;
-    }) config.nix-configs.users
-  );
+  home-manager = {
+    gui.enable = false;
+    users = (
+      lib.concatMapAttrs (name: _: {
+      }) config.nix-configs.users
+    );
+  };
 }
