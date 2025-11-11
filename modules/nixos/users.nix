@@ -28,9 +28,11 @@ in
             "wheel"
             "networkmanager"
           ];
-          initialPassword = if (value.initialHashedPassword == null) then value.name else null;
-          initialHashedPassword = value.initialHashedPassword;
-          hashedPasswordFile = value.hashedPasswordFile;
+          initialPassword = lib.mkDefault (
+            if (value.initialHashedPassword == null) then value.name else null
+          );
+          initialHashedPassword = lib.mkDefault value.initialHashedPassword;
+          hashedPasswordFile = lib.mkDefault value.hashedPasswordFile;
 
           openssh.authorizedKeys.keys = [ ] ++ (lib.optionals (value.sshKey != null) [ value.sshKey ]);
         };
