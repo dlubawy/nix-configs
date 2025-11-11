@@ -37,12 +37,22 @@ let
         sshKey = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = "SSH publib key";
+          description = "SSH public key";
         };
         gpgKey = mkOption {
           type = types.nullOr types.str;
           default = null;
           description = "GPG public key";
+        };
+        initialHashedPassword = mkOption {
+          type = types.nullOr (types.passwdEntry types.str);
+          default = null;
+          description = "Initial hashed password created with mkpasswd";
+        };
+        hashedPasswordFile = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "Path to hashed password file setup with mkpasswd";
         };
       };
       config = mkMerge [
