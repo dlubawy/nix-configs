@@ -10,16 +10,16 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1748807842,
-        "narHash": "sha256-9sXsld6x/b6JV3Nd0wlPXEu9kqepB01EecoqUOztO/M=",
+        "lastModified": 1762829559,
+        "narHash": "sha256-+gCPzq4X036PSe5y1qbB4Gu4qxmG4MoOwWLjJfH9abo=",
         "owner": "dlubawy",
         "repo": "agenix",
-        "rev": "136e16cc6686371e43918ea73e5148953c92934d",
+        "rev": "078c9ed6b3ce0acf957b31756b4f480d41caff88",
         "type": "github"
       },
       "original": {
         "owner": "dlubawy",
-        "ref": "armor_support",
+        "ref": "launchd_settings",
         "repo": "agenix",
         "type": "github"
       }

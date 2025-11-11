@@ -38,7 +38,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
-      url = "github:dlubawy/agenix/armor_support";
+      url = "github:dlubawy/agenix/launchd_settings";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pre-commit-hooks = {
