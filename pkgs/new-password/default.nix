@@ -14,9 +14,17 @@ pkgs.writeShellApplication {
           cat <<HELP
     Create a new password hash file using mkpasswd.
 
+    Usage:
+      new_password [FLAGS] [PASSWORD]
+
     Args:
       -h|--help, this help message
-      -f|--file, file location to write to (default: "$PW_FILE")
+      -f|--file [FILE], file location to write to (default: "$PW_FILE")
+
+    Example:
+      new_password
+      new_password -f my_password_file
+      new_password my_password
     HELP
           exit 0
           ;;
@@ -35,14 +43,20 @@ pkgs.writeShellApplication {
       esac
     done
 
-    read -r -s -p "Password: " password
-    echo ""
-    read -r -s -p "Confirm password: " password_check
-    echo ""
+    set -- "''${POSITIONAL_ARGS[@]}"
 
-    if [ "$password" != "$password_check" ]; then
-      echo "Passwords do not match. Aborting!" 1>&2
-      exit 1
+    if [ "''${#POSITIONAL_ARGS[@]}" -eq 0 ]; then
+      read -r -s -p "Password: " password
+      echo ""
+      read -r -s -p "Confirm password: " password_check
+      echo ""
+
+      if [ "$password" != "$password_check" ]; then
+        echo "Passwords do not match. Aborting!" 1>&2
+        exit 1
+      fi
+    else
+      password="$1"
     fi
 
     if [ -f "$PW_FILE" ]; then
