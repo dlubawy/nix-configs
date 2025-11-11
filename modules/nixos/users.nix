@@ -12,6 +12,10 @@ in
     (import ../nix-configs).default
   ];
 
+  environment.systemPackages = with pkgs; [
+    new-password
+  ];
+
   config = {
     users.users = (
       lib.concatMapAttrs (name: value: {

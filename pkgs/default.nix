@@ -6,6 +6,7 @@ let
     aarch64-darwin = pkgs: {
       # example = pkgs.callPackage ./example { };
       fuse-t = pkgs.callPackage ./fuse-t { };
+      new-password = pkgs.callPackage ./new-password { };
     };
     x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {
@@ -14,8 +15,11 @@ let
       prometheus-nf-conntrack = pkgs.callPackage ./prometheus-nf-conntrack { };
       prometheus-iwinfo = pkgs.callPackage ./prometheus-iwinfo { };
       prometheus-networkctl = pkgs.callPackage ./prometheus-networkctl { };
+      new-password = pkgs.callPackage ./new-password { };
     };
-    x86_64-linux = pkgs: { };
+    x86_64-linux = pkgs: {
+      new-password = pkgs.callPackage ./new-password { };
+    };
   };
 in
 if builtins.hasAttr system allPackages then
