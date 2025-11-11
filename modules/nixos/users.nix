@@ -12,11 +12,11 @@ in
     (import ../nix-configs).default
   ];
 
-  environment.systemPackages = with pkgs; [
-    new-password
-  ];
-
   config = {
+    environment.systemPackages = with pkgs; [
+      new-password
+    ];
+
     users.users = (
       lib.concatMapAttrs (name: value: {
         ${name} = {
