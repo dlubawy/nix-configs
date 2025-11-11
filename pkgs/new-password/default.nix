@@ -45,7 +45,12 @@ pkgs.writeShellApplication {
       exit 1
     fi
 
+    if [ -f "$PW_FILE" ]; then
+      chattr -i "$PW_FILE"
+      rm -f "$PW_FILE"
+    fi
     mkpasswd "$password" | tr -d '\n' > "$PW_FILE"
-    chmod 0600 "$PW_FILE"
+    chmod 0000 "$PW_FILE"
+    chattr +i "$PW_FILE"
   '';
 }
