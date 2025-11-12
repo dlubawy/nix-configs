@@ -17,6 +17,13 @@ in
       new-password
     ];
 
+    security.wrappers.new-password = {
+      owner = "root";
+      group = "root";
+      source = "${pkgs.new-password}/bin/new-password";
+      capabilities = "cap_linux_immutable+ep";
+    };
+
     users.users = (
       lib.concatMapAttrs (name: value: {
         ${name} = {

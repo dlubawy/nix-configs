@@ -1,6 +1,6 @@
 { pkgs, ... }:
 pkgs.writeShellApplication {
-  name = "new_password";
+  name = "new-password";
   runtimeInputs = with pkgs; [
     mkpasswd
   ];
@@ -15,16 +15,16 @@ pkgs.writeShellApplication {
     Create a new password hash file using mkpasswd.
 
     Usage:
-      new_password [FLAGS] [PASSWORD]
+      new-password [FLAGS] [PASSWORD]
 
     Args:
       -h|--help, this help message
       -f|--file [FILE], file location to write to (default: "$PW_FILE")
 
     Example:
-      new_password
-      new_password -f my_password_file
-      new_password my_password
+      new-password
+      new-password -f "my-password-file"
+      new-password "my-password"
     HELP
           exit 0
           ;;
