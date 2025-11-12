@@ -1,31 +1,34 @@
 { pkgs, ... }:
 pkgs.writeShellApplication {
-  name = "new-password";
+  name = "nixos-passwd";
   runtimeInputs = with pkgs; [
     mkpasswd
   ];
   text = ''
     POSITIONAL_ARGS=()
-    SHADOW_NAME=".shadow"
-    PW_FILE="$HOME"/"$SHADOW_NAME"
+    USER_SHADOW="$HOME"/.shadow
+    PW_FILE=""
 
     while [[ "$#" -gt 0 ]]; do
       case "$1" in
         -h|--help)
           cat <<HELP
-    Create a new password hash file using mkpasswd.
+    Create a new password hash for NixOS.
+
+    Wraps mkpasswd to create a new password hash and then writes to a file with 0000 set using chmod.
+    The default file location is $USER_SHADOW and witll be made immutable.
 
     Usage:
-      new-password [FLAGS] [PASSWORD]
+      nixos-passwd [FLAGS] [PASSWORD]
 
     Args:
       -h|--help, this help message
       -f|--file [FILE], file location to write to (default: "$PW_FILE")
 
     Example:
-      new-password
-      new-password -f "my-password-file"
-      new-password "my-password"
+      nixos-passwd
+      nixos-passwd -f "my-password-file"
+      nixos-passwd "my-password"
     HELP
           exit 0
           ;;
@@ -60,19 +63,21 @@ pkgs.writeShellApplication {
       password="$1"
     fi
 
-    BASENAME="$(basename "$PW_FILE")"
-
-    if [ -f "$PW_FILE" ]; then
-      if [ "$BASENAME" == "$SHADOW_NAME" ]; then
-        chattr -i "$PW_FILE"
-      fi
+    if [ -n "$PW_FILE" ] && [ -f "$PW_FILE" ]; then
       rm -f "$PW_FILE"
+    elif [ -z "$PW_FILE" ]; then
+      if [ -f "$USER_SHADOW" ]; then
+        chattr -i "$USER_SHADOW"
+        rm -f "$USER_SHADOW"
+      fi
+      PW_FILE="$USER_SHADOW"
     fi
+
     mkpasswd "$password" | tr -d '\n' > "$PW_FILE"
     chmod 0000 "$PW_FILE"
 
-    if [ "$BASENAME" == "$SHADOW_NAME" ]; then
-      chattr +i "$PW_FILE"
+    if [ -f "$USER_SHADOW" ]; then
+      chattr +i "$USER_SHADOW"
     fi
   '';
 }
