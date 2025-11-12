@@ -6,7 +6,8 @@ pkgs.writeShellApplication {
   ];
   text = ''
     POSITIONAL_ARGS=()
-    PW_FILE="$HOME"/.shadow
+    SHADOW_NAME=".shadow"
+    PW_FILE="$HOME"/"$SHADOW_NAME"
 
     while [[ "$#" -gt 0 ]]; do
       case "$1" in
@@ -59,12 +60,19 @@ pkgs.writeShellApplication {
       password="$1"
     fi
 
+    BASENAME="$(basename "$PW_FILE")"
+
     if [ -f "$PW_FILE" ]; then
-      chattr -i "$PW_FILE"
+      if [ "$BASENAME" == "$SHADOW_NAME" ]; then
+        chattr -i "$PW_FILE"
+      fi
       rm -f "$PW_FILE"
     fi
     mkpasswd "$password" | tr -d '\n' > "$PW_FILE"
     chmod 0000 "$PW_FILE"
-    chattr +i "$PW_FILE"
+
+    if [ "$BASENAME" == "$SHADOW_NAME" ]; then
+      chattr +i "$PW_FILE"
+    fi
   '';
 }
