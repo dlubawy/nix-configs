@@ -6,7 +6,7 @@ let
     aarch64-darwin = pkgs: {
       # example = pkgs.callPackage ./example { };
       fuse-t = pkgs.callPackage ./fuse-t { };
-      nixos-passwd = pkgs.callPackage ./nixos-passwd { };
+      nixos-password = pkgs.callPackage ./nixos-password { };
     };
     x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {
@@ -15,10 +15,10 @@ let
       prometheus-nf-conntrack = pkgs.callPackage ./prometheus-nf-conntrack { };
       prometheus-iwinfo = pkgs.callPackage ./prometheus-iwinfo { };
       prometheus-networkctl = pkgs.callPackage ./prometheus-networkctl { };
-      nixos-passwd = pkgs.callPackage ./nixos-passwd { };
+      nixos-password = pkgs.callPackage ./nixos-password { };
     };
     x86_64-linux = pkgs: {
-      nixos-passwd = pkgs.callPackage ./nixos-passwd { };
+      nixos-password = pkgs.callPackage ./nixos-password { };
     };
   };
 in
