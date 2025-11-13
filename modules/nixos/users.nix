@@ -14,13 +14,13 @@ in
 
   config = {
     environment.systemPackages = with pkgs; [
-      nixos-passwd
+      nixos-password
     ];
 
     security.wrappers.new-password = {
       owner = "root";
       group = "root";
-      source = "${pkgs.nixos-passwd}/bin/nixos-passwd";
+      source = "${pkgs.nixos-password}/bin/nixos-passwd";
       capabilities = "cap_dac_override,cap_linux_immutable+ep";
     };
 
