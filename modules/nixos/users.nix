@@ -41,6 +41,8 @@ in
       }
     ];
 
+    environment.systemPackages = with pkgs; [ ] ++ optionals config.users.shadow.enable [ e2fsprogs ];
+
     security.wrappers.nixos-passwd = {
       enable = config.users.shadow.enable;
       owner = "root";
