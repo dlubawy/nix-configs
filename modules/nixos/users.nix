@@ -42,6 +42,7 @@ in
         message = "Users must have an initialHashedPassword set if using nix-configs.shadow";
       }
     ];
+    services.userborn.enable = true;
 
     # Enable to allow chattr for root if needing to remove a file
     environment.systemPackages = with pkgs; [ ] ++ optionals config.users.shadow.enable [ e2fsprogs ];
