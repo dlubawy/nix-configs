@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-BASE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nixos"
-SHADOW_FILE="$BASE_DIR/shadow"
+SHADOW_FILE="$HOME/.shadow"
 
 trap '' SIGINT
 
@@ -43,7 +42,10 @@ HELP
   esac
 done
 
-mkdir -p "$BASE_DIR"
+if [ ! -d "$HOME" ]; then
+  echo "${HOME:-"HOME"} dir does not exist" 1>&2
+  exit 1
+fi
 
 if [ -f "$SHADOW_FILE" ]; then
   chattr -i "$SHADOW_FILE"

@@ -1,6 +1,5 @@
 POSITIONAL_ARGS=()
-BASE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nixos"
-PW_FILE="$BASE_DIR/shadow"
+PW_FILE="$HOME/.shadow"
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in

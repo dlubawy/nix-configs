@@ -12,6 +12,7 @@ let
     runtimeInputs = with pkgs; [
       e2fsprogs
       gawk
+      nixos-mkpasswd
     ];
     text = (builtins.readFile ./nixos-passwd.sh);
   };
