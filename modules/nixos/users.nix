@@ -28,6 +28,8 @@ in
   ];
 
   options = {
+    # Allows using $HOME/.shadow to manage the password hash
+    # Makes mutable users work with /etc wipe on every boot (erase your darlings)
     users.shadow.enable = mkEnableOption "Enable individual user shadow file for password hash";
   };
 
@@ -41,8 +43,10 @@ in
       }
     ];
 
+    # Enable to allow chattr for root if needing to remove a file
     environment.systemPackages = with pkgs; [ ] ++ optionals config.users.shadow.enable [ e2fsprogs ];
 
+    # nixos-passwd needs chattr and to ignore '0000' octal on user shadow files
     security.wrappers.nixos-passwd = {
       enable = config.users.shadow.enable;
       owner = "root";
@@ -51,6 +55,9 @@ in
       capabilities = "cap_dac_override,cap_linux_immutable+ep";
     };
 
+    # Create the initial $HOME/.shadow file using an initialHashedPassword
+    # Users may then change password using nixos-passwd
+    # Should prevent user lockout if .shadow is deleted as it will revert to initialHashedPassword
     systemd.tmpfiles.settings.home-directories = mkIf config.users.shadow.enable (
       mapAttrs'
         (

@@ -47,12 +47,20 @@ let
         initialHashedPassword = mkOption {
           type = types.nullOr (types.passwdEntry types.str);
           default = null;
-          description = "Initial hashed password created with mkpasswd";
+          description = ''
+            Initial hashed password created with mkpasswd.
+            The order of precedence is as shown below, where values on the left are overridden by values on the right:
+            {option}`name` -> {option}`initialHashedPassword` -> {option}`hashedPasswordFile`
+          '';
         };
         hashedPasswordFile = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = "Path to hashed password file setup with mkpasswd";
+          description = ''
+            Hashed password file created with mkpasswd.
+            The order of precedence is as shown below, where values on the left are overridden by values on the right:
+            {option}`name` -> {option}`initialHashedPassword` -> {option}`hashedPasswordFile`
+          '';
         };
       };
       config = mkMerge [
