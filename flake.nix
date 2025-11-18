@@ -10,7 +10,7 @@ rec {
 
   inputs = {
     # Different nixpkgs sources
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
 
@@ -59,6 +59,7 @@ rec {
     {
       self,
       nixpkgs,
+      nixpkgs-darwin,
       darwin,
       home-manager,
       nixos-wsl,
@@ -79,11 +80,17 @@ rec {
       ];
 
       forSystemList =
+        let
+          inherit (nixpkgs) lib;
+        in
         systemList: f:
-        nixpkgs.lib.genAttrs systemList (
+        lib.genAttrs systemList (
           system:
+          let
+            systemPkgs = if (lib.hasSuffix system "darwin") then nixpkgs-darwin else nixpkgs;
+          in
           f {
-            pkgs = import nixpkgs {
+            pkgs = import systemPkgs {
               inherit system;
               config.allowUnfree = true;
               overlays = [ nix-topology.overlays.default ];
@@ -334,30 +341,38 @@ rec {
             buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
               inputs.agenix.packages.${system}.default
-              (writeScriptBin "sync-flake-inputs" ''
-                gitRoot="$(${pkgs.git}/bin/git rev-parse --show-toplevel)"
-                if [ -z "$gitRoot" ]; then
-                  echo "Not a git project"
-                  exit 1
-                fi
-
-                version="$1"
-                if [ -z "$version" ]; then
-                  version="$(${pkgs.gnugrep}/bin/grep --color=never -o 'release-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
-                  if [ -z "$version" ]; then
-                    echo "Could not determine root flake version"
+              (writeShellApplication {
+                name = "sync-flake-inputs";
+                runtimeInputs = [
+                  git
+                  gnugrep
+                  gnused
+                ];
+                text = ''
+                  gitRoot="$(git rev-parse --show-toplevel)"
+                  if [ -z "$gitRoot" ]; then
+                    echo "Not a git project"
                     exit 1
                   fi
-                fi
 
-                for template in "$gitRoot"/templates/*; do
-                  pushd "$template"
-                  ${pkgs.gnused}/bin/sed -i "s/release-[0-9]\+.[0-9]\+/release-''${version/*-}/g" ./flake.nix
-                  cp ../../flake.lock ./flake.lock
-                  nix flake lock
-                  popd
-                done
-              '')
+                  version="''${1:-""}"
+                  if [ -z "$version" ]; then
+                    version="$(grep --color=never -o 'nixos-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
+                    if [ -z "$version" ]; then
+                      echo "Could not determine root flake version"
+                      exit 1
+                    fi
+                  fi
+
+                  for template in "$gitRoot"/templates/*; do
+                    pushd "$template"
+                    sed -i "s/nixos-[0-9]\+.[0-9]\+/nixos-''${version/*-}/g" ./flake.nix
+                    cp ../../flake.lock ./flake.lock
+                    nix flake lock
+                    popd
+                  done
+                '';
+              })
               nil
               nixfmt-rfc-style
             ];

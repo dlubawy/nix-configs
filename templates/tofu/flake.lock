@@ -3,11 +3,11 @@
     "flake-compat": {
       "flake": false,
       "locked": {
-        "lastModified": 1696426674,
-        "narHash": "sha256-kvjfFW7WAETZlt09AgDn1MrtKzP7t90Vf7vypd3OL1U=",
+        "lastModified": 1747046372,
+        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
         "owner": "edolstra",
         "repo": "flake-compat",
-        "rev": "0f9255e01c2351cc7d116c072cb317785dd33b33",
+        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
         "type": "github"
       },
       "original": {
@@ -39,16 +39,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1754602041,
-        "narHash": "sha256-2RehejYjWzyy51yl36qUutR8yAK0Q5JXfFy8upGHn6s=",
+        "lastModified": 1763334038,
+        "narHash": "sha256-LBVOyaH6NFzQ3X/c6vfMZ9k4SV2ofhpxeL9YnhHNJQQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "0a5845504e22c85ff256987fff25ab9c33a29e07",
+        "rev": "4c8cdd5b1a630e8f72c9dd9bf582b1afb3127d2c",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "release-25.05",
+        "ref": "nixos-25.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -62,11 +62,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1754416808,
-        "narHash": "sha256-c6yg0EQ9xVESx6HGDOCMcyRSjaTpNJP10ef+6fRcofA=",
+        "lastModified": 1763319842,
+        "narHash": "sha256-YG19IyrTdnVn0l3DvcUYm85u3PaqBt6tI6VvolcuHnA=",
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "9c52372878df6911f9afc1e2a1391f55e4dfc864",
+        "rev": "7275fa67fbbb75891c16d9dee7d88e58aea2d761",
         "type": "github"
       },
       "original": {

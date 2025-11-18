@@ -1,7 +1,7 @@
 {
   description = "A Nix flake based Go environment";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
