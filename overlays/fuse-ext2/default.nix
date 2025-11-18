@@ -12,7 +12,7 @@ in
         hash = "sha256-RErvNiXWMB5lgqRVbDdNeJ7xQbmn4FVLTM2/Vk/jW6A=";
       }
     else
-      prev.src;
+      prev.fuse-ext2.src;
   nativeBuildInputs =
     prev.fuse-ext2.nativeBuildInputs
     ++ (prev.lib.optionals isDarwin [
@@ -23,8 +23,12 @@ in
   ]
   ++ (prev.lib.optionals isDarwin [ final.fuse-t ])
   ++ (prev.lib.optionals (!isDarwin) [ final.fuse ]);
-  postInstall = prev.lib.optionalString isDarwin ''
-    wrapProgram $out/bin/fuse-ext2 --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
-    wrapProgram $out/bin/fuse-ext2.probe --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
-  '';
+  postInstall =
+    if isDarwin then
+      ''
+        wrapProgram $out/bin/fuse-ext2 --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
+        wrapProgram $out/bin/fuse-ext2.probe --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
+      ''
+    else
+      prev.fuse-ext2.postInstall;
 }
