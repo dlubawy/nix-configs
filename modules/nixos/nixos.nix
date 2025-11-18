@@ -56,7 +56,5 @@ in
       etc.overlay.enable = true;
       stateVersion = "${vars.stateVersion}";
     };
-
-    services.userborn.enable = true;
   };
 }
