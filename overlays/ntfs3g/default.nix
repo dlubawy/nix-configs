@@ -12,7 +12,7 @@ in
         hash = "sha256-35c5H2q1/YsKiyFXC/nd5Ax3fngpcGL0J1TkX2Vk+5M=";
       }
     else
-      prev.src;
+      prev.ntfs3g.src;
   nativeBuildInputs =
     prev.ntfs3g.nativeBuildInputs
     ++ (prev.lib.optionals isDarwin [
@@ -30,8 +30,12 @@ in
   ++ prev.lib.optionals isDarwin [
     final.fuse-t
   ];
-  postInstall = prev.lib.optionalString isDarwin ''
-    wrapProgram $out/bin/ntfs-3g --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
-    wrapProgram $out/bin/ntfs-3g.probe --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
-  '';
+  postInstall =
+    if isDarwin then
+      ''
+        wrapProgram $out/bin/ntfs-3g --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
+        wrapProgram $out/bin/ntfs-3g.probe --prefix DYLD_LIBRARY_PATH : "${final.fuse-t}/lib"
+      ''
+    else
+      prev.ntfs3g.postInstall;
 }
