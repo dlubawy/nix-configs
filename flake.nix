@@ -49,6 +49,10 @@ rec {
       url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko/v1.12.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -62,6 +66,7 @@ rec {
       agenix,
       pre-commit-hooks,
       nix-topology,
+      disko,
       ...
     }@inputs:
     let
@@ -176,6 +181,21 @@ rec {
             modules = [ "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
           }).config.system.build.sdImage;
         bpi = nixosConfigurations.bpi.config.system.build.sdImage;
+        iso-installer = forAllSystems (
+          { pkgs }:
+          let
+            inherit (nixpkgs) lib;
+          in
+          (lib.nixosSystem {
+            inherit (pkgs) system;
+            specialArgs = {
+              inherit inputs outputs vars;
+            };
+            modules = [
+              self.nixosModules.installer
+            ];
+          }).config.system.build.isoImage
+        );
       };
 
       topology = forAllSystems (

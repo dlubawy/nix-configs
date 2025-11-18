@@ -3,4 +3,5 @@
 {
   # List your module files here
   default = import ./nixos.nix;
+  installer = import ./installer.nix;
 }
