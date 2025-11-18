@@ -59,6 +59,7 @@ rec {
     {
       self,
       nixpkgs,
+      nixpkgs-darwin,
       darwin,
       home-manager,
       nixos-wsl,
@@ -79,11 +80,17 @@ rec {
       ];
 
       forSystemList =
+        let
+          inherit (nixpkgs) lib;
+        in
         systemList: f:
-        nixpkgs.lib.genAttrs systemList (
+        lib.genAttrs systemList (
           system:
+          let
+            systemPkgs = if (lib.hasSuffix system "darwin") then nixpkgs-darwin else nixpkgs;
+          in
           f {
-            pkgs = import nixpkgs {
+            pkgs = import systemPkgs {
               inherit system;
               config.allowUnfree = true;
               overlays = [ nix-topology.overlays.default ];
