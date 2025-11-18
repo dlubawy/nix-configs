@@ -78,9 +78,9 @@ rec {
         "aarch64-darwin"
       ];
 
-      forAllSystems =
-        f:
-        nixpkgs.lib.genAttrs systems (
+      forSystemList =
+        systemList: f:
+        nixpkgs.lib.genAttrs systemList (
           system:
           f {
             pkgs = import nixpkgs {
@@ -90,6 +90,8 @@ rec {
             };
           }
         );
+
+      forAllSystems = forSystemList systems;
 
       vars = {
         darwinStateVersion = 6;
@@ -181,7 +183,7 @@ rec {
             modules = [ "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
           }).config.system.build.sdImage;
         bpi = nixosConfigurations.bpi.config.system.build.sdImage;
-        iso-installer = forAllSystems (
+        nixos-iso-installer = forSystemList [ "aarch64-linux" "x86_64-linux" ] (
           { pkgs }:
           let
             inherit (nixpkgs) lib;
