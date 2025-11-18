@@ -49,6 +49,10 @@ rec {
       url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko/v1.12.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -62,6 +66,7 @@ rec {
       agenix,
       pre-commit-hooks,
       nix-topology,
+      disko,
       ...
     }@inputs:
     let
@@ -73,9 +78,9 @@ rec {
         "aarch64-darwin"
       ];
 
-      forAllSystems =
-        f:
-        nixpkgs.lib.genAttrs systems (
+      forSystemList =
+        systemList: f:
+        nixpkgs.lib.genAttrs systemList (
           system:
           f {
             pkgs = import nixpkgs {
@@ -85,6 +90,8 @@ rec {
             };
           }
         );
+
+      forAllSystems = forSystemList systems;
 
       vars = {
         darwinStateVersion = 6;
@@ -176,6 +183,21 @@ rec {
             modules = [ "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
           }).config.system.build.sdImage;
         bpi = nixosConfigurations.bpi.config.system.build.sdImage;
+        nixos-iso-installer = forSystemList [ "aarch64-linux" "x86_64-linux" ] (
+          { pkgs }:
+          let
+            inherit (nixpkgs) lib;
+          in
+          (lib.nixosSystem {
+            inherit (pkgs) system;
+            specialArgs = {
+              inherit inputs outputs vars;
+            };
+            modules = [
+              self.nixosModules.installer
+            ];
+          }).config.system.build.isoImage
+        );
       };
 
       topology = forAllSystems (

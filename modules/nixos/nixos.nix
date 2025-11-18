@@ -1,9 +1,7 @@
 {
   lib,
-  pkgs,
   config,
   inputs,
-  outputs,
   vars,
   ...
 }:
@@ -14,16 +12,13 @@ in
   imports = [
     inputs.nix-topology.nixosModules.default
     inputs.nixvim.nixosModules.nixvim
+    ./nix.nix
     ./users.nix
   ];
 
   config = {
-    nixpkgs = {
-      overlays = builtins.attrValues outputs.overlays;
-    };
-
     environment.shellAliases = {
-      bpi = "sudo nixos-rebuild switch --flake ${vars.flake}#${systemName}";
+      "${systemName}" = "sudo nixos-rebuild switch --flake ${vars.flake}#${systemName}";
     };
 
     boot.initrd.systemd.enable = true;
@@ -63,20 +58,5 @@ in
     };
 
     services.userborn.enable = true;
-
-    nix = {
-      enable = true;
-      gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 7d";
-      };
-      optimise.automatic = true;
-      settings = {
-        experimental-features = "nix-command flakes";
-        substituters = vars.nixConfig.extra-substituters;
-        trusted-public-keys = vars.nixConfig.extra-trusted-public-keys;
-      };
-    };
   };
 }
