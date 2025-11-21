@@ -11,5 +11,6 @@
     ../../users/default.nix
   ];
 
-  gui.enable = false;
+  home-manager.gui.enable = false;
+  users.shadow.enable = true;
 }
