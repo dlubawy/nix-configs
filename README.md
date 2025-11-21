@@ -26,7 +26,20 @@ Hosts import reusable system configuration modules based on the type of system b
 
 All hosts import the Home Manager module (`./modules/home-manager`). This module brings in reusable configurations to be applied for each defined user in a host.
 
+## Users
+
 Users are defined in the `./users` module where the default imports all users, but hosts can selectively choose to import individual users as needed. An admin is specified in the `vars` within `flake.nix`. You should modify this user if copying this repo.
+
+Default password for users are set in two ways:
+
+- Darwin: set based on the user's configuration `name`
+- NixOS: set based on `initialHashedPassword` or `hashedPasswordFile`
+
+If `mutableUsers` are set in the host configuration then passwords may be changed from the initial values.
+
+### NixOS
+
+An additional `users.shadow.enable` option is available to move password management into individually managed `$HOME/.shadow` files with the `nixos-passwd` script within the `nixos-password` package.
 
 ## Templates
 

@@ -37,12 +37,30 @@ let
         sshKey = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = "SSH publib key";
+          description = "SSH public key";
         };
         gpgKey = mkOption {
           type = types.nullOr types.str;
           default = null;
           description = "GPG public key";
+        };
+        initialHashedPassword = mkOption {
+          type = types.nullOr (types.passwdEntry types.str);
+          default = null;
+          description = ''
+            Initial hashed password created with mkpasswd.
+            The order of precedence is as shown below, where values on the left are overridden by values on the right:
+            {option}`name` -> {option}`initialHashedPassword` -> {option}`hashedPasswordFile`
+          '';
+        };
+        hashedPasswordFile = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            Hashed password file created with mkpasswd.
+            The order of precedence is as shown below, where values on the left are overridden by values on the right:
+            {option}`name` -> {option}`initialHashedPassword` -> {option}`hashedPasswordFile`
+          '';
         };
       };
       config = mkMerge [
