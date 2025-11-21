@@ -27,6 +27,21 @@
     };
   };
 
+  fileSystems = {
+    "/home" = {
+      # Needed for userborn when `users.shadow.enable = true`
+      neededForBoot = true;
+    };
+    "/persist" = {
+      neededForBoot = true;
+    };
+  };
+
+  zramSwap = {
+    enable = true;
+    writebackDevice = "/dev/zvol/tank/local/swap";
+  };
+
   disko = {
     devices = {
       disk = {
