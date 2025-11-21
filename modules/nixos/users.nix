@@ -53,7 +53,7 @@ in
       owner = "root";
       group = "root";
       source = "${pkgs.nixos-password}/bin/nixos-passwd";
-      capabilities = "cap_dac_override,cap_linux_immutable+ep";
+      capabilities = "cap_linux_immutable+ep";
     };
 
     # Create the initial $HOME/.shadow file using an initialHashedPassword

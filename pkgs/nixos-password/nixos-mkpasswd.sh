@@ -40,11 +40,6 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}"
 
-if [ -f "$PW_FILE" ]; then
-  echo "File already exists" 1>&2
-  exit 1
-fi
-
 if [ "${#POSITIONAL_ARGS[@]}" -eq 0 ]; then
   read -r -s -p "Password:" password
   echo ""
@@ -59,5 +54,6 @@ else
   password="$1"
 fi
 
-mkpasswd "$password" | tr -d '\n' > "$PW_FILE"
-chmod 0000 "$PW_FILE"
+TMPFILE=$(mktemp)
+chmod 600 "$TMPFILE"
+(mkpasswd "$password" | tr -d '\n' > "$TMPFILE" && mv "$TMPFILE" "$PW_FILE") || rm "$TMPFILE"

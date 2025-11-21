@@ -13,10 +13,13 @@ confirm_password() {
 
   if [ "$current_password_hash" != "$password_hash" ]; then
     echo "Current password doesn't match" 1>&2
-    chmod 0000 "$SHADOW_FILE"
     exit 1
   fi
 }
+
+LOCK=""
+LOCK_SSH=""
+UNLOCK=""
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
@@ -29,11 +32,25 @@ Usage:
 
 Args:
   -h|--help, this help message
+  -l|--lock, lock the password
+  -L|--lock-ssh, lock the password and SSH logins
 
 Example:
   nixos-passwd
 HELP
       exit 0
+      ;;
+    -l|--lock)
+      LOCK="true"
+      shift
+      ;;
+    -L|--lock-ssh)
+      LOCK_SSH="true"
+      shift
+      ;;
+    -u|--unlock)
+      UNLOCK="true"
+      shift
       ;;
     *)
       echo "Unknown option $1"
@@ -48,24 +65,27 @@ if [ ! -d "$HOME" ]; then
 fi
 
 if [ -f "$SHADOW_FILE" ]; then
+  WORD_COUNT="$(wc -m "$SHADOW_FILE" | awk -F' ' '{ print $1 }')"
+  if [ "$WORD_COUNT" -gt 1 ]; then
+      confirm_password
+  elif [ -z "$UNLOCK" ]; then
+      echo "Password is locked" 1>&2
+      exit 1
+  fi
   chattr -i "$SHADOW_FILE"
-  chmod 0400 "$SHADOW_FILE"
-  confirm_password
-  mv "$SHADOW_FILE" "$SHADOW_FILE.bak"
 fi
 
-set +e
-nixos-mkpasswd -f "$SHADOW_FILE"
-
-# shellcheck disable=SC2181
-if [ "$?" -eq 0 ] && [ -f "$SHADOW_FILE.bak" ]; then
-  set -e
-  rm -f "$SHADOW_FILE.bak"
-elif [ -f "$SHADOW_FILE.bak" ]; then
-  set -e
-  mv "$SHADOW_FILE.bak" "$SHADOW_FILE"
+if [ -n "$LOCK" ] && [ -z "$LOCK_SSH" ]; then
+  echo -n '*' > "$SHADOW_FILE"
+elif [ -n "$LOCK_SSH" ]; then
+  echo -n '!' > "$SHADOW_FILE"
+else
+  nixos-mkpasswd -f "$SHADOW_FILE" || true
 fi
 
 if [ -f "$SHADOW_FILE" ]; then
   chattr +i "$SHADOW_FILE"
+else
+  echo "Failed to create $SHADOW_FILE" 1>&2
+  exit 1
 fi
