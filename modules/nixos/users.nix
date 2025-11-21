@@ -65,10 +65,13 @@ in
           username: opts:
           nameValuePair ((toString opts.home) + "/.shadow") {
             f = {
-              mode = "0000";
+              mode = "0600";
               user = opts.name;
               inherit (opts) group;
               argument = (getAttr opts.name config.nix-configs.users).initialHashedPassword;
+            };
+            h = {
+              argument = "+i";
             };
           }
         )
