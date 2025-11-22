@@ -40,6 +40,7 @@ If `mutableUsers` are set in the host configuration then passwords may be change
 ### NixOS
 
 An additional `users.shadow.enable` option is available to move password management into individually managed `$HOME/.shadow` files with the `nixos-passwd` script within the `nixos-password` package.
+When a `/persist` mount is enabled, shadow files will be created in `/persist/$HOME/.shadow` for each managed user.
 
 ## Templates
 
