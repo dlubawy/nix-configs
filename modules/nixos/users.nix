@@ -6,23 +6,30 @@
 }:
 let
   inherit (lib)
-    concatMapAttrs
     attrValues
-    filterAttrs
+    concatMapAttrs
     filter
-    length
+    filterAttrs
     getAttr
     hasAttr
+    length
+    mapAttrs'
     mkDefault
     mkEnableOption
     mkIf
     nameValuePair
-    optionalAttrs
     optionals
-    mapAttrs'
     ;
   nixConfigsUsers = config.nix-configs.users;
   hasPersist = builtins.hasAttr "/persist" config.fileSystems;
+  configuredUsers = filterAttrs (
+    _username: opts:
+    opts.enable
+    && opts.isNormalUser
+    && opts.createHome
+    && opts.home != "/var/empty"
+    && (hasAttr opts.name config.nix-configs.users)
+  ) config.users.users;
 in
 {
   imports = [
@@ -50,7 +57,7 @@ in
       }
       {
         assertion =
-          (config.users.shadow.enable && !hasPersist && (builtins.hasAttr "/home" config.fileSystems))
+          (config.users.shadow.enable && (!hasPersist) && (builtins.hasAttr "/home" config.fileSystems))
           -> (config.fileSystems."/home".neededForBoot);
         message = "`/home` mount should be enabled in initrd when using user shadow files and no /persist mount is available";
       }
@@ -69,18 +76,42 @@ in
       capabilities = "cap_linux_immutable+ep";
     };
 
-    # Create the initial $HOME/.shadow file using an initialHashedPassword
+    # Create the initial $HOME/.shadow or /persist/$HOME/.shadow file using an initialHashedPassword
     # Users may then change password using nixos-passwd
     # Should prevent user lockout if .shadow is deleted as it will revert to initialHashedPassword
-    systemd.tmpfiles.settings.home-directories = mkIf config.users.shadow.enable (
-      mapAttrs'
-        (
+    systemd.tmpfiles.settings = {
+      home-directories = mkIf (config.users.shadow.enable && (!hasPersist)) (
+        mapAttrs' (
+          username: opts:
+          nameValuePair ((toString opts.home) + "/.shadow") {
+            f = {
+              mode = "600";
+              user = opts.name;
+              inherit (opts) group;
+              argument = (getAttr opts.name config.nix-configs.users).initialHashedPassword;
+            };
+            h = {
+              argument = "+i";
+            };
+          }
+        ) configuredUsers
+      );
+      persist-directories = mkIf (config.users.shadow.enable && hasPersist) (
+        concatMapAttrs (
           username: opts:
           let
-            shadowFile = ((toString opts.home) + "/.shadow");
+            shadowDir = "/persist" + (toString opts.home);
+            shadowFile = shadowDir + "/.shadow";
           in
-          (
-            nameValuePair (if hasPersist then "/persist" + shadowFile else shadowFile) {
+          {
+            "${shadowDir}" = {
+              d = {
+                mode = opts.homeMode;
+                user = opts.name;
+                inherit (opts) group;
+              };
+            };
+            "${shadowFile}" = {
               f = {
                 mode = "600";
                 user = opts.name;
@@ -90,28 +121,11 @@ in
               h = {
                 argument = "+i";
               };
-            }
-            // (optionalAttrs hasPersist (
-              nameValuePair ("/persist" + (toString opts.home)) {
-                d = {
-                  mode = opts.homeMode;
-                  user = opts.name;
-                  inherit (opts) group;
-                };
-              }
-            ))
-          )
-        )
-        (
-          filterAttrs (
-            _username: opts:
-            opts.enable
-            && opts.createHome
-            && opts.home != "/var/empty"
-            && (hasAttr opts.name config.nix-configs.users)
-          ) config.users.users
-        )
-    );
+            };
+          }
+        ) configuredUsers
+      );
+    };
 
     users.users = (
       concatMapAttrs (name: value: {
@@ -133,7 +147,7 @@ in
                 (
                   value.initialHashedPassword == null
                   && value.hashedPasswordFile == null
-                  && !config.users.shadow.enable
+                  && (!config.users.shadow.enable)
                 )
               then
                 value.name
