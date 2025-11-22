@@ -18,7 +18,7 @@
       description = "Rollback root ZFS dataset to snapshot before mounting root";
       wantedBy = [ "initrd.target" ];
       before = [ "sysroot.mount" ];
-      after = [ "zpool-import-rpool.service" ];
+      after = [ "zfs-import-rpool.service" ];
 
       path = [ pkgs.zfs ];
       unitConfig.DefaultDependencies = "no";
