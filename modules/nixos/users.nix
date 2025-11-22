@@ -1,4 +1,3 @@
-# TODO: Allow changing shadow location such as using /persist instead of /home
 {
   lib,
   pkgs,
@@ -18,10 +17,12 @@ let
     mkEnableOption
     mkIf
     nameValuePair
+    optionalAttrs
     optionals
     mapAttrs'
     ;
   nixConfigsUsers = config.nix-configs.users;
+  hasPersist = builtins.hasAttr "/persist" config.fileSystems;
 in
 {
   imports = [
@@ -44,9 +45,14 @@ in
       }
       {
         assertion =
-          config.users.shadow.enable
-          -> (builtins.hasAttr "/home" config.fileSystems && config.fileSystems."/home".neededForBoot);
-        message = "`/home` mounts should be enabled in initrd when using user shadow files";
+          (config.users.shadow.enable && hasPersist) -> (config.fileSystems."/persist".neededForBoot);
+        message = "`/persist` mount should be enabled in initrd when using user shadow files";
+      }
+      {
+        assertion =
+          (config.users.shadow.enable && !hasPersist && (builtins.hasAttr "/home" config.fileSystems))
+          -> (config.fileSystems."/home".neededForBoot);
+        message = "`/home` mount should be enabled in initrd when using user shadow files and no /persist mount is available";
       }
     ];
     services.userborn.enable = true;
@@ -70,17 +76,31 @@ in
       mapAttrs'
         (
           username: opts:
-          nameValuePair ((toString opts.home) + "/.shadow") {
-            f = {
-              mode = "600";
-              user = opts.name;
-              inherit (opts) group;
-              argument = (getAttr opts.name config.nix-configs.users).initialHashedPassword;
-            };
-            h = {
-              argument = "+i";
-            };
-          }
+          let
+            shadowFile = ((toString opts.home) + "/.shadow");
+          in
+          (
+            nameValuePair (if hasPersist then "/persist" + shadowFile else shadowFile) {
+              f = {
+                mode = "600";
+                user = opts.name;
+                inherit (opts) group;
+                argument = (getAttr opts.name config.nix-configs.users).initialHashedPassword;
+              };
+              h = {
+                argument = "+i";
+              };
+            }
+            // (optionalAttrs hasPersist (
+              nameValuePair ("/persist" + (toString opts.home)) {
+                d = {
+                  mode = opts.homeMode;
+                  user = opts.name;
+                  inherit (opts) group;
+                };
+              }
+            ))
+          )
         )
         (
           filterAttrs (
@@ -127,7 +147,10 @@ in
                 (if value.hashedPasswordFile == null then value.initialHashedPassword else null)
             );
             hashedPasswordFile = mkDefault (
-              if config.users.shadow.enable then "${userHome}/.shadow" else value.hashedPasswordFile
+              if config.users.shadow.enable then
+                (if hasPersist then "/persist/${userHome}/.shadow" else "${userHome}/.shadow")
+              else
+                value.hashedPasswordFile
             );
 
             openssh.authorizedKeys.keys = [ ] ++ (optionals (value.sshKey != null) [ value.sshKey ]);
