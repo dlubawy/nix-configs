@@ -21,7 +21,8 @@ let
     optionals
     ;
   nixConfigsUsers = config.nix-configs.users;
-  hasPersist = builtins.hasAttr "/persist" config.fileSystems;
+  hasPersist =
+    (builtins.hasAttr "/persist" config.fileSystems) && config.fileSystems."/persist".enable;
   configuredUsers = filterAttrs (
     _username: opts:
     opts.enable
