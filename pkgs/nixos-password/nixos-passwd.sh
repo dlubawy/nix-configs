@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 SHADOW_FILE="$HOME/.shadow"
 
 trap '' SIGINT
