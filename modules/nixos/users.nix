@@ -1,3 +1,4 @@
+# TODO: Allow changing shadow location such as using /persist instead of /home
 {
   lib,
   pkgs,
@@ -41,13 +42,19 @@ in
           -> (length (filter (v: v.initialHashedPassword != null) (attrValues config.nix-configs.users)) > 0);
         message = "Users must have an initialHashedPassword set if using nix-configs.shadow";
       }
+      {
+        assertion =
+          config.users.shadow.enable
+          -> (builtins.hasAttr "/home" config.fileSystems && config.fileSystems."/home".neededForBoot);
+        message = "`/home` mounts should be enabled in initrd when using user shadow files";
+      }
     ];
     services.userborn.enable = true;
 
     # Enable to allow chattr for root if needing to remove a file
     environment.systemPackages = with pkgs; [ ] ++ optionals config.users.shadow.enable [ e2fsprogs ];
 
-    # nixos-passwd needs chattr and to ignore '0000' octal on user shadow files
+    # nixos-passwd needs chattr +/-i on user shadow files
     security.wrappers.nixos-passwd = {
       enable = config.users.shadow.enable;
       owner = "root";
