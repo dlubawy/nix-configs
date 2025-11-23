@@ -91,9 +91,8 @@ let
       libtapi
     ];
 
-    # TODO: remove `.out` after https://github.com/NixOS/nixpkgs/pull/346043 is merged to `master`
     buildInputs = [
-      libiconv.out
+      libiconv
     ];
 
     propagatedBuildInputs = [ ];
