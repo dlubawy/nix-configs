@@ -27,14 +27,8 @@
     };
   };
 
-  fileSystems = {
-    "/home" = {
-      # Needed for userborn when `users.shadow.enable = true`
-      neededForBoot = true;
-    };
-    "/persist" = {
-      neededForBoot = true;
-    };
+  fileSystems."/persist" = {
+    neededForBoot = true;
   };
 
   zramSwap = {
