@@ -316,20 +316,12 @@ rec {
               };
             };
           };
-          nixvimCheck =
-            # FIXME: remove when fixed: https://github.com/nix-community/nixvim/issues/3576
-            let
-              nixvimModule =
-                { ... }:
-                {
-                  imports = [ ./modules/nixvim ];
-                  nixpkgs.overlays = (builtins.attrValues self.overlays);
-                };
-            in
-            (nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
+          nixvimCheck = (
+            nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
               inherit pkgs;
-              module = nixvimModule;
-            });
+              module = import ./modules/nixvim;
+            }
+          );
         }
       );
 
