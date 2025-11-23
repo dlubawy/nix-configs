@@ -53,6 +53,10 @@ rec {
       url = "github:nix-community/disko/v1.12.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -68,6 +72,7 @@ rec {
       pre-commit-hooks,
       nix-topology,
       disko,
+      lanzaboote,
       ...
     }@inputs:
     let
