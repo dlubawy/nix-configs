@@ -39,6 +39,7 @@
   disko = {
     devices = {
       disk = {
+        # TODO: Get actual device name
         emmc = {
           type = "disk";
           device = "/dev/mmcblk0";
@@ -76,6 +77,14 @@
             pool = "tank";
           };
         };
+        ssd2 = {
+          type = "disk";
+          device = "/dev/sdb";
+          content = {
+            type = "zfs";
+            pool = "tank";
+          };
+        };
       };
       zpool = {
         rpool = {
@@ -100,6 +109,20 @@
         };
         tank = {
           type = "zpool";
+          mode = {
+            topology = {
+              type = "topology";
+              vdev = [
+                {
+                  mode = "mirror";
+                  members = [
+                    "ssd1"
+                    "ssd2"
+                  ];
+                }
+              ];
+            };
+          };
           rootFsOptions = {
             encryption = "on";
             keyformat = "passphrase";
