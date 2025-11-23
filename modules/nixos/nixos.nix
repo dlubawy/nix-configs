@@ -6,6 +6,7 @@
   ...
 }:
 let
+  inherit (lib) mkEnableOption optionals;
   systemName = config.networking.hostName;
 in
 {
@@ -15,6 +16,10 @@ in
     ./nix.nix
     ./users.nix
   ];
+
+  options = {
+    topology.enable = mkEnableOption "Enable system in topology view";
+  };
 
   config = {
     environment.shellAliases = {

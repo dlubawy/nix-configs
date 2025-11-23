@@ -4,11 +4,12 @@
   ...
 }:
 let
+  inherit (config.lib.topology) mkDevice mkInternet mkConnection;
   homeDomain = config.homeDomain;
 in
-with config.lib.topology;
 {
   topology = {
+    enable = true;
     nodes = {
       internet = mkInternet {
         connections = mkConnection "bpi" "sfp2";
