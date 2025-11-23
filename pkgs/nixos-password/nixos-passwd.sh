@@ -1,5 +1,22 @@
-#!/usr/bin/env bash
-SHADOW_FILE="$HOME/.shadow"
+if [ -z "$HOME" ]; then
+  echo "\$HOME is not set" 1>&2
+  exit 1
+fi
+
+# Check for erase your darlings setup
+if [ -d "/persist" ]; then
+  if [ ! -d "/persist/$HOME" ]; then
+    echo "/persist/${HOME:-"\$HOME"} dir does not exist" 1>&2
+    exit 1
+  fi
+  SHADOW_FILE="/persist/$HOME/.shadow"
+else
+  if [ ! -d "$HOME" ]; then
+    echo "${HOME:-"\$HOME"} dir does not exist" 1>&2
+    exit 1
+  fi
+  SHADOW_FILE="$HOME/.shadow"
+fi
 
 trap '' SIGINT
 
@@ -58,11 +75,6 @@ HELP
       ;;
   esac
 done
-
-if [ ! -d "$HOME" ]; then
-  echo "${HOME:-"HOME"} dir does not exist" 1>&2
-  exit 1
-fi
 
 if [ -f "$SHADOW_FILE" ]; then
   WORD_COUNT="$(wc -m "$SHADOW_FILE" | awk -F' ' '{ print $1 }')"
