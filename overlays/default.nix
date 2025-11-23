@@ -17,14 +17,6 @@
     fuse-ext2 = prev.fuse-ext2.overrideAttrs (_: (import ./fuse-ext2 { inherit prev final; }));
     ntfs3g = prev.ntfs3g.overrideAttrs (_: (import ./ntfs3g { inherit prev final; }));
     hostapd = prev.hostapd.overrideAttrs (_: (import ./hostapd { inherit prev final; }));
-    vimPlugins = prev.vimPlugins // {
-      CopilotChat-nvim = prev.vimPlugins.CopilotChat-nvim.overrideAttrs (_: {
-        nvimSkipModules = [ "CopilotChat.integrations.fzflua" ];
-      });
-      render-markdown-nvim = prev.vimPlugins.render-markdown-nvim.overrideAttrs (_: {
-        nvimSkipModules = [ "render-markdown.config.patterns" ];
-      });
-    };
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
