@@ -7,15 +7,22 @@
   vars,
   ...
 }:
+let
+  inherit (lib)
+    mkOption
+    types
+    ;
+in
 {
   imports = [
     inputs.nixvim.nixDarwinModules.nixvim
     ./users.nix
+    ./topology.nix
   ];
 
   options = {
-    systemName = lib.mkOption {
-      type = lib.types.str;
+    systemName = mkOption {
+      type = types.str;
       description = "System name for deriving admin username and computer hostname";
     };
   };
