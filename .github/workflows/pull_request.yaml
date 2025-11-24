@@ -37,9 +37,28 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a
       - name: Run flake check
         run: nix develop --command make check
+  check-results:
+    needs:
+      - check
+      - detect-changes
+    if: ${{ always() && contains(needs.detect-changes.result, 'success') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine check results
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            echo "One or more checks failed" 1>&2
+            exit 1
+          elif [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "One or more checks cancelled" 1>&2
+            exit 1
+          else
+            echo "All checks completed successfully or were skipped"
+            exit 0
+          fi
   merge:
     if: ${{ github.event.pull_request.user.login == 'dlubawy-bot[bot]' && github.repository == 'dlubawy/nix-configs' }}
-    needs: check
+    needs: check-results
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94
