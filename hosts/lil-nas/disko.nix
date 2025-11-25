@@ -70,7 +70,7 @@
         };
         ssd1 = {
           type = "disk";
-          device = "/dev/nvme0n1";
+          device = "/dev/nvme0";
           content = {
             type = "zfs";
             pool = "tank";
@@ -78,7 +78,7 @@
         };
         ssd2 = {
           type = "disk";
-          device = "/dev/nvme1n1";
+          device = "/dev/nvme1";
           content = {
             type = "zfs";
             pool = "tank";
