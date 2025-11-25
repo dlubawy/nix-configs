@@ -16,7 +16,8 @@ in
 
   nix.gc.automatic = mkForce false;
 
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
+    networkmanager
     inputs.disko.packages.${pkgs.system}.disko
     inputs.disko.packages.${pkgs.system}.disko-install
   ];
