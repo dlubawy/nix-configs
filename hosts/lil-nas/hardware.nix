@@ -1,21 +1,29 @@
-# FIXME: qemu VM test - replace with real hardware config later
-{ modulesPath, ... }:
+{
+  config,
+  lib,
+  modulesPath,
+  ...
+}:
 {
   imports = [
-    (modulesPath + "/profiles/qemu-guest.nix")
+    (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
   boot = {
     initrd = {
       availableKernelModules = [
-        "ahci"
         "xhci_pci"
-        "virtio_pci"
-        "virtio_scsi"
+        "nvme"
         "usb_storage"
+        "usbhid"
         "sd_mod"
+        "sdhci_pci"
       ];
     };
-    kernelModules = [ "kvm-amd" ];
+    kernelModules = [ "kvm-intel" ];
   };
+
+  networking.useDHCP = lib.mkDefault true;
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
