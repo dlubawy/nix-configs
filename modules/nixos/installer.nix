@@ -15,6 +15,8 @@ in
   ];
 
   nix.gc.automatic = mkForce false;
+  networking.networkmanager.enable = true;
+  networking.wireless.enable = false;
 
   environment.systemPackages = with pkgs; [
     networkmanager
