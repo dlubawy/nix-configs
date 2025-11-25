@@ -9,7 +9,7 @@ in
       hardware.info = "GMKtec G9";
       interfaces = {
         lan1 = {
-          addresses = [ "192.168.1.11" ];
+          addresses = [ "192.168.1.10" ];
           physicalConnections = [
             (mkConnectionRev "bpi" "lan1")
           ];
