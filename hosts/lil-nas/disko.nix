@@ -39,7 +39,6 @@
   disko = {
     devices = {
       disk = {
-        # TODO: Get actual device name
         emmc = {
           type = "disk";
           device = "/dev/mmcblk0";
@@ -71,7 +70,7 @@
         };
         ssd1 = {
           type = "disk";
-          device = "/dev/sda";
+          device = "/dev/nvme0n1";
           content = {
             type = "zfs";
             pool = "tank";
@@ -79,7 +78,7 @@
         };
         ssd2 = {
           type = "disk";
-          device = "/dev/sdb";
+          device = "/dev/nvme1n1";
           content = {
             type = "zfs";
             pool = "tank";
