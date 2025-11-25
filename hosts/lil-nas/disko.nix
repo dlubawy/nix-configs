@@ -1,4 +1,9 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  config,
+  inputs,
+  ...
+}:
 {
   imports = [ inputs.disko.nixosModules.disko ];
 
@@ -41,7 +46,7 @@
       disk = {
         emmc = {
           type = "disk";
-          device = "/dev/mmcblk0";
+          device = "/dev/disk/by-id/mmc-TWSC_0x1b2108a7";
           content = {
             type = "gpt";
             partitions = {
@@ -70,7 +75,7 @@
         };
         ssd1 = {
           type = "disk";
-          device = "/dev/nvme0";
+          device = "/dev/disk/by-id/nvme-TWSC_TSC3AN512-F5T50S_TTSMA254GX00859";
           content = {
             type = "zfs";
             pool = "tank";
@@ -78,7 +83,7 @@
         };
         ssd2 = {
           type = "disk";
-          device = "/dev/nvme1";
+          device = "/dev/disk/by-id/nvme-CT500P310SSD8_2518500D9211";
           content = {
             type = "zfs";
             pool = "tank";
@@ -115,8 +120,8 @@
                 {
                   mode = "mirror";
                   members = [
-                    "ssd1"
-                    "ssd2"
+                    config.disko.devices.disk.ssd1.device
+                    config.disko.devices.disk.ssd2.device
                   ];
                 }
               ];
