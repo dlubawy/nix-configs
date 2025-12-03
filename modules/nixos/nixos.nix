@@ -20,6 +20,7 @@ in
     inputs.nix-topology.nixosModules.default
     inputs.nixvim.nixosModules.nixvim
     inputs.lanzaboote.nixosModules.lanzaboote
+    inputs.preservation.nixosModules.preservation
     ./nix.nix
     ./users.nix
   ];
