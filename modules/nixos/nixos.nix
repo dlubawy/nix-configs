@@ -7,7 +7,12 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkForce;
+  inherit (lib)
+    mkEnableOption
+    mkDefault
+    mkIf
+    mkMerge
+    ;
   systemName = config.networking.hostName;
 in
 {
@@ -28,6 +33,15 @@ in
   };
 
   config = {
+    assertions = [
+      {
+        assertion =
+          (config.boot.secure.enable)
+          -> (config.boot.lanzaboote.enable && (!config.boot.loader.systemd-boot.enable));
+        message = "When secure boot is enabled lanzaboote is enabled and systemd-boot is disabled";
+      }
+    ];
+
     environment = {
       systemPackages = with pkgs; [ sbctl ];
       shellAliases = {
@@ -35,14 +49,18 @@ in
       };
     };
 
-    boot = {
-      initrd.systemd.enable = true;
-      loader.systemd-boot.enable = mkForce (!config.boot.secure.enable);
-      lanzaboote = {
-        enable = config.boot.secure.enable;
-        pkiBundle = "/var/lib/sbctl";
-      };
-    };
+    boot = mkMerge [
+      {
+        initrd.systemd.enable = mkDefault true;
+      }
+      (mkIf config.boot.secure.enable {
+        loader.systemd-boot.enable = mkDefault false;
+        lanzaboote = {
+          enable = mkDefault true;
+          pkiBundle = "/var/lib/sbctl";
+        };
+      })
+    ];
 
     programs = {
       nixvim = {
