@@ -109,8 +109,10 @@
     comment.enable = true;
     lspkind = {
       enable = true;
-      symbolMap = {
-        Copilot = "";
+      settings = {
+        symbolMap = {
+          Copilot = "";
+        };
       };
     };
     fzf-lua.enable = true;
@@ -118,19 +120,24 @@
     # Editor
     neo-tree = {
       enable = true;
-      closeIfLastWindow = true;
-      filesystem.followCurrentFile.enabled = true;
+      settings = {
+        closeIfLastWindow = true;
+        filesystem.followCurrentFile.enabled = true;
+      };
     };
     spectre = {
-      enable = true;
+      # FIXME: enable when ISSUE(#133) is resolvable
+      enable = false;
       settings.open_cmd = "noswapfile vnew";
     };
     gitsigns.enable = true;
     illuminate = {
       enable = true;
-      delay = 200;
-      largeFileCutoff = 2000;
-      largeFileOverrides.providers = [ "lsp" ];
+      settings = {
+        delay = 200;
+        largeFileCutoff = 2000;
+        largeFileOverrides.providers = [ "lsp" ];
+      };
     };
     todo-comments.enable = true;
     fugitive.enable = true;
