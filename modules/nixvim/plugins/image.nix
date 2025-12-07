@@ -1,6 +1,5 @@
 {
   pkgs,
-  helpers,
   lib,
   ...
 }:
@@ -11,7 +10,7 @@
     ueberzugpp
   ];
   plugins.image = {
-    enable = helpers.enableExceptInTests;
+    enable = lib.nixvim.enableExceptInTests;
     settings = {
       backend = lib.mkDefault "ueberzug";
       integrations = {

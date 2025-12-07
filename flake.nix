@@ -10,21 +10,22 @@ rec {
 
   inputs = {
     # Different nixpkgs sources
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
 
     # System modules
     darwin = {
-      url = "github:dlubawy/nix-darwin/develop-25.05";
+      url = "github:dlubawy/nix-darwin/develop-25.11";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/release-25.05";
+      # FIXME: Change when upstream has 25.11 released
+      url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-sbc = {
@@ -34,7 +35,7 @@ rec {
 
     # Supporting modules
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.05";
+      url = "github:nix-community/nixvim/nixos-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
@@ -102,7 +103,7 @@ rec {
 
       vars = {
         darwinStateVersion = 6;
-        stateVersion = "25.05";
+        stateVersion = "25.11";
         flake = "github:dlubawy/nix-configs/main";
         admin = (import ./users/drew.nix).nix-configs.users.drew;
         inherit nixConfig;
@@ -118,7 +119,7 @@ rec {
           isDarwin = lib.strings.hasSuffix "darwin" system;
           systemBuilder = if isDarwin then darwin.lib.darwinSystem else lib.nixosSystem;
           systemModule = if isDarwin then self.darwinModules.default else self.nixosModules.default;
-          homeModule = if isDarwin then self.homeManagerModules.darwin else self.homeManagerModules.nixos;
+          homeModule = if isDarwin then self.homeModules.darwin else self.homeModules.nixos;
         in
         systemBuilder {
           inherit system;
@@ -133,13 +134,13 @@ rec {
         };
     in
     rec {
-      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system) pkgs);
+      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.stdenv.hostPlatform.system) pkgs);
       formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
 
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       darwinModules = import ./modules/darwin;
-      homeManagerModules = import ./modules/home-manager { inherit inputs; };
+      homeModules = import ./modules/home-manager { inherit inputs; };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
@@ -178,7 +179,7 @@ rec {
             inherit inputs outputs vars;
           };
           modules = [
-            self.homeManagerModules.default
+            self.homeModules.default
             ./users/drew.nix
           ];
         };
@@ -196,7 +197,7 @@ rec {
             inherit (nixpkgs) lib;
           in
           (lib.nixosSystem {
-            inherit (pkgs) system;
+            inherit (pkgs.stdenv.hostPlatform) system;
             specialArgs = {
               inherit inputs outputs vars;
             };
@@ -221,7 +222,7 @@ rec {
       checks = forAllSystems (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = ./.;
             hooks = {
               trufflehog = {
@@ -317,7 +318,7 @@ rec {
             };
           };
           nixvimCheck = (
-            nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
+            nixvim.lib."${pkgs.stdenv.hostPlatform.system}".check.mkTestDerivationFromNixvimModule {
               inherit pkgs;
               module = import ./modules/nixvim;
             }
@@ -329,10 +330,10 @@ rec {
         { pkgs }:
         {
           default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
-            buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
+            inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
+            buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
-              inputs.agenix.packages.${system}.default
+              inputs.agenix.packages.${stdenv.hostPlatform.system}.default
               (writeShellApplication {
                 name = "sync-flake-inputs";
                 runtimeInputs = [

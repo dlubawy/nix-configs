@@ -8,7 +8,11 @@ pkgs.python3Packages.buildPythonApplication {
 
   meta.platforms = [ "aarch64-linux" ];
 
-  buildInputs = [ iwinfo-lite ];
+  pyproject = true;
+  buildInputs = with pkgs.python3Packages; [
+    setuptools
+    iwinfo-lite
+  ];
   propagatedBuildInputs = with pkgs.python3Packages; [ prometheus-client ];
 
   src = ./.;
