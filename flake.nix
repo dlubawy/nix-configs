@@ -103,7 +103,7 @@ rec {
 
       vars = {
         darwinStateVersion = 6;
-        stateVersion = "25.05";
+        stateVersion = "25.11";
         flake = "github:dlubawy/nix-configs/main";
         admin = (import ./users/drew.nix).nix-configs.users.drew;
         inherit nixConfig;
