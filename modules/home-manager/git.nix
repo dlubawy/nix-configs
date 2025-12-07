@@ -5,11 +5,15 @@ in
 {
   programs.git = {
     enable = true;
-    userEmail = if user.email == "" then null else user.email;
-    userName = if user.fullName == "" then null else user.fullName;
-    extraConfig = {
-      init = {
-        defaultBranch = "main";
+    settings = {
+      user = {
+        email = if user.email == "" then null else user.email;
+        name = if user.fullName == "" then null else user.fullName;
+      };
+      extraConfig = {
+        init = {
+          defaultBranch = "main";
+        };
       };
     };
     signing = lib.mkIf (user.gpgKey != null) {
