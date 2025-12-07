@@ -44,7 +44,7 @@ in
       package = lib.mkIf (!useGlobalPkgs) pkgs.nix;
       gc = {
         automatic = true;
-        frequency = "weekly";
+        dates = "weekly";
         options = "--delete-older-than 7d";
       };
       settings = {
