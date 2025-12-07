@@ -134,7 +134,7 @@ rec {
         };
     in
     rec {
-      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.system) pkgs);
+      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.stdenv.hostPlatform.system) pkgs);
       formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
 
       overlays = import ./overlays { inherit inputs; };
@@ -197,7 +197,7 @@ rec {
             inherit (nixpkgs) lib;
           in
           (lib.nixosSystem {
-            inherit (pkgs) system;
+            inherit (pkgs.stdenv.hostPlatform) system;
             specialArgs = {
               inherit inputs outputs vars;
             };
@@ -222,7 +222,7 @@ rec {
       checks = forAllSystems (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = ./.;
             hooks = {
               trufflehog = {
@@ -318,7 +318,7 @@ rec {
             };
           };
           nixvimCheck = (
-            nixvim.lib."${pkgs.system}".check.mkTestDerivationFromNixvimModule {
+            nixvim.lib."${pkgs.stdenv.hostPlatform.system}".check.mkTestDerivationFromNixvimModule {
               inherit pkgs;
               module = import ./modules/nixvim;
             }
@@ -330,10 +330,10 @@ rec {
         { pkgs }:
         {
           default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
-            buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
+            inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
+            buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
-              inputs.agenix.packages.${system}.default
+              inputs.agenix.packages.${stdenv.hostPlatform.system}.default
               (writeShellApplication {
                 name = "sync-flake-inputs";
                 runtimeInputs = [
