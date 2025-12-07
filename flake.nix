@@ -119,7 +119,7 @@ rec {
           isDarwin = lib.strings.hasSuffix "darwin" system;
           systemBuilder = if isDarwin then darwin.lib.darwinSystem else lib.nixosSystem;
           systemModule = if isDarwin then self.darwinModules.default else self.nixosModules.default;
-          homeModule = if isDarwin then self.homeManagerModules.darwin else self.homeManagerModules.nixos;
+          homeModule = if isDarwin then self.homeModules.darwin else self.homeModules.nixos;
         in
         systemBuilder {
           inherit system;
@@ -140,7 +140,7 @@ rec {
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       darwinModules = import ./modules/darwin;
-      homeManagerModules = import ./modules/home-manager { inherit inputs; };
+      homeModules = import ./modules/home-manager { inherit inputs; };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
@@ -179,7 +179,7 @@ rec {
             inherit inputs outputs vars;
           };
           modules = [
-            self.homeManagerModules.default
+            self.homeModules.default
             ./users/drew.nix
           ];
         };
