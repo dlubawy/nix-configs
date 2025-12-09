@@ -19,16 +19,31 @@
       efi.canTouchEfiVariables = true;
     };
 
-    initrd.systemd.services."zfs-rollback" = {
-      description = "Rollback root ZFS dataset to snapshot before mounting root";
-      wantedBy = [ "initrd.target" ];
-      before = [ "sysroot.mount" ];
-      after = [ "zfs-import-rpool.service" ];
+    initrd.systemd.services = {
+      "zfs-wait" = {
+        description = "Wait for USB devices if needed for unlock";
+        wantedBy = [ "initrd.target" ];
+        before = [
+          "zfs-import-rpool.service"
+          "zfs-import-tank.service"
+        ];
+        after = [ "initrd-root-device.target" ];
 
-      path = [ pkgs.zfs ];
-      unitConfig.DefaultDependencies = "no";
-      serviceConfig.Type = "oneshot";
-      script = "zfs rollback -r rpool/local/root@blank";
+        unitConfig.DefaultDependencies = "no";
+        serviceConfig.Type = "oneshot";
+        script = "sleep 2";
+      };
+      "zfs-rollback" = {
+        description = "Rollback root ZFS dataset to snapshot before mounting root";
+        wantedBy = [ "initrd.target" ];
+        before = [ "sysroot.mount" ];
+        after = [ "zfs-import-rpool.service" ];
+
+        path = [ pkgs.zfs ];
+        unitConfig.DefaultDependencies = "no";
+        serviceConfig.Type = "oneshot";
+        script = "zfs rollback -r rpool/local/root@blank";
+      };
     };
   };
 
