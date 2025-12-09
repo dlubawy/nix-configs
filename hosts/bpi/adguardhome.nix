@@ -63,7 +63,7 @@ in
         "key.pem:${certDir}/key.pem"
       ];
 
-    requires = [ "acme-finished-${homeDomain}.target" ];
+    requires = [ "acme-${homeDomain}.service" ];
   };
 
   services.adguardhome = {
