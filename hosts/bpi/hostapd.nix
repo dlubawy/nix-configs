@@ -152,10 +152,8 @@
                 time_zone = "PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00";
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
-
-                # NOTE: we effectively disabled PMKSA caching through a hostapd patch so rsn_preauth/okc won't work
-                rsn_preauth = 0;
-                okc = 0;
+                rsn_preauth = 1;
+                okc = 1;
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan0 = pkgs.writeShellScript "shared-secret-config-wlan0" sharedSecretConfigScript;
@@ -255,10 +253,8 @@
                 time_zone = "PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00";
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
-
-                # NOTE: we effectively disabled PMKSA caching through a hostapd patch so rsn_preauth/okc won't work
-                rsn_preauth = 0;
-                okc = 0;
+                rsn_preauth = 1;
+                okc = 1;
               };
               dynamicConfigScripts = {
                 sharedSecretConfigWlan1 = pkgs.writeShellScript "shared-secret-config-wlan1" sharedSecretConfigScript;
