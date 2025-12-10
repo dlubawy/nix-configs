@@ -63,7 +63,7 @@ in
         "key.pem:${certDir}/key.pem"
       ];
 
-    requires = [ "acme-finished-${homeDomain}.target" ];
+    requires = [ "acme-${homeDomain}.service" ];
   };
 
   services.adguardhome = {
@@ -322,14 +322,17 @@ in
           {
             domain = "${homeDomain}";
             answer = "192.168.1.1";
+            enabled = true;
           }
           {
             domain = "adguard.home";
             answer = "192.168.1.1";
+            enabled = true;
           }
           {
             domain = "grafana.home";
             answer = "192.168.1.1";
+            enabled = true;
           }
         ];
       };
