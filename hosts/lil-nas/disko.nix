@@ -21,7 +21,7 @@
 
     initrd.systemd.services = {
       "zfs-wait" = {
-        description = "Wait for USB devices if needed for unlock";
+        description = "Wait for ZFS key to unlock pools";
         wantedBy = [ "initrd.target" ];
         before = [
           "zfs-import-rpool.service"
@@ -31,7 +31,7 @@
 
         unitConfig.DefaultDependencies = "no";
         serviceConfig.Type = "oneshot";
-        script = "sleep 2";
+        script = "udevadm wait /dev/disk/by-partlabel/zfs-key";
       };
       "zfs-rollback" = {
         description = "Rollback root ZFS dataset to snapshot before mounting root";
