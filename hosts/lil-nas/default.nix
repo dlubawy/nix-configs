@@ -34,5 +34,13 @@
         "--advertise-tags=tag:server"
       ];
     };
+
+    zfs = {
+      autoScrub = {
+        enable = true;
+        interval = "weekly";
+      };
+      autoSnapshot.enable = true;
+    };
   };
 }
