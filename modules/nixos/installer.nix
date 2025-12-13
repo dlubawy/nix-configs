@@ -15,8 +15,11 @@ in
   ];
 
   nix.gc.automatic = mkForce false;
+  networking.networkmanager.enable = true;
+  networking.wireless.enable = false;
 
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
+    networkmanager
     inputs.disko.packages.${pkgs.system}.disko
     inputs.disko.packages.${pkgs.system}.disko-install
   ];

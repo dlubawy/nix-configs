@@ -54,6 +54,13 @@ rec {
       url = "github:nix-community/disko/v1.12.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.3";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    preservation = {
+      url = "github:nix-community/preservation/93416f4614ad2dfed5b0dcf12f27e57d27a5ab11";
+    };
   };
 
   outputs =
@@ -63,12 +70,10 @@ rec {
       nixpkgs-darwin,
       darwin,
       home-manager,
-      nixos-wsl,
       nixvim,
       agenix,
       pre-commit-hooks,
       nix-topology,
-      disko,
       ...
     }@inputs:
     let
@@ -161,6 +166,12 @@ rec {
           name = "bpi";
           system = "aarch64-linux";
         };
+
+        # GMTtec G9
+        lil-nas = mkSystem {
+          name = "lil-nas";
+          system = "x86_64-linux";
+        };
       };
 
       darwinConfigurations = {
@@ -188,7 +199,7 @@ rec {
       images = {
         pi =
           (nixosConfigurations.pi.extendModules {
-            modules = [ "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
+            modules = [ "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
           }).config.system.build.sdImage;
         bpi = nixosConfigurations.bpi.config.system.build.sdImage;
         nixos-iso-installer = forSystemList [ "aarch64-linux" "x86_64-linux" ] (
@@ -222,7 +233,7 @@ rec {
       checks = forAllSystems (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
+          pre-commit-check = pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = ./.;
             hooks = {
               trufflehog = {
@@ -333,7 +344,7 @@ rec {
             inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
             buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
-              inputs.agenix.packages.${stdenv.hostPlatform.system}.default
+              agenix.packages.${stdenv.hostPlatform.system}.default
               (writeShellApplication {
                 name = "sync-flake-inputs";
                 runtimeInputs = [

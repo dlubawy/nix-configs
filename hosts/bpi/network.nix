@@ -2,14 +2,17 @@
   lib,
   pkgs,
   config,
+  outputs,
   ...
 }:
 let
-  gamingPC = config.topology.nodes.gamingPC.interfaces.wifi;
-  laptop = config.topology.nodes.laptop.interfaces.wifi;
-  printer = config.topology.nodes.printer.interfaces.wifi;
-  tv = config.topology.nodes.tv.interfaces.wifi;
-  tv2 = config.topology.nodes.tv.interfaces.wifi2;
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  gamingPC = topology.nodes.gamingPC.interfaces.wifi;
+  laptop = topology.nodes.laptop.interfaces.wifi;
+  printer = topology.nodes.printer.interfaces.wifi;
+  tv = topology.nodes.tv.interfaces.wifi;
+  tv2 = topology.nodes.tv.interfaces.wifi2;
+  lil-nas = topology.nodes.lil-nas.interfaces.enp5s0;
 
   getAddress = node: (builtins.elemAt node.addresses 0);
 in
@@ -28,6 +31,7 @@ in
         ''iifname { "br-wan" } counter drop comment "Drop all unsolicited traffic from WAN"''
       ];
       extraForwardRules = lib.strings.concatLines [
+        ''iifname { "vl-user" "${config.services.tailscale.interfaceName}" } ip daddr { ${getAddress lil-nas} } accept comment "Allow trusted users and tailscale to access NAS"''
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
@@ -270,6 +274,12 @@ in
           PoolOffset = 100;
           PoolSize = 100;
         };
+        dhcpServerStaticLeases = [
+          {
+            Address = getAddress lil-nas;
+            MACAddress = lil-nas.mac;
+          }
+        ];
       };
       "35-vl-user" = {
         matchConfig.Name = "vl-user";
