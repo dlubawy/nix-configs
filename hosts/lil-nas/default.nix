@@ -1,6 +1,10 @@
 {
+  lib,
   ...
 }:
+let
+  inherit (lib) mkForce;
+in
 {
   imports = [
     ./disko.nix
@@ -9,7 +13,11 @@
     ../../users/default.nix
   ];
 
-  networking.hostName = "lil-nas";
+  networking = {
+    hostName = "lil-nas";
+    networkmanager.enable = mkForce false;
+  };
+
   home-manager.gui.enable = false;
   users.shadow.enable = true;
 
