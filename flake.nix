@@ -167,7 +167,7 @@ rec {
           system = "aarch64-linux";
         };
 
-        # WIP: Testing out some ideas
+        # GMTtec G9
         lil-nas = mkSystem {
           name = "lil-nas";
           system = "x86_64-linux";
