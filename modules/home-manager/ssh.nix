@@ -51,6 +51,14 @@ in
         identitiesOnly = true;
         identityFile = [ ] ++ sshKeys;
       };
+      "lil-nas" = {
+        hostname = "192.168.1.10";
+        port = 22;
+        user = "${username}";
+        controlMaster = "no";
+        identitiesOnly = true;
+        identityFile = [ ] ++ sshKeys;
+      };
       "*" = {
         addressFamily = "inet";
         extraOptions = {
