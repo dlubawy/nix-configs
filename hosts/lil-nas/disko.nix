@@ -15,7 +15,6 @@
   networking.hostId = "d4986fb2";
   boot = {
     loader = {
-      systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
 

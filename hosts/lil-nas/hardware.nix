@@ -10,6 +10,7 @@
   ];
 
   boot = {
+    secure.enable = true;
     initrd = {
       availableKernelModules = [
         "xhci_pci"
