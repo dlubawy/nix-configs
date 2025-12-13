@@ -2,14 +2,17 @@
   lib,
   pkgs,
   config,
+  outputs,
   ...
 }:
 let
-  gamingPC = config.topology.nodes.gamingPC.interfaces.wifi;
-  laptop = config.topology.nodes.laptop.interfaces.wifi;
-  printer = config.topology.nodes.printer.interfaces.wifi;
-  tv = config.topology.nodes.tv.interfaces.wifi;
-  tv2 = config.topology.nodes.tv.interfaces.wifi2;
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  gamingPC = topology.nodes.gamingPC.interfaces.wifi;
+  laptop = topology.nodes.laptop.interfaces.wifi;
+  printer = topology.nodes.printer.interfaces.wifi;
+  tv = topology.nodes.tv.interfaces.wifi;
+  tv2 = topology.nodes.tv.interfaces.wifi2;
+  lil-nas = topology.nodes.lil-nas.interfaces.enp5s0;
 
   getAddress = node: (builtins.elemAt node.addresses 0);
 in
@@ -270,6 +273,12 @@ in
           PoolOffset = 100;
           PoolSize = 100;
         };
+        dhcpServerStaticLeases = [
+          {
+            Address = getAddress lil-nas;
+            MACAddress = lil-nas.mac;
+          }
+        ];
       };
       "35-vl-user" = {
         matchConfig.Name = "vl-user";
