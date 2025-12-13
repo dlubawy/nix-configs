@@ -31,6 +31,7 @@ in
         ''iifname { "br-wan" } counter drop comment "Drop all unsolicited traffic from WAN"''
       ];
       extraForwardRules = lib.strings.concatLines [
+        ''iifname { "vl-user" "${config.services.tailscale.interfaceName}" } ip daddr { ${getAddress lil-nas} } accept comment "Allow trusted users and tailscale to access NAS"''
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
