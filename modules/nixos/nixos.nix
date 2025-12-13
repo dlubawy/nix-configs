@@ -81,6 +81,7 @@ in
 
     networking = {
       networkmanager.enable = true;
+      nftables.enable = lib.mkDefault true;
     };
 
     system = {
