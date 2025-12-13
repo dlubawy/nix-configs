@@ -82,7 +82,10 @@ in
     networking = {
       networkmanager.enable = true;
       nftables.enable = lib.mkDefault true;
+      useNetworkd = lib.mkDefault true;
     };
+
+    systemd.network.enable = lib.mkDefault true;
 
     system = {
       autoUpgrade = {
