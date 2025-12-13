@@ -12,7 +12,7 @@ in
     enable = true;
     nodes = {
       internet = mkInternet {
-        connections = mkConnection "bpi" "sfp2";
+        connections = mkConnection "bpi" "sfp1";
       };
       laptop = mkDevice "Laptop" {
         interfaceGroups = [ [ "wifi" ] ];
@@ -128,6 +128,7 @@ in
 
       interfaces = {
         sfp1 = { };
+        sfp2 = { };
         lan1 = { };
         lan2 = { };
         lan3 = { };
@@ -152,7 +153,7 @@ in
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".99" x)
             (x: lib.strings.hasPrefix "lan" x)
-            (x: x == "sfp1")
+            (x: x == "sfp2")
           ];
         };
         vl-user = {
