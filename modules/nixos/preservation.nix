@@ -39,7 +39,11 @@ in
             config.boot.lanzaboote.pkiBundle
           ])
           ++ (optionals config.services.jellyfin.enable [
-            config.services.jellyfin.dataDir
+            {
+              directory = config.services.jellyfin.dataDir;
+              group = config.services.jellyfin.group;
+              user = config.services.jellyfin.user;
+            }
           ]);
 
           files = [
