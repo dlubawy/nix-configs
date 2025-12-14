@@ -47,6 +47,13 @@ in
           "Wi-Fi"
           "USB 10/100/1000 LAN"
         ];
+        applicationFirewall = {
+          enable = true;
+          blockAllIncoming = true;
+          enableStealthMode = true;
+          allowSignedApp = false;
+          allowSigned = false;
+        };
       };
 
       users = {
@@ -158,14 +165,6 @@ in
       system = {
         defaults = {
           SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
-
-          alf = {
-            globalstate = 1;
-            stealthenabled = 1;
-            loggingenabled = 1;
-            allowdownloadsignedenabled = 0;
-            allowsignedenabled = 0;
-          };
         };
         stateVersion = vars.darwinStateVersion;
       };
