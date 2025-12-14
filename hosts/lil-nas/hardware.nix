@@ -1,6 +1,6 @@
 {
+  pkgs,
   config,
-  lib,
   modulesPath,
   ...
 }:
@@ -26,5 +26,18 @@
 
   networking.useDHCP = true;
   nixpkgs.hostPlatform = "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
+  hardware = {
+    cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
+    graphics = {
+      enable = true;
+      extraPackages = with pkgs; [
+        intel-media-driver
+        intel-compute-runtime
+        vpl-gpu-rt
+      ];
+    };
+  };
 }
