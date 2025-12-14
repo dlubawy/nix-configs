@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) filterAttrs concatMapAttrs;
+  inherit (lib)
+    filterAttrs
+    concatMapAttrs
+    strings
+    lists
+    ;
   inherit (config.lib.topology) mkSwitch mkDevice;
   darwinConfigurations = filterAttrs (
     _: value: (builtins.hasAttr "topology" value.config) && value.config.topology.enable
@@ -13,6 +18,12 @@ let
 in
 {
   config = {
+    lib.helpers = {
+      getAddress = interface: (builtins.head interface.addresses);
+      getJellyfinPort =
+        node: (lists.last (strings.split ":" node.services.jellyfin.details."listen.http".text));
+    };
+
     nixosConfigurations = filterAttrs (
       _: value: (builtins.hasAttr "topology" value.config) && value.config.topology.enable
     ) outputs.nixosConfigurations;

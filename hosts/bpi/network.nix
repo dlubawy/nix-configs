@@ -14,7 +14,7 @@ let
   tv2 = topology.nodes.tv.interfaces.wifi2;
   lil-nas = topology.nodes.lil-nas.interfaces.enp5s0;
 
-  getAddress = node: (builtins.elemAt node.addresses 0);
+  inherit (topology.lib.helpers) getAddress;
 in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;

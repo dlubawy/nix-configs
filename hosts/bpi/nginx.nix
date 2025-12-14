@@ -1,11 +1,15 @@
 {
-  lib,
+  pkgs,
   config,
-  vars,
+  outputs,
   ...
 }:
 let
   homeDomain = config.homeDomain;
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  lil-nas = topology.nodes.lil-nas;
+
+  inherit (topology.lib.helpers) getAddress getJellyfinPort;
 in
 {
   users.users.nginx.extraGroups = [ "acme" ];
@@ -24,6 +28,13 @@ in
           "192.168.1.1"
         ];
         globalRedirect = "${homeDomain}/grafana";
+      };
+
+      "jellyfin.home" = {
+        listenAddresses = [
+          "192.168.1.1"
+        ];
+        globalRedirect = "${homeDomain}/jellyfin";
       };
 
       "${homeDomain}" = {
@@ -65,6 +76,24 @@ in
             extraConfig = ''
               proxy_set_header Host $host;
               rewrite ^/grafana/(.*)  /$1 break;
+            '';
+          };
+
+          "/jellyfin/" = {
+            proxyPass = "http://${getAddress lil-nas.interfaces.enp5s0}:${getJellyfinPort lil-nas}/";
+            recommendedProxySettings = true;
+            extraConfig = ''
+              rewrite ^/jellyfin/(.*)  /$1 break;
+              proxy_buffering off;
+            '';
+          };
+
+          "/jellyfin/socket/" = {
+            proxyPass = "http://${getAddress lil-nas.interfaces.enp5s0}:${getJellyfinPort lil-nas}/socket/";
+            proxyWebsockets = true;
+            extraConfig = ''
+              proxy_set_header Host $host;
+              rewrite ^/jellyfin/(.*)  /$1 break;
             '';
           };
         };
