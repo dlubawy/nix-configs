@@ -1,7 +1,7 @@
 {
   description = "A Nix flake based Python environment";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     # Python inputs
     pyproject-nix = {
