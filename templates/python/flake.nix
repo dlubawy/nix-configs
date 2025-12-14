@@ -60,7 +60,7 @@
       checks = forEachSupportedSystem (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = ./.;
             hooks = {
               trufflehog = {
@@ -206,7 +206,7 @@
         {
           default = {
             type = "app";
-            program = "${self.packages.${pkgs.system}.default}/bin/template";
+            program = "${self.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/template";
           };
         }
       );
@@ -280,7 +280,7 @@
 
             in
             pkgs.mkShell {
-              buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
+              buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
               packages = [
                 virtualenv
                 pkgs.uv
@@ -303,7 +303,7 @@
               };
 
               shellHook = lib.strings.concatLines [
-                self.checks.${pkgs.system}.pre-commit-check.shellHook
+                self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.shellHook
                 # Undo dependency propagation by nixpkgs.
                 "unset PYTHONPATH"
                 # Get repository root using git. This is expanded at runtime by the editable `.pth` machinery.

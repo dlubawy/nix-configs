@@ -28,7 +28,7 @@
       checks = forEachSupportedSystem (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.system}.run {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = ./.;
             hooks = {
               trufflehog = {
@@ -151,8 +151,8 @@
         { pkgs }:
         {
           default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
-            buildInputs = self.checks.${pkgs.system}.pre-commit-check.enabledPackages;
+            inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
+            buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
             nativeBuildInputs = with pkgs; [
               go
               gopls
