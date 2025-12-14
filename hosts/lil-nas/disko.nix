@@ -168,6 +168,13 @@
               type = "zfs_fs";
               mountpoint = "/persist";
             };
+            "safe/jellyfin" = {
+              type = "zfs_fs";
+              mountpoint = "/srv/jellyfin";
+              options = {
+                recordsize = "1M";
+              };
+            };
             "local/swap" = {
               type = "zfs_volume";
               size = "4G";
