@@ -14,7 +14,7 @@
     copilot-cmp.enable = true;
     copilot-chat = {
       enable = true;
-      settings.model = "claude-3.5-sonnet";
+      settings.model = "gpt-5-mini";
     };
   };
 }
