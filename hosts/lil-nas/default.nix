@@ -7,10 +7,11 @@ let
 in
 {
   imports = [
+    ../../users/default.nix
     ./disko.nix
     ./hardware.nix
+    ./jellyfin.nix
     ./topology.nix
-    ../../users/default.nix
   ];
 
   networking = {
