@@ -14,6 +14,7 @@
   boot.initrd.systemd.enable = lib.mkForce false;
   systemd.sysusers.enable = lib.mkForce false;
   system.etc.overlay.enable = lib.mkForce false;
+  services.resolved.enable = false;
 
   wsl =
     let
