@@ -121,8 +121,8 @@
     neo-tree = {
       enable = true;
       settings = {
-        closeIfLastWindow = true;
-        filesystem.followCurrentFile.enabled = true;
+        close_if_last_window = true;
+        filesystem.follow_current_file.enabled = true;
       };
     };
     spectre = {
