@@ -28,6 +28,15 @@ in
   i18n.defaultLocale = "en_US.UTF-8";
 
   services = {
+    avahi = {
+      enable = true;
+      publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+      };
+    };
+
     openssh = {
       enable = true;
       settings = {
