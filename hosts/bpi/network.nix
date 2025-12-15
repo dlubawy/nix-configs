@@ -36,6 +36,7 @@ in
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
         ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
+        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress lil-nas} } tcp dport { 8096 } accept comment "Allow TV forward to NAS for Jellyfin"''
         ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } tcp dport { 27036, 27037 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } udp dport { 27031, 27036 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${getAddress tv2} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } tcp sport { 7000 } accept comment "Allow TV forward to user and guest for AirPlay"''
