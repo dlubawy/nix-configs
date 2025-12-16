@@ -1,5 +1,7 @@
 {
+  config,
   lib,
+  inputs,
   ...
 }:
 let
@@ -12,6 +14,7 @@ in
     ./hardware.nix
     ./jellyfin.nix
     ./topology.nix
+    inputs.agenix.nixosModules.default
   ];
 
   networking = {
@@ -26,6 +29,14 @@ in
 
   time.timeZone = "America/Los_Angeles";
   i18n.defaultLocale = "en_US.UTF-8";
+
+  age = {
+    secrets = {
+      tailscale = {
+        file = ../../secrets/tailscale.age;
+      };
+    };
+  };
 
   services = {
     avahi = {
@@ -46,8 +57,8 @@ in
     };
 
     tailscale = {
-      enable = false;
-      # authKeyFile = config.age.secrets.tailscale.path;
+      enable = true;
+      authKeyFile = config.age.secrets.tailscale.path;
       extraUpFlags = [
         "--advertise-tags=tag:server"
       ];
