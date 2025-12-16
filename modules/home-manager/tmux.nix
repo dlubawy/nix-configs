@@ -6,6 +6,9 @@
       set-option -sa terminal-features ',xterm*:RGB'
       set -gq allow-passthrough on
 
+      # Allows prefix sending when in ssh session
+      bind C-Space send-prefix
+
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
       bind c new-window -c "#{pane_current_path}"
