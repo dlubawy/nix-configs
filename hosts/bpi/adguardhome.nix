@@ -334,6 +334,11 @@ in
             answer = "192.168.1.1";
             enabled = true;
           }
+          {
+            domain = "jellyfin.home";
+            answer = "192.168.1.1";
+            enabled = true;
+          }
         ];
       };
     };

@@ -36,7 +36,14 @@ in
             "/var/db"
           ]
           ++ (optionals config.boot.secure.enable [
-            "/var/lib/sbctl"
+            config.boot.lanzaboote.pkiBundle
+          ])
+          ++ (optionals config.services.jellyfin.enable [
+            {
+              directory = config.services.jellyfin.dataDir;
+              group = config.services.jellyfin.group;
+              user = config.services.jellyfin.user;
+            }
           ]);
 
           files = [
