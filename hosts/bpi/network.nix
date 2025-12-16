@@ -31,16 +31,19 @@ in
         ''iifname { "br-wan" } counter drop comment "Drop all unsolicited traffic from WAN"''
       ];
       extraForwardRules = lib.strings.concatLines [
-        ''iifname { "vl-user", "${config.services.tailscale.interfaceName}" } ip daddr { ${getAddress lil-nas} } accept comment "Allow trusted users and tailscale to access NAS"''
+        # Accept
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
+        ''iifname { "${config.services.tailscale.interfaceName}" } ip daddr { ${getAddress lil-nas} } accept comment "Allow tailscale to access NAS"''
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
-        ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
         ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress lil-nas} } tcp dport { 8096 } accept comment "Allow TV forward to NAS for Jellyfin"''
+        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress lil-nas} } udp dport { 7359 } accept comment "Allow TV forward to NAS for Jellyfin"''
         ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } tcp dport { 27036, 27037 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } udp dport { 27031, 27036 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${getAddress tv2} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } tcp sport { 7000 } accept comment "Allow TV forward to user and guest for AirPlay"''
         ''ip saddr { ${getAddress tv2} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } udp sport { 6002, 49152-65535 } accept comment "Allow TV forward to user and guest for AirPlay"''
+        # Reject
+        ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
         ''iifname { "vl-iot" } oifname { "vl-lan", "vl-user", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject IoT forwarding outside itself"''
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject guest and tailscale forwarding to all internal networks"''
       ];

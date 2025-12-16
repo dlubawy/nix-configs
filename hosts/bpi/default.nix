@@ -157,7 +157,7 @@ in
         useRoutingFeatures = "server";
         extraUpFlags = [
           "--advertise-tags=tag:router"
-          "--advertise-routes=192.168.1.1/32,192.168.30.0/24"
+          "--advertise-routes=192.168.1.0/24,192.168.30.0/24"
           "--advertise-exit-node"
           "--accept-dns=false"
         ];
