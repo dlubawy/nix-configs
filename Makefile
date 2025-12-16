@@ -76,3 +76,10 @@ bpi:
     else
 		sudo nixos-rebuild switch --flake $(GIT_REPO)\#bpi
     endif
+
+lil-nas:
+    ifdef DEBUG
+		sudo nixos-rebuild switch --flake $(GIT_REPO)\#lil-nas --show-trace --verbose
+    else
+		sudo nixos-rebuild switch --flake $(GIT_REPO)\#lil-nas
+    endif
