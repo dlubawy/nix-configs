@@ -1,6 +1,13 @@
-{ config, ... }:
+{
+  pkgs,
+  config,
+  outputs,
+  ...
+}:
 let
   inherit (config.lib.topology) mkConnectionRev;
+  homeDomain =
+    outputs.topology.${pkgs.stdenv.hostPlatform.system}.config.nodes.bpi.services.nginx.info;
 in
 {
   topology = {
@@ -15,6 +22,9 @@ in
             (mkConnectionRev "bpi" "sfp2")
           ];
         };
+      };
+      services = {
+        jellyfin.info = "${homeDomain}/jellyfin";
       };
     };
   };
