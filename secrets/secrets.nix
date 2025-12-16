@@ -33,7 +33,11 @@ in
     armor = true;
   };
   "tailscale.age" = {
-    publicKeys = [ systems.bpi ] ++ allYubiKeys;
+    publicKeys = [
+      systems.bpi
+      systems.lil-nas
+    ]
+    ++ allYubiKeys;
     armor = true;
   };
   "grafana-contact-points.age" = {
