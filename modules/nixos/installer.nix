@@ -20,7 +20,7 @@ in
 
   environment.systemPackages = with pkgs; [
     networkmanager
-    inputs.disko.packages.${pkgs.system}.disko
-    inputs.disko.packages.${pkgs.system}.disko-install
+    inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko
+    inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko-install
   ];
 }
