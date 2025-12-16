@@ -1,13 +1,16 @@
 {
   pkgs,
+  lib,
   config,
   outputs,
   ...
 }:
 let
+  inherit (lib) mkForce;
   inherit (config.lib.topology) mkConnectionRev mkConnection;
-  homeDomain =
-    outputs.topology.${pkgs.stdenv.hostPlatform.system}.config.nodes.bpi.services.nginx.info;
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  inherit (topology.lib.helpers) getHomeDomain;
+  homeDomain = (getHomeDomain "bpi" "nginx");
 in
 {
   topology = {
@@ -30,6 +33,7 @@ in
       };
       services = {
         jellyfin.info = "${homeDomain}/jellyfin";
+        grafana.info = mkForce "${homeDomain}/grafana";
       };
     };
   };

@@ -14,7 +14,6 @@ in
     inputs.nixos-sbc.nixosModules.boards.bananapi.bpir3
     inputs.nixos-sbc.nixosModules.default
     ./adguardhome.nix
-    ./grafana
     ./hardware.nix
     ./hostapd.nix
     ./kernel

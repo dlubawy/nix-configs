@@ -1,22 +1,43 @@
-{ config, ... }:
+{
+  pkgs,
+  config,
+  outputs,
+  ...
+}:
 let
-  homeDomain = config.homeDomain;
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  inherit (topology.lib.helpers)
+    getHomeDomain
+    getAddress
+    getLokiPort
+    getPrometheusPort
+    ;
+  homeDomain = (getHomeDomain "bpi" "nginx");
+
+  bpi = {
+    address = (getAddress "bpi" "vl-lan");
+    prometheusPort = (getPrometheusPort "bpi");
+    lokiPort = (getLokiPort "bpi");
+  };
 in
 {
   age = {
     secrets = {
       grafana-contact-points = {
         file = ../../../secrets/grafana-contact-points.age;
+        owner = "grafana";
+        group = "grafana";
       };
     };
   };
 
   services.grafana = {
     enable = true;
+    openFirewall = true;
     settings = {
       analytics.reporting_enabled = false;
       server = {
-        http_port = 3001;
+        http_addr = "0.0.0.0";
         domain = "${homeDomain}";
         root_url = "https://%(domain)s/grafana/";
       };
@@ -25,6 +46,7 @@ in
       enable = true;
 
       alerting = {
+        contactPoints.path = config.age.secrets.grafana-contact-points.path;
         rules.path = "/etc/grafana/alerting.yaml";
         policies.settings.policies = [
           {
@@ -47,15 +69,15 @@ in
 
       datasources.settings.datasources = [
         {
-          name = "Prometheus";
+          name = "bpi Prometheus";
           type = "prometheus";
-          url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}";
+          url = "http://${bpi.address}:${bpi.prometheusPort}";
           uid = "PBFA97CFB590B2093";
         }
         {
-          name = "Loki";
+          name = "bpi Loki";
           type = "loki";
-          url = "http://${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
+          url = "http://${bpi.address}:${bpi.lokiPort}";
           uid = "FECRLA1BDO9OGF";
           jsonData = {
             manageAlerts = false;
@@ -97,11 +119,6 @@ in
     };
     "grafana/alerting.yaml" = {
       source = ./alerting.yaml;
-      group = "grafana";
-      user = "grafana";
-    };
-    "grafana/contact_points.yaml" = {
-      source = config.age.secrets.grafana-contact-points.path;
       group = "grafana";
       user = "grafana";
     };

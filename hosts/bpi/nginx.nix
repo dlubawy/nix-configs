@@ -7,9 +7,13 @@
 let
   homeDomain = config.homeDomain;
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
-  lil-nas = topology.nodes.lil-nas;
+  inherit (topology.lib.helpers) getAddress getJellyfinPort getGrafanaPort;
 
-  inherit (topology.lib.helpers) getAddress getJellyfinPort;
+  lil-nas = {
+    address = (getAddress "lil-nas" "enp5s0");
+    grafanaPort = (getGrafanaPort "lil-nas");
+    jellyfinPort = (getJellyfinPort "lil-nas");
+  };
 in
 {
   users.users.nginx.extraGroups = [ "acme" ];
@@ -63,7 +67,7 @@ in
           };
 
           "/grafana/" = {
-            proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
+            proxyPass = "http://${lil-nas.address}:${lil-nas.grafanaPort}";
             recommendedProxySettings = true;
             extraConfig = ''
               rewrite ^/grafana/(.*)  /$1 break;
@@ -71,7 +75,7 @@ in
           };
 
           "/grafana/api/live/" = {
-            proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
+            proxyPass = "http://${lil-nas.address}:${lil-nas.grafanaPort}";
             proxyWebsockets = true;
             extraConfig = ''
               proxy_set_header Host $host;
@@ -80,7 +84,7 @@ in
           };
 
           "/jellyfin/" = {
-            proxyPass = "http://${getAddress lil-nas.interfaces.enp5s0}:${getJellyfinPort lil-nas}/";
+            proxyPass = "http://${lil-nas.address}:${lil-nas.jellyfinPort}/";
             recommendedProxySettings = true;
             extraConfig = ''
               rewrite ^/jellyfin/(.*)  /$1 break;
@@ -89,7 +93,7 @@ in
           };
 
           "/jellyfin/socket/" = {
-            proxyPass = "http://${getAddress lil-nas.interfaces.enp5s0}:${getJellyfinPort lil-nas}/socket/";
+            proxyPass = "http://${lil-nas.address}:${lil-nas.jellyfinPort}/socket/";
             proxyWebsockets = true;
             extraConfig = ''
               proxy_set_header Host $host;
