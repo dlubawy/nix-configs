@@ -13,11 +13,7 @@ let
 in
 {
   "adguardhome.age" = {
-    publicKeys = [
-      systems.pi
-      systems.bpi
-    ]
-    ++ allYubiKeys;
+    publicKeys = [ systems.bpi ] ++ allYubiKeys;
     armor = true;
   };
   "wifi-sae.age" = {
@@ -41,7 +37,7 @@ in
     armor = true;
   };
   "grafana-contact-points.age" = {
-    publicKeys = [ systems.bpi ] ++ allYubiKeys;
+    publicKeys = [ systems.lil-nas ] ++ allYubiKeys;
     armor = true;
   };
   "cloudflare-dns-token.age" = {

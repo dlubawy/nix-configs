@@ -176,10 +176,16 @@ in
         };
       };
       services = {
-        loki.hidden = true;
+        loki = {
+          hidden = true;
+          details = {
+            listen = {
+              text = "${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
+            };
+          };
+        };
         prometheus.hidden = true;
         adguardhome.info = "${homeDomain}/adguard";
-        grafana.info = lib.mkForce "${homeDomain}/grafana";
         nginx.info = "${homeDomain}";
       };
     };

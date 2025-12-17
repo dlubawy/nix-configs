@@ -11,6 +11,7 @@ in
   imports = [
     ../../users/default.nix
     ./disko.nix
+    ./grafana
     ./hardware.nix
     ./jellyfin.nix
     ./topology.nix

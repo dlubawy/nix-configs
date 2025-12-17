@@ -7,14 +7,17 @@
 }:
 let
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
-  gamingPC = topology.nodes.gamingPC.interfaces.wifi;
-  laptop = topology.nodes.laptop.interfaces.wifi;
-  printer = topology.nodes.printer.interfaces.wifi;
-  tv = topology.nodes.tv.interfaces.wifi;
-  tv2 = topology.nodes.tv.interfaces.wifi2;
-  lil-nas = topology.nodes.lil-nas.interfaces.enp5s0;
-
-  inherit (topology.lib.helpers) getAddress;
+  inherit (topology.lib.helpers) getAddress getMac;
+  getInterface = node: interface: {
+    address = (getAddress node interface);
+    mac = (getMac node interface);
+  };
+  gamingPC = (getInterface "gamingPC" "wifi");
+  laptop = (getInterface "laptop" "wifi");
+  printer = (getInterface "printer" "wifi");
+  tv = (getInterface "tv" "wifi");
+  tv2 = (getInterface "tv" "wifi2");
+  lil-nas = (getInterface "lil-nas" "enp5s0");
 in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
@@ -33,15 +36,15 @@ in
       extraForwardRules = lib.strings.concatLines [
         # Accept
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
-        ''iifname { "${config.services.tailscale.interfaceName}" } ip daddr { ${getAddress lil-nas} } accept comment "Allow tailscale to access NAS"''
+        ''iifname { "${config.services.tailscale.interfaceName}" } ip daddr { ${lil-nas.address} } accept comment "Allow tailscale to access NAS"''
         ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
-        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress lil-nas} } tcp dport { 8096 } accept comment "Allow TV forward to NAS for Jellyfin"''
-        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress lil-nas} } udp dport { 7359 } accept comment "Allow TV forward to NAS for Jellyfin"''
-        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } tcp dport { 27036, 27037 } accept comment "Allow TV forward to gaming PC for Steam Link"''
-        ''ip saddr { ${getAddress tv} } ip daddr { ${getAddress gamingPC} } udp dport { 27031, 27036 } accept comment "Allow TV forward to gaming PC for Steam Link"''
-        ''ip saddr { ${getAddress tv2} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } tcp sport { 7000 } accept comment "Allow TV forward to user and guest for AirPlay"''
-        ''ip saddr { ${getAddress tv2} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } udp sport { 6002, 49152-65535 } accept comment "Allow TV forward to user and guest for AirPlay"''
+        ''ip saddr { ${tv.address} } ip daddr { ${lil-nas.address} } tcp dport { 8096 } accept comment "Allow TV forward to NAS for Jellyfin"''
+        ''ip saddr { ${tv.address} } ip daddr { ${lil-nas.address} } udp dport { 7359 } accept comment "Allow TV forward to NAS for Jellyfin"''
+        ''ip saddr { ${tv.address} } ip daddr { ${gamingPC.address} } tcp dport { 27036, 27037 } accept comment "Allow TV forward to gaming PC for Steam Link"''
+        ''ip saddr { ${tv.address} } ip daddr { ${gamingPC.address} } udp dport { 27031, 27036 } accept comment "Allow TV forward to gaming PC for Steam Link"''
+        ''ip saddr { ${tv2.address} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } tcp sport { 7000 } accept comment "Allow TV forward to user and guest for AirPlay"''
+        ''ip saddr { ${tv2.address} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } udp sport { 6002, 49152-65535 } accept comment "Allow TV forward to user and guest for AirPlay"''
         # Reject
         ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
         ''iifname { "vl-iot" } oifname { "vl-lan", "vl-user", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject IoT forwarding outside itself"''
@@ -280,7 +283,7 @@ in
         };
         dhcpServerStaticLeases = [
           {
-            Address = getAddress lil-nas;
+            Address = lil-nas.address;
             MACAddress = lil-nas.mac;
           }
         ];
@@ -304,12 +307,12 @@ in
         };
         dhcpServerStaticLeases = [
           {
-            Address = getAddress laptop;
+            Address = laptop.address;
             MACAddress = laptop.mac;
           }
           # Gaming PC
           {
-            Address = getAddress gamingPC;
+            Address = gamingPC.address;
             MACAddress = gamingPC.mac;
           }
         ];
@@ -333,15 +336,15 @@ in
         };
         dhcpServerStaticLeases = [
           {
-            Address = getAddress printer;
+            Address = printer.address;
             MACAddress = printer.mac;
           }
           {
-            Address = getAddress tv;
+            Address = tv.address;
             MACAddress = tv.mac;
           }
           {
-            Address = getAddress tv2;
+            Address = tv2.address;
             MACAddress = tv2.mac;
           }
         ];

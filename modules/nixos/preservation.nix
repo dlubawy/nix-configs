@@ -47,6 +47,13 @@ in
               group = config.services.jellyfin.group;
               user = config.services.jellyfin.user;
             }
+          ])
+          ++ (optionals config.services.grafana.enable [
+            {
+              directory = config.services.grafana.dataDir;
+              group = "grafana";
+              user = "grafana";
+            }
           ]);
 
           files = [
