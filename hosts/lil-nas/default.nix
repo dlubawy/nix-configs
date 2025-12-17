@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkForce;
+  inherit (lib) mkForce mkIf;
 in
 {
   imports = [
@@ -31,6 +31,7 @@ in
   i18n.defaultLocale = "en_US.UTF-8";
 
   age = {
+    identityPaths = [ "/persist/.rw-etc/upper/ssh/ssh_host_ed25519_key" ];
     secrets = {
       tailscale = {
         file = ../../secrets/tailscale.age;
@@ -38,6 +39,9 @@ in
     };
   };
 
+  systemd.services.tailscaled.after = mkIf (config.systemd.network.wait-online.enable) [
+    "systemd-networkd-wait-online.service"
+  ];
   services = {
     avahi = {
       enable = true;

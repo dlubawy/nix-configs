@@ -38,6 +38,9 @@ in
           ++ (optionals config.boot.secure.enable [
             config.boot.lanzaboote.pkiBundle
           ])
+          ++ (optionals config.services.tailscale.enable [
+            "/var/lib/tailscale"
+          ])
           ++ (optionals config.services.jellyfin.enable [
             {
               directory = config.services.jellyfin.dataDir;
