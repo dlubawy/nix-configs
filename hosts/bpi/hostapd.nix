@@ -140,6 +140,7 @@
 
                 # Roaming
                 bss_transition = 1;
+                bss_max_idle = 2;
                 ft_over_ds = 0;
                 mobility_domain = "3143";
                 nas_identifier = "9adfd2a229a0";
@@ -241,6 +242,7 @@
 
                 # Roaming
                 bss_transition = 1;
+                bss_max_idle = 2;
                 ft_over_ds = 0;
                 mobility_domain = "3143";
                 nas_identifier = "daef7a02e13c";
