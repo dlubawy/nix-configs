@@ -175,6 +175,22 @@
                 recordsize = "1M";
               };
             };
+            "safe/postgresql" = {
+              type = "zfs_fs";
+              mountpoint = "/var/lib/postgresql";
+              options = {
+                redundant_metadata = "most";
+                recordsize = "32k";
+                logbias = "throughput";
+              };
+            };
+            "safe/nextcloud" = {
+              type = "zfs_fs";
+              mountpoint = "/var/lib/nextcloud";
+              options = {
+                recordsize = "1M";
+              };
+            };
             "local/swap" = {
               type = "zfs_volume";
               size = "4G";
