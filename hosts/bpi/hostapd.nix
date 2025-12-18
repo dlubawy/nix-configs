@@ -93,6 +93,9 @@
         };
       };
     };
+    services.systemd-networkd.restartTriggers = (
+      lib.lists.flatten (builtins.split "\n" config.systemd.services.hostapd.preStart)
+    );
   };
   services.hostapd =
     let
@@ -243,6 +246,7 @@
                 # Roaming
                 bss_transition = 1;
                 bss_max_idle = 2;
+                skip_inactivity_poll = 1;
                 ft_over_ds = 0;
                 mobility_domain = "3143";
                 nas_identifier = "daef7a02e13c";
