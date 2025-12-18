@@ -143,6 +143,7 @@
 
                 # Roaming
                 bss_transition = 1;
+                ap_max_inactivity = 15;
                 bss_max_idle = 2;
                 ft_over_ds = 0;
                 mobility_domain = "3143";
@@ -157,6 +158,7 @@
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
                 rsn_preauth = 1;
+                rsn_preauth_interfaces = "br-lan";
                 okc = 1;
               };
               dynamicConfigScripts = {
@@ -245,8 +247,8 @@
 
                 # Roaming
                 bss_transition = 1;
+                ap_max_inactivity = 15;
                 bss_max_idle = 2;
-                skip_inactivity_poll = 1;
                 ft_over_ds = 0;
                 mobility_domain = "3143";
                 nas_identifier = "daef7a02e13c";
@@ -260,6 +262,7 @@
                 wnm_sleep_mode = 1;
                 wpa_key_mgmt = lib.mkForce "SAE FT-SAE";
                 rsn_preauth = 1;
+                rsn_preauth_interfaces = "br-lan";
                 okc = 1;
               };
               dynamicConfigScripts = {
