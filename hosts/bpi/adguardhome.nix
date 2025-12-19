@@ -2,10 +2,15 @@
   lib,
   config,
   pkgs,
+  outputs,
   ...
 }:
 let
   homeDomain = config.homeDomain;
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  inherit (topology.lib.helpers) getAddress;
+  lil-nas = getAddress "lil-nas" "enp5s0";
+  cloudDomain = (lib.strings.removePrefix "https://" topology.nodes.lil-nas.services.nextcloud.info);
 in
 {
   age = {
@@ -322,6 +327,11 @@ in
           {
             domain = "${homeDomain}";
             answer = "192.168.1.1";
+            enabled = true;
+          }
+          {
+            domain = "${cloudDomain}";
+            answer = lil-nas;
             enabled = true;
           }
           {

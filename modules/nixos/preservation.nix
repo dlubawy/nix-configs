@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) optionals;
+  inherit (lib) optionals mkIf;
   hasPersist =
     (builtins.hasAttr "/persist" config.fileSystems) && config.fileSystems."/persist".enable;
 in
@@ -25,6 +25,31 @@ in
           message = "Preservation requires persist mount in fileSystems";
         }
       ];
+
+      systemd.tmpfiles.settings =
+        let
+          mkOwnership = dir: user: group: {
+            "${dir}".Z = {
+              user = user;
+              group = group;
+            };
+          };
+        in
+        {
+          grafana = mkIf config.services.grafana.enable (
+            mkOwnership config.services.grafana.dataDir "grafana" "grafana"
+          );
+          jellyfin = mkIf config.services.jellyfin.enable (
+            mkOwnership config.services.jellyfin.dataDir config.services.jellyfin.user
+              config.services.jellyfin.group
+          );
+          nextcloud = mkIf config.services.nextcloud.enable (
+            mkOwnership config.services.nextcloud.datadir "nextcloud" "nextcloud"
+          );
+          postgresql = mkIf config.services.postgresql.enable (
+            mkOwnership "/var/lib/postgresql" "postgres" "postgres"
+          );
+        };
 
       preservation = {
         preserveAt."/persist" = {

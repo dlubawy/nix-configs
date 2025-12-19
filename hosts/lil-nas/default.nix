@@ -14,67 +14,78 @@ in
     ./grafana
     ./hardware.nix
     ./jellyfin.nix
+    ./nextcloud.nix
     ./topology.nix
     inputs.agenix.nixosModules.default
   ];
 
-  networking = {
-    hostName = "lil-nas";
-    networkmanager.enable = mkForce false;
+  options = {
+    cloudDomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Domain name for the Nextcloud ACME cert";
+      default = "cloud.andrewlubawy.com";
+    };
   };
 
-  home-manager.gui.enable = false;
-  users.shadow.enable = true;
+  config = {
+    networking = {
+      hostName = "lil-nas";
+      networkmanager.enable = mkForce false;
+    };
 
-  preservation.enable = true;
+    home-manager.gui.enable = false;
+    users.shadow.enable = true;
 
-  time.timeZone = "America/Los_Angeles";
-  i18n.defaultLocale = "en_US.UTF-8";
+    preservation.enable = true;
 
-  age = {
-    identityPaths = [ "/persist/.rw-etc/upper/ssh/ssh_host_ed25519_key" ];
-    secrets = {
+    time.timeZone = "America/Los_Angeles";
+    i18n.defaultLocale = "en_US.UTF-8";
+
+    age = {
+      identityPaths = [ "/persist/.rw-etc/upper/ssh/ssh_host_ed25519_key" ];
+      secrets = {
+        tailscale = {
+          file = ../../secrets/tailscale.age;
+        };
+      };
+    };
+
+    systemd.services.tailscaled.after = mkIf (config.systemd.network.wait-online.enable) [
+      "systemd-networkd-wait-online.service"
+    ];
+    services = {
+      avahi = {
+        enable = true;
+        publish = {
+          enable = true;
+          addresses = true;
+          domain = true;
+        };
+      };
+
+      openssh = {
+        enable = true;
+        settings = {
+          PasswordAuthentication = false;
+          KbdInteractiveAuthentication = false;
+        };
+      };
+
       tailscale = {
-        file = ../../secrets/tailscale.age;
-      };
-    };
-  };
-
-  systemd.services.tailscaled.after = mkIf (config.systemd.network.wait-online.enable) [
-    "systemd-networkd-wait-online.service"
-  ];
-  services = {
-    avahi = {
-      enable = true;
-      publish = {
         enable = true;
-        addresses = true;
-        domain = true;
+        authKeyFile = config.age.secrets.tailscale.path;
+        extraUpFlags = [
+          "--advertise-tags=tag:server"
+        ];
       };
-    };
 
-    openssh = {
-      enable = true;
-      settings = {
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
+      zfs = {
+        autoScrub = {
+          enable = true;
+          interval = "weekly";
+        };
+        autoSnapshot.enable = true;
       };
-    };
-
-    tailscale = {
-      enable = true;
-      authKeyFile = config.age.secrets.tailscale.path;
-      extraUpFlags = [
-        "--advertise-tags=tag:server"
-      ];
-    };
-
-    zfs = {
-      autoScrub = {
-        enable = true;
-        interval = "weekly";
-      };
-      autoSnapshot.enable = true;
     };
   };
 }

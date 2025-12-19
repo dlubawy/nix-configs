@@ -10,38 +10,25 @@ let
     backup = "age1yubikey1vkn4gw425p6wk37enpd5zy2zrm60ekwgergqce6w9tsp3pdpzvcqtqtj6l";
   };
   allYubiKeys = builtins.attrValues yubiKeys;
+
+  mkSecret = systems: {
+    publicKeys = systems ++ allYubiKeys;
+    armor = true;
+  };
 in
 {
-  "adguardhome.age" = {
-    publicKeys = [ systems.bpi ] ++ allYubiKeys;
-    armor = true;
-  };
-  "wifi-sae.age" = {
-    publicKeys = [ systems.bpi ] ++ allYubiKeys;
-    armor = true;
-  };
-  "wifi-iot-psk.age" = {
-    publicKeys = [ systems.bpi ] ++ allYubiKeys;
-    armor = true;
-  };
-  "wifi-shared-secret.age" = {
-    publicKeys = [ systems.bpi ] ++ allYubiKeys;
-    armor = true;
-  };
-  "tailscale.age" = {
-    publicKeys = [
-      systems.bpi
-      systems.lil-nas
-    ]
-    ++ allYubiKeys;
-    armor = true;
-  };
-  "grafana-contact-points.age" = {
-    publicKeys = [ systems.lil-nas ] ++ allYubiKeys;
-    armor = true;
-  };
-  "cloudflare-dns-token.age" = {
-    publicKeys = [ systems.bpi ] ++ allYubiKeys;
-    armor = true;
-  };
+  "adguardhome.age" = mkSecret [ systems.bpi ];
+  "wifi-sae.age" = mkSecret [ systems.bpi ];
+  "wifi-iot-psk.age" = mkSecret [ systems.bpi ];
+  "wifi-shared-secret.age" = mkSecret [ systems.bpi ];
+  "tailscale.age" = mkSecret [
+    systems.bpi
+    systems.lil-nas
+  ];
+  "grafana-contact-points.age" = mkSecret [ systems.lil-nas ];
+  "cloudflare-dns-token.age" = mkSecret [
+    systems.bpi
+    systems.lil-nas
+  ];
+  "nextcloud.age" = mkSecret [ systems.lil-nas ];
 }

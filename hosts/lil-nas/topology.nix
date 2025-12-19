@@ -11,6 +11,7 @@ let
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
   inherit (topology.lib.helpers) getHomeDomain;
   homeDomain = (getHomeDomain "bpi" "nginx");
+  cloudDomain = config.cloudDomain;
 in
 {
   topology = {
@@ -32,6 +33,7 @@ in
         };
       };
       services = {
+        nginx.info = "${cloudDomain}";
         jellyfin.info = "${homeDomain}/jellyfin";
         grafana.info = mkForce "${homeDomain}/grafana";
       };
