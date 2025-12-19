@@ -1,5 +1,13 @@
-{ config, vars, ... }:
+{
+  pkgs,
+  config,
+  vars,
+  outputs,
+  ...
+}:
 let
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  inherit (topology.lib.helpers) getAddress;
   cloudDomain = config.cloudDomain;
 in
 {
@@ -37,7 +45,7 @@ in
   services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
     forceSSL = true;
     useACMEHost = "${cloudDomain}";
-    listenAddresses = [ "192.168.1.10" ];
+    listenAddresses = [ (getAddress "lil-nas" "enp5s0") ];
   };
 
   security = {
