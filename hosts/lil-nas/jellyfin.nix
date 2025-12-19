@@ -22,11 +22,12 @@ in
         };
       };
     };
-    tmpfiles.settings.jellyfin."/srv/jellyfin" = {
-      Z = {
-        mode = "755";
-        user = config.services.jellyfin.user;
-        group = config.services.jellyfin.group;
+    tmpfiles.settings.jellyfin = {
+      "/srv/jellyfin" = {
+        Z = {
+          user = config.services.jellyfin.user;
+          group = config.services.jellyfin.group;
+        };
       };
     };
   };
