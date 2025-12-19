@@ -75,26 +75,7 @@ in
       flake = "${vars.flake}#bpi";
     };
 
-    home-manager = {
-      gui.enable = false;
-      users = (
-        lib.concatMapAttrs (name: _: {
-          ${name} = {
-            systemd.user.services.taildrive = lib.mkIf config.services.tailscale.enable {
-              Unit = {
-                Description = "Tailscale drive service";
-                After = [ "tailscale.service" ];
-              };
-              Service = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-                ExecStart = "${config.services.tailscale.package}/bin/tailscale drive share org %h/Documents/org";
-              };
-            };
-          };
-        }) config.nix-configs.users
-      );
-    };
+    home-manager.gui.enable = false;
 
     networking = {
       hostName = "bpi";
