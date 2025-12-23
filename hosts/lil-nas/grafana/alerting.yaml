@@ -5,6 +5,61 @@ groups:
     folder: Alerts
     interval: 1m
     rules:
+      - uid: ef7y0ublidkowf
+        title: ZFS health
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
+            model:
+              datasource:
+                type: prometheus
+                uid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
+              editorMode: builder
+              expr: zfs_pool_health{job="nas_metrics"}
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          summary: ZFS health check failed
+        labels: {}
+        isPaused: false
+        notification_settings:
+          receiver: Telegram
       - uid: aeuuzc1rol4w0b
         title: Server src NAT Traffic
         condition: threshold
@@ -96,8 +151,94 @@ groups:
         notification_settings:
           receiver: Telegram
 
+      - uid: c7c19e24-c1eb-4a46-aeb3-97906d022811
+        title: lil-nas SSH Failure by User and IP
+        condition: threshold
+        data:
+          - refId: failures
+            queryType: range
+            relativeTimeRange:
+              from: 172800
+              to: 0
+            datasourceUid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
+            model:
+              datasource:
+                type: loki
+                uid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
+              editorMode: code
+              expr: count_over_time({host="lil-nas", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m])
+              instant: true
+              intervalMs: 1000
+              maxDataPoints: 43200
+              queryType: range
+              range: false
+              refId: failures
+          - refId: reduce
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - D
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: failures
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: reduce
+              type: reduce
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 10
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - E
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: reduce
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: threshold
+              type: threshold
+        dashboardUid: OMEuTfqVk
+        panelId: 23
+        noDataState: OK
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: OMEuTfqVk
+          __panelId__: "23"
+          description: Detected unusually high SSH login failures on NAS
+          summary: High SSH login failures for NAS
+        isPaused: false
+        notification_settings:
+          receiver: Telegram
+
       - uid: eeuuzo3xlqn0ga
-        title: SSH Failure by User and IP
+        title: bpi SSH Failure by User and IP
         condition: threshold
         data:
           - refId: failures
@@ -176,8 +317,8 @@ groups:
         annotations:
           __dashboardUid__: OMEuTfqVk
           __panelId__: "23"
-          description: Detected unusually high SSH login failures
-          summary: High SSH login failures
+          description: Detected unusually high SSH login failures on bpi
+          summary: High SSH login failures for bpi
         isPaused: false
         notification_settings:
           receiver: Telegram

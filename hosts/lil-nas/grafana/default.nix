@@ -19,6 +19,11 @@ let
     prometheusPort = (getPrometheusPort "bpi");
     lokiPort = (getLokiPort "bpi");
   };
+  lil-nas = {
+    address = (getAddress "lil-nas" "enp5s0");
+    prometheusPort = (getPrometheusPort "lil-nas");
+    lokiPort = (getLokiPort "lil-nas");
+  };
 in
 {
   age = {
@@ -69,6 +74,18 @@ in
 
       datasources.settings.datasources = [
         {
+          name = "lil-nas Prometheus";
+          type = "prometheus";
+          url = "http://${lil-nas.address}:${lil-nas.prometheusPort}";
+          uid = "69b599c1-95e0-454b-b31b-e3ff78c40fdd";
+        }
+        {
+          name = "lil-nas Loki";
+          type = "loki";
+          url = "http://${lil-nas.address}:${lil-nas.lokiPort}";
+          uid = "73693469-0eab-4c69-a6d5-9b3fb6c9d929";
+        }
+        {
           name = "bpi Prometheus";
           type = "prometheus";
           url = "http://${bpi.address}:${bpi.prometheusPort}";
@@ -87,6 +104,21 @@ in
     };
   };
   environment.etc = {
+    "grafana/dashboards/zfs.json" = {
+      source = ./zfs.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana/dashboards/node_exporter.json" = {
+      source = ./node_exporter.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana/dashboards/nextcloud_logs.json" = {
+      source = ./nextcloud_logs.json;
+      group = "grafana";
+      user = "grafana";
+    };
     "grafana/dashboards/router.json" = {
       source = ./router.json;
       group = "grafana";

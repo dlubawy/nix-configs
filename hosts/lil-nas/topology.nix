@@ -36,6 +36,15 @@ in
         nginx.info = "${cloudDomain}";
         jellyfin.info = "${homeDomain}/jellyfin";
         grafana.info = mkForce "${homeDomain}/grafana";
+        loki = {
+          hidden = true;
+          details = {
+            listen = {
+              text = "${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
+            };
+          };
+        };
+        prometheus.hidden = true;
       };
     };
   };

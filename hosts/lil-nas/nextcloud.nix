@@ -23,6 +23,11 @@ in
 
   services.nextcloud = {
     enable = true;
+    settings = {
+      loglevel = 1;
+      log_type = "systemd";
+      log_type_audit = "systemd";
+    };
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         news
