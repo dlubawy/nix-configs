@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 12,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -38,7 +38,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -63,7 +63,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -95,13 +95,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "count_over_time({unit=~\"user@.*service\"} |= `sudo:session` | pattern `pam_unix(sudo:<_>): <sudo_json_message> for` | line_format `{\"sudo_json_message\": \"{{ .sudo_json_message }}\"}` | json | sudo_json_message =~ `^session opened.*` | __error__=`` [$__auto])",
           "hide": false,
@@ -115,7 +116,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -140,7 +141,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -176,13 +177,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by(host) (count_over_time({unit=~\"user@.*service\"} |= `COMMAND=` | pattern `<sudoer>:<message>TTY=<tty> ; PWD=<pwd> ; USER=<user> ; COMMAND=<command>` | line_format `{\"sudoer\": \"{{.sudoer|trim}}\", \"pwd\": \"{{.pwd}}\", \"user\": \"{{.user|trim}}\", \"command\": \"{{.command}}\", \"message\": \"{{.message|trim}}\"}` | json sudoer=\"sudoer\", user=\"user\", message=\"message\" | message !=\"\" [$__auto]))",
           "hide": false,
@@ -202,7 +204,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -227,7 +229,7 @@
             "steps": [
               {
                 "color": "orange",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -259,13 +261,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "count_over_time({unit=~\"user@.*service\"} |= `sudo:session` | pattern `pam_unix(sudo:<_>): <sudo_json_message> for` | line_format `{\"sudo_json_message\": \"{{ .sudo_json_message }}\"}` | json | sudo_json_message =~ `^session opened.*` | __error__=`` [$__auto])",
           "hide": true,
@@ -275,8 +278,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by(host) (count_over_time({unit=~\"user@.*service\"} |= `COMMAND=` | pattern `<sudoer>:<message>TTY=<tty> ; PWD=<pwd> ; USER=<user> ; COMMAND=<command>` | line_format `{\"sudoer\": \"{{.sudoer|trim}}\", \"pwd\": \"{{.pwd}}\", \"user\": \"{{.user|trim}}\", \"command\": \"{{.command}}\", \"message\": \"{{.message|trim}}\"}` | json sudoer=\"sudoer\", user=\"user\", message=\"message\" | message != `` [$__auto]))",
           "hide": true,
@@ -325,7 +329,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -350,7 +354,7 @@
             "steps": [
               {
                 "color": "orange",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -382,13 +386,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "bytes_over_time({unit=~\"user@.*service\"} |= `sudo:session` | pattern `pam_unix(sudo:<_>): <sudo_json_message> for` | line_format `{\"sudo_json_message\": \"{{ .sudo_json_message }}\"}` | json | sudo_json_message =~ `^session opened.*` | __error__=`` [$__auto])",
           "hide": true,
@@ -398,8 +403,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by(host) (bytes_over_time({unit=~\"user@.*service\"} |= `COMMAND=` | pattern `<sudoer>:<message>TTY=<tty> ; PWD=<pwd> ; USER=<user> ; COMMAND=<command>` | line_format `{\"sudoer\": \"{{.sudoer|trim}}\", \"pwd\": \"{{.pwd}}\", \"user\": \"{{.user|trim}}\", \"command\": \"{{.command}}\", \"message\": \"{{.message|trim}}\"}` | json sudoer=\"sudoer\", user=\"user\", message=\"message\" | message != `` [$__auto]))",
           "hide": true,
@@ -448,7 +454,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -492,18 +498,21 @@
           "fields": "",
           "values": false
         },
+        "sort": "desc",
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by(sudoer) (count_over_time({unit=~\"user@.*service\"} |= `sudo:session` | pattern `pam_unix(sudo:<_>): <sudo_json_message> for user <user>(<_>) by <sudoer>(<_>)` | line_format `{\"sudo_json_message\": \"{{ .sudo_json_message }}\", \"sudoer\": \"{{ .sudoer }}\"}` | json | sudo_json_message =~ `^session opened.*` | __error__=`` [$__auto]))",
           "hide": false,
@@ -518,7 +527,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -563,18 +572,21 @@
           "fields": "",
           "values": false
         },
+        "sort": "desc",
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "count_over_time({unit=~\"user@.*service\"} |= `COMMAND=` | pattern `<sudoer>:<message>TTY=<tty> ; PWD=<pwd> ; USER=<user> ; COMMAND=<command>` | line_format `{\"sudoer\": \"{{.sudoer|trim}}\", \"pwd\": \"{{.pwd}}\", \"user\": \"{{.user|trim}}\", \"command\": \"{{.command}}\", \"message\": \"{{.message|trim}}\"}` | json sudoer=\"sudoer\", user=\"user\", message=\"message\" | message != `` [$__auto])",
           "hide": false,
@@ -597,7 +609,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {},
@@ -612,21 +624,24 @@
       "id": 6,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
+        "showControls": false,
         "showLabels": false,
         "showTime": true,
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "{unit=~\"user@.*service\"} |= `COMMAND=` | pattern `<sudoer>:<message>TTY=<tty> ; PWD=<pwd> ; USER=<user> ; COMMAND=<command>` | line_format `{\"sudoer\": \"{{.sudoer|trim}}\", \"pwd\": \"{{.pwd}}\", \"user\": \"{{.user|trim}}\", \"command\": \"{{.command}}\", \"message\": \"{{.message|trim}}\"}` | json sudoer=\"sudoer\", user=\"user\", message=\"message\" | message =~ `\\s*` | line_format `👤 {{ .sudoer }} 📂 {{ .pwd }} 🎯 {{ .user }} 🖥️ {{ .command }}` | __error__=``",
           "hide": false,
@@ -636,8 +651,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "{unit=~\"user@.*service\"} |= `COMMAND=` | pattern `<sudoer>:<base_message>TTY=<tty> ; PWD=<pwd> ; USER=<user> ; COMMAND=<command>` | base_message !~ `\\s*` | pattern `<sudoer>:<message> ; TTY=<tty> ; PWD=<pwd> ; USER=<user> ; COMMAND=<command>` | line_format `{\"sudoer\": \"{{.sudoer|trim}}\", \"pwd\": \"{{.pwd}}\", \"user\": \"{{.user|trim}}\", \"command\": \"{{.command}}\", \"message\": \"{{.message|trim}}\"}` | json sudoer=\"sudoer\", user=\"user\", message=\"message\" | line_format `🚫 {{ .message }} 👤 {{ .sudoer }} 📂 {{ .pwd }} 🎯 {{ .user }} 🖥️ {{ .command }}` | __error__=``",
           "hide": false,
@@ -677,6 +693,9 @@
               "type": "auto"
             },
             "filterable": true,
+            "footer": {
+              "reducers": []
+            },
             "inspect": false
           },
           "mappings": [],
@@ -685,7 +704,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -750,7 +769,7 @@
             },
             "properties": [
               {
-                "id": "custom.hidden",
+                "id": "custom.hideFrom.viz",
                 "value": true
               }
             ]
@@ -785,7 +804,7 @@
             },
             "properties": [
               {
-                "id": "custom.hidden",
+                "id": "custom.hideFrom.viz",
                 "value": true
               }
             ]
@@ -797,7 +816,7 @@
             },
             "properties": [
               {
-                "id": "custom.hidden",
+                "id": "custom.hideFrom.viz",
                 "value": true
               }
             ]
@@ -809,7 +828,7 @@
             },
             "properties": [
               {
-                "id": "custom.hidden",
+                "id": "custom.hideFrom.viz",
                 "value": true
               }
             ]
@@ -825,18 +844,10 @@
       "id": 1,
       "options": {
         "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
@@ -984,8 +995,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-purple",
-                "value": null
+                "color": "dark-purple"
               }
             ]
           }
@@ -1012,8 +1022,7 @@
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": null
+                "id": "custom.width"
               }
             ]
           }
@@ -1157,8 +1166,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1449,8 +1457,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-purple",
-                "value": null
+                "color": "dark-purple"
               }
             ]
           }
@@ -1577,7 +1584,7 @@
   ],
   "preload": false,
   "refresh": "1m",
-  "schemaVersion": 40,
+  "schemaVersion": 42,
   "tags": [
     "linux",
     "loki",
@@ -1609,6 +1616,5 @@
   "timezone": "",
   "title": "SUDO Logs",
   "uid": "e3f0d8c9-ca9f-4a0d-bad6-2f12c6714558",
-  "version": 5,
-  "weekStart": ""
+  "version": 1
 }

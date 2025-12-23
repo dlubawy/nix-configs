@@ -14,7 +14,9 @@ in
     ./grafana
     ./hardware.nix
     ./jellyfin.nix
+    ./loki.nix
     ./nextcloud.nix
+    ./prometheus.nix
     ./topology.nix
     inputs.agenix.nixosModules.default
   ];

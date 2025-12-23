@@ -90,6 +90,7 @@ in
     system = {
       autoUpgrade = {
         enable = lib.mkDefault true;
+        flake = lib.mkDefault "${vars.flake}#${config.networking.hostName}";
         dates = lib.mkDefault "weekly";
         allowReboot = lib.mkDefault true;
         rebootWindow = lib.mkDefault {

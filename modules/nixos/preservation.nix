@@ -49,6 +49,12 @@ in
           postgresql = mkIf config.services.postgresql.enable (
             mkOwnership "/var/lib/postgresql" "postgres" "postgres"
           );
+          prometheus = mkIf config.services.prometheus.enable (
+            mkOwnership "/var/lib/${config.services.prometheus.stateDir}" "prometheus" "prometheus"
+          );
+          loki = mkIf config.services.loki.enable (
+            mkOwnership config.services.loki.dataDir config.services.loki.user config.services.loki.group
+          );
         };
 
       preservation = {
@@ -78,6 +84,20 @@ in
               directory = config.services.grafana.dataDir;
               group = "grafana";
               user = "grafana";
+            }
+          ])
+          ++ (optionals config.services.prometheus.enable [
+            {
+              directory = "/var/lib/${config.services.prometheus.stateDir}";
+              group = "prometheus";
+              user = "prometheus";
+            }
+          ])
+          ++ (optionals config.services.loki.enable [
+            {
+              directory = config.services.loki.dataDir;
+              group = config.services.loki.group;
+              user = config.services.loki.user;
             }
           ]);
 

@@ -31,4 +31,5 @@ in
     systems.lil-nas
   ];
   "nextcloud.age" = mkSecret [ systems.lil-nas ];
+  "nextcloud-exporter.age" = mkSecret [ systems.lil-nas ];
 }

@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 10,
+  "id": 6,
   "links": [],
   "panels": [
     {
@@ -38,7 +38,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -63,7 +63,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -93,13 +93,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by($label_name) (count_over_time({$label_name=~\"$label_value\"} | logfmt | detected_level=\"debug\" | __error__=\"\" [$__range]))",
           "queryType": "instant",
@@ -112,7 +113,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -137,7 +138,7 @@
             "steps": [
               {
                 "color": "light-green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -167,13 +168,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by($label_name) (count_over_time({$label_name=~\"$label_value\"} | logfmt | detected_level=\"info\" | __error__=\"\" [$__range]))",
           "queryType": "instant",
@@ -186,7 +188,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -211,7 +213,7 @@
             "steps": [
               {
                 "color": "yellow",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -241,13 +243,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by($label_name) (count_over_time({$label_name=~\"$label_value\"} | logfmt | detected_level=\"warn\" | __error__=\"\" [$__range]))",
           "queryType": "instant",
@@ -260,7 +263,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -285,7 +288,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -315,13 +318,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by($label_name) (count_over_time({$label_name=~\"$label_value\"} | logfmt | detected_level=\"error\" | __error__=\"\" [$__range]))",
           "queryType": "instant",
@@ -334,7 +338,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -359,7 +363,7 @@
             "steps": [
               {
                 "color": "orange",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -389,13 +393,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum(count_over_time({$label_name=~\"$label_value\"} | __error__=\"\" [$__range]))",
           "queryType": "instant",
@@ -408,7 +413,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -433,7 +438,7 @@
             "steps": [
               {
                 "color": "orange",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -465,13 +470,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum(bytes_over_time({$label_name=~\"$label_value\"} | __error__=\"\" [$__range]))",
           "queryType": "instant",
@@ -484,7 +490,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "Deployed Promtail Version",
       "fieldConfig": {
@@ -498,7 +504,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -528,12 +534,12 @@
         "textMode": "name",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -556,7 +562,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "Number of active files.",
       "fieldConfig": {
@@ -567,7 +573,7 @@
             "steps": [
               {
                 "color": "#77a0ed",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -599,12 +605,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -623,7 +629,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "Current number of bytes sent. ( Real Time )",
       "fieldConfig": {
@@ -634,7 +640,7 @@
             "steps": [
               {
                 "color": "#77a0ed",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -666,12 +672,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -694,7 +700,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "FECRLA1BDO9OGF"
+        "uid": "${datasource}"
       },
       "description": "Use LogQL Filter to filter information.",
       "fieldConfig": {
@@ -710,21 +716,24 @@
       "id": 8,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
+        "showControls": false,
         "showLabels": false,
         "showTime": true,
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "builder",
           "expr": "{$label_name=~\"$label_value\", job=~\"$job\"} | logfmt | detected_level = `debug` |= `$filter` | line_format `➡️ 🔵 {{regexReplaceAll \"level=debug|ts=[^\\\\s]+\\\\s\" __line__ \"$1\" | trim  }}`",
           "queryType": "range",
@@ -733,8 +742,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "{$label_name=~\"$label_value\",job=~\"$job\"} | logfmt | detected_level=\"info\" |= \"$filter\" | line_format `➡️ 🟢 {{regexReplaceAll \"level=info|ts=[^\\\\s]+\\\\s\" __line__ \"$1\" | trim }}`",
           "hide": false,
@@ -744,8 +754,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "{$label_name=~\"$label_value\",job=~\"$job\"} | logfmt | detected_level=\"warn\" |= \"$filter\" | line_format `➡️ 🟡 {{regexReplaceAll \"level=warn|ts=[^\\\\s]+\\\\s\" __line__ \"$1\" | trim  }}`",
           "hide": false,
@@ -755,8 +766,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "{$label_name=~\"$label_value\", job=~\"$job\"} | logfmt | detected_level=\"error\" |= \"$filter\" | line_format `➡️ 🔴 {{regexReplaceAll \"level=error|ts=[^\\\\s]+\\\\s\" __line__ \"$1\" | trim  }}`",
           "hide": false,
@@ -806,6 +818,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -821,7 +834,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -881,6 +894,30 @@
                 "value": "right"
               }
             ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Error Logs Lines"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
@@ -902,16 +939,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -925,8 +963,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by (detected_level) (count_over_time({$label_name=~\"$label_value\"} | logfmt | detected_level=\"warn\" | __error__=\"\"[$__auto]))",
           "hide": false,
@@ -937,8 +976,9 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "FECRLA1BDO9OGF"
+            "uid": "${datasource}"
           },
+          "direction": "backward",
           "editorMode": "code",
           "expr": "sum by (detected_level) (count_over_time({$label_name=~\"$label_value\"} | logfmt | detected_level=\"error\" | __error__=\"\"[$__auto]))",
           "hide": false,
@@ -966,7 +1006,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "Number of bytes read. - Overtime",
       "fieldConfig": {
@@ -998,6 +1038,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1013,7 +1054,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1052,16 +1093,17 @@
           "width": 350
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1084,7 +1126,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "",
       "fieldConfig": {
@@ -1098,6 +1140,9 @@
               "type": "auto"
             },
             "filterable": false,
+            "footer": {
+              "reducers": []
+            },
             "inspect": false
           },
           "mappings": [],
@@ -1106,7 +1151,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1148,25 +1193,15 @@
       "id": 28,
       "options": {
         "cellHeight": "md",
-        "footer": {
-          "countRows": false,
-          "enablePagination": false,
-          "fields": [
-            "Value"
-          ],
-          "reducer": [
-            "lastNotNull"
-          ],
-          "show": false
-        },
+        "enablePagination": false,
         "showHeader": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1182,7 +1217,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1197,7 +1232,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "expr": "rate(promtail_read_lines_total{instance=~\"$prom_instance\"}[$interval])",
@@ -1211,7 +1246,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "expr": "increase(promtail_read_bytes_total{instance=~\"$prom_instance\"}[24h])",
@@ -1264,7 +1299,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "- Encoded: Number of bytes encoded and ready to send.\n- Send: Number of bytes sent. ",
       "fieldConfig": {
@@ -1296,6 +1331,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1311,7 +1347,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1337,16 +1373,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -1365,7 +1402,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "expr": "rate(promtail_sent_bytes_total{instance=~\"$prom_instance\"}[$interval])",
@@ -1382,7 +1419,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "",
       "fieldConfig": {
@@ -1396,6 +1433,9 @@
               "type": "auto"
             },
             "filterable": false,
+            "footer": {
+              "reducers": []
+            },
             "inspect": false
           },
           "mappings": [],
@@ -1404,7 +1444,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1470,25 +1510,15 @@
       "id": 29,
       "options": {
         "cellHeight": "md",
-        "footer": {
-          "countRows": false,
-          "enablePagination": false,
-          "fields": [
-            "Value"
-          ],
-          "reducer": [
-            "lastNotNull"
-          ],
-          "show": false
-        },
+        "enablePagination": false,
         "showHeader": true
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1503,7 +1533,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "expr": "increase(promtail_sent_bytes_total{instance=~\"$prom_instance\"}[24h])",
@@ -1518,7 +1548,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1533,7 +1563,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "expr": "increase(promtail_encoded_bytes_total{instance=~\"$prom_instance\"}[24h])",
@@ -1587,7 +1617,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "- Dropped Bytes: Number of bytes dropped because failed to be sent to the ingester after all retries.\n- Dropped Entries: Number of log entries dropped because failed to be sent to the ingester after all retries.",
       "fieldConfig": {
@@ -1619,6 +1649,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1634,7 +1665,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1672,16 +1703,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1695,7 +1727,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1713,7 +1745,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${datasourceProm}"
       },
       "description": "99th percentile latency",
       "fieldConfig": {
@@ -1745,6 +1777,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1760,7 +1793,7 @@
             "steps": [
               {
                 "color": "purple",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1783,16 +1816,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.3",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${datasourceProm}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1812,7 +1846,7 @@
   ],
   "preload": false,
   "refresh": "",
-  "schemaVersion": 40,
+  "schemaVersion": 42,
   "tags": [
     "promtail"
   ],
@@ -1839,7 +1873,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "FECRLA1BDO9OGF"
+          "uid": "${datasource}"
         },
         "definition": "",
         "includeAll": false,
@@ -1863,7 +1897,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "FECRLA1BDO9OGF"
+          "uid": "${datasource}"
         },
         "definition": "",
         "includeAll": false,
@@ -2008,6 +2042,16 @@
         ],
         "query": "",
         "type": "textbox"
+      },
+      {
+        "baseFilters": [],
+        "datasource": {
+          "type": "loki",
+          "uid": "FECRLA1BDO9OGF"
+        },
+        "filters": [],
+        "name": "Filters",
+        "type": "adhoc"
       }
     ]
   },
@@ -2019,6 +2063,5 @@
   "timezone": "browser",
   "title": "Promtail Monitoring - Metrics and Logs",
   "uid": "promtailntfc0a",
-  "version": 1,
-  "weekStart": ""
+  "version": 1
 }
