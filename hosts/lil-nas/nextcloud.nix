@@ -27,12 +27,17 @@ in
       loglevel = 1;
       log_type = "systemd";
       log_type_audit = "systemd";
+      allow_local_remote_servers = true;
+      user_oidc = {
+        enrich_login_id_token_with_userinfo = true;
+      };
     };
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         news
         contacts
         cookbook
+        user_oidc
         ;
     };
     extraAppsEnable = true;
