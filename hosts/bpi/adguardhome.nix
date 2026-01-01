@@ -98,7 +98,10 @@ in
           private_key_path = "${credsDir}/key.pem";
         };
       dns = {
-        bind_hosts = [ "192.168.1.1" ];
+        bind_hosts = [
+          "192.168.1.1"
+          "100.64.0.1"
+        ];
         trusted_proxies = [
           "127.0.0.1"
           "192.168.1.1"
