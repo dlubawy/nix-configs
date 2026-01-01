@@ -118,6 +118,10 @@ in
             addr = "192.168.1.1";
             port = 22;
           }
+          {
+            addr = "100.64.0.1";
+            port = 2222;
+          }
         ];
         settings = {
           PasswordAuthentication = false;
@@ -138,6 +142,7 @@ in
           "--advertise-routes=192.168.1.0/24,192.168.30.0/24"
           "--advertise-exit-node"
           "--accept-dns=false"
+          "--ssh"
         ];
       };
     };
