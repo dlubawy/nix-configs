@@ -1,11 +1,10 @@
 {
-  config,
   lib,
   inputs,
   ...
 }:
 let
-  inherit (lib) mkForce mkIf;
+  inherit (lib) mkForce;
 in
 {
   imports = [
@@ -17,6 +16,7 @@ in
     ./loki.nix
     ./nextcloud.nix
     ./prometheus.nix
+    ./tailscale.nix
     ./topology.nix
     inputs.agenix.nixosModules.default
   ];
@@ -45,16 +45,8 @@ in
 
     age = {
       identityPaths = [ "/persist/.rw-etc/upper/ssh/ssh_host_ed25519_key" ];
-      secrets = {
-        tailscale = {
-          file = ../../secrets/tailscale.age;
-        };
-      };
     };
 
-    systemd.services.tailscaled.after = mkIf (config.systemd.network.wait-online.enable) [
-      "systemd-networkd-wait-online.service"
-    ];
     services = {
       avahi = {
         enable = true;
@@ -71,14 +63,6 @@ in
           PasswordAuthentication = false;
           KbdInteractiveAuthentication = false;
         };
-      };
-
-      tailscale = {
-        enable = true;
-        authKeyFile = config.age.secrets.tailscale.path;
-        extraUpFlags = [
-          "--advertise-tags=tag:server"
-        ];
       };
 
       zfs = {

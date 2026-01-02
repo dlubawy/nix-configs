@@ -18,6 +18,8 @@ let
   tv = (getInterface "tv" "wifi");
   tv2 = (getInterface "tv" "wifi2");
   lil-nas = (getInterface "lil-nas" "enp5s0");
+  prometheusPort = (builtins.toString config.services.prometheus.port);
+  lokiPort = (builtins.toString config.services.loki.configuration.server.http_listen_port);
 in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
@@ -31,28 +33,62 @@ in
       allowPing = false;
       checkReversePath = true;
       extraInputRules = lib.strings.concatLines [
+        ################################################################
+        # Drop
+        ################################################################
         ''iifname { "br-wan" } counter drop comment "Drop all unsolicited traffic from WAN"''
+        ################################################################
+        # Accept
+        ################################################################
+        # vl-dmz
+        ''ip saddr { ${lil-nas.address} } tcp dport { ${prometheusPort}, ${lokiPort} } accept comment "Allow grafana on NAS to access local prometheus and loki ports"''
       ];
       extraForwardRules = lib.strings.concatLines [
+        ################################################################
         # Accept
+        ################################################################
+        # vl-lan
+        ''iifname { "vl-lan" } oifname { "vl-lan", "vl-dmz", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
+        # vl-user
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
-        ''iifname { "${config.services.tailscale.interfaceName}" } ip daddr { ${lil-nas.address} } accept comment "Allow tailscale to access NAS"''
-        ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests and tailscale to access curated subnet"''
-        ''iifname { "vl-lan" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
+        # vl-iot
         ''ip saddr { ${tv.address} } ip daddr { ${lil-nas.address} } tcp dport { 8096 } accept comment "Allow TV forward to NAS for Jellyfin"''
         ''ip saddr { ${tv.address} } ip daddr { ${lil-nas.address} } udp dport { 7359 } accept comment "Allow TV forward to NAS for Jellyfin"''
         ''ip saddr { ${tv.address} } ip daddr { ${gamingPC.address} } tcp dport { 27036, 27037 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${tv.address} } ip daddr { ${gamingPC.address} } udp dport { 27031, 27036 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${tv2.address} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } tcp sport { 7000 } accept comment "Allow TV forward to user and guest for AirPlay"''
         ''ip saddr { ${tv2.address} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } udp sport { 6002, 49152-65535 } accept comment "Allow TV forward to user and guest for AirPlay"''
+        # vl-guest
+        ''iifname { "vl-guest" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests to access curated subnet"''
+        # tailscale
+        ''iifname { "${config.services.tailscale.interfaceName}" } ip daddr { ${lil-nas.address}, 192.168.30.10-192.168.30.20 } accept comment "Allow tailscale to access NAS and curated subnet"''
+        ################################################################
         # Reject
+        ################################################################
+        # vl-user
         ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
+        # vl-iot
         ''iifname { "vl-iot" } oifname { "vl-lan", "vl-user", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject IoT forwarding outside itself"''
-        ''iifname { "vl-guest", "${config.services.tailscale.interfaceName}" } oifname { "vl-lan", "vl-user", "vl-iot", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject guest and tailscale forwarding to all internal networks"''
+        # vl-dmz, vl-guest, tailscale
+        ''iifname { "vl-dmz", "vl-guest", "${config.services.tailscale.interfaceName}" } oifname { "vl-lan", "vl-dmz", "vl-user", "vl-iot", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject DMZ, guest, and tailscale forwarding to all internal networks"''
       ];
       filterForward = true;
       trustedInterfaces = [ "vl-lan" ];
       interfaces = {
+        "vl-dmz" = {
+          allowedTCPPorts = [
+            53
+            853
+            5355
+          ];
+          allowedUDPPorts = [
+            53
+            67
+            853
+            5353
+            5355
+          ];
+        };
         "vl-user" = {
           allowedTCPPorts = [
             53
@@ -97,7 +133,6 @@ in
         };
         "${config.services.tailscale.interfaceName}" = {
           allowedTCPPorts = [
-            22
             53
             80
             443
@@ -116,6 +151,7 @@ in
       externalInterface = "br-wan";
       internalInterfaces = [
         "vl-lan"
+        "vl-dmz"
         "vl-user"
         "vl-iot"
         "vl-guest"
@@ -168,6 +204,14 @@ in
         };
         vlanConfig.Id = 99;
       };
+      "20-vl-dmz" = {
+        netdevConfig = {
+          Description = "For anything exposed to the Internet";
+          Kind = "vlan";
+          Name = "vl-dmz";
+        };
+        vlanConfig.Id = 10;
+      };
       "20-vl-user" = {
         netdevConfig = {
           Description = "For PCs, laptops, phones (to isolate from IoT devices)";
@@ -199,9 +243,9 @@ in
         bridge = [ "br-lan" ];
         bridgeVLANs = [
           {
-            VLAN = 99;
-            PVID = 99;
-            EgressUntagged = 99;
+            VLAN = 10;
+            PVID = 10;
+            EgressUntagged = 10;
           }
         ];
         networkConfig.ConfigureWithoutCarrier = true;
@@ -241,12 +285,14 @@ in
         matchConfig.Name = "br-lan";
         vlan = [
           "vl-lan"
+          "vl-dmz"
           "vl-user"
           "vl-iot"
           "vl-guest"
         ];
         bridgeVLANs = [
           { VLAN = 99; }
+          { VLAN = 10; }
           { VLAN = 20; }
           { VLAN = 30; }
           { VLAN = 40; }
@@ -280,6 +326,26 @@ in
           Router = "192.168.1.1";
           PoolOffset = 100;
           PoolSize = 100;
+          PersistLeases = false;
+        };
+      };
+      "35-vl-dmz" = {
+        matchConfig.Name = "vl-dmz";
+        address = [ "192.168.10.1/24" ];
+        networkConfig = {
+          DHCPServer = true;
+          MulticastDNS = true;
+          ConfigureWithoutCarrier = true;
+        };
+        dhcpServerConfig = {
+          ServerAddress = "192.168.10.1/24";
+          DefaultLeaseTimeSec = "12h";
+          MaxLeaseTimeSec = "24h";
+          DNS = "192.168.1.1";
+          Router = "192.168.10.1";
+          PoolOffset = 100;
+          PoolSize = 100;
+          PersistLeases = false;
         };
         dhcpServerStaticLeases = [
           {
@@ -374,6 +440,7 @@ in
       enable = true;
       allowInterfaces = [
         "vl-lan"
+        "vl-dmz"
         "vl-user"
         "vl-iot"
         "vl-guest"

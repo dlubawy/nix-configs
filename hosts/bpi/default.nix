@@ -10,7 +10,6 @@ let
 in
 {
   imports = [
-    inputs.agenix.nixosModules.default
     inputs.nixos-sbc.nixosModules.boards.bananapi.bpir3
     inputs.nixos-sbc.nixosModules.default
     ./adguardhome.nix
@@ -87,9 +86,6 @@ in
 
     age = {
       secrets = {
-        tailscale = {
-          file = ../../secrets/tailscale.age;
-        };
         cloudflare-dns-token = {
           file = ../../secrets/cloudflare-dns-token.age;
         };
@@ -118,9 +114,15 @@ in
       openssh = {
         enable = true;
         listenAddresses = [
+          # Only allow vl-lan SSH on local net
           {
             addr = "192.168.1.1";
             port = 22;
+          }
+          # Allow backup SSH from tailnet on 2222
+          {
+            addr = "100.64.0.1";
+            port = 2222;
           }
         ];
         settings = {
@@ -132,12 +134,15 @@ in
 
       tailscale = {
         enable = true;
-        authKeyFile = config.age.secrets.tailscale.path;
+        bootstrap = {
+          enable = false;
+          tag = "router";
+        };
+        ssh.enable = true;
         disableTaildrop = true;
         useRoutingFeatures = "server";
         extraUpFlags = [
-          "--advertise-tags=tag:router"
-          "--advertise-routes=192.168.1.0/24,192.168.30.0/24"
+          "--advertise-routes=192.168.1.1/32,192.168.10.0/24,192.168.30.0/24"
           "--advertise-exit-node"
           "--accept-dns=false"
         ];

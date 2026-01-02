@@ -27,12 +27,19 @@ in
       loglevel = 1;
       log_type = "systemd";
       log_type_audit = "systemd";
+      allow_local_remote_servers = true;
+      user_oidc = {
+        enrich_login_id_token_with_userinfo = true;
+      };
+      trusted_domains = [ "*.ts.net" ];
+      trusted_proxies = [ "127.0.0.1" ];
     };
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         news
         contacts
         cookbook
+        user_oidc
         ;
     };
     extraAppsEnable = true;
@@ -47,10 +54,28 @@ in
   };
 
   users.users.nginx.extraGroups = [ "acme" ];
-  services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
-    forceSSL = true;
-    useACMEHost = "${cloudDomain}";
-    listenAddresses = [ (getAddress "lil-nas" "enp5s0") ];
+  services.nginx.virtualHosts = {
+    ${config.services.nextcloud.hostName} = {
+      forceSSL = true;
+      useACMEHost = "${cloudDomain}";
+      listenAddresses = [ (getAddress "lil-nas" "enp5s0") ];
+    };
+    "nextcloud.ts.net" = {
+      listen = [
+        {
+          addr = "127.0.0.1";
+          port = 8080;
+        }
+        {
+          addr = "127.0.0.1";
+          port = 8443;
+        }
+      ];
+      locations."/" = {
+        proxyPass = "https://${config.services.nextcloud.hostName}";
+        recommendedProxySettings = true;
+      };
+    };
   };
 
   security = {

@@ -72,6 +72,14 @@ in
           ++ (optionals config.services.tailscale.enable [
             "/var/lib/tailscale"
           ])
+          ++ (optionals config.services.tsidp.enable [
+            {
+              directory = "/var/lib/private/tsidp";
+              group = "nogroup";
+              user = "nobody";
+              parent.mode = "700";
+            }
+          ])
           ++ (optionals config.services.jellyfin.enable [
             {
               directory = config.services.jellyfin.dataDir;

@@ -35,16 +35,8 @@ in
         identitiesOnly = true;
         identityFile = [ ] ++ sshKeys;
       };
-      "rpi" = {
-        hostname = "192.168.0.34";
-        port = 22;
-        user = "${username}";
-        controlMaster = "no";
-        identitiesOnly = true;
-        identityFile = [ ] ++ sshKeys;
-      };
       "bpi" = {
-        hostname = "192.168.1.1";
+        hostname = "bpi";
         port = 22;
         user = "${username}";
         controlMaster = "no";
@@ -52,7 +44,7 @@ in
         identityFile = [ ] ++ sshKeys;
       };
       "lil-nas" = {
-        hostname = "192.168.1.10";
+        hostname = "lil-nas";
         port = 22;
         user = "${username}";
         controlMaster = "no";
