@@ -108,6 +108,10 @@ in
         name = "LAN Network";
         cidrv4 = "192.168.1.1/24";
       };
+      dmz = {
+        name = "DMZ Network";
+        cidrv4 = "192.168.10.1/24";
+      };
       user = {
         name = "User Network";
         cidrv4 = "192.168.20.1/24";
@@ -153,6 +157,12 @@ in
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".99" x)
             (x: lib.strings.hasPrefix "lan" x)
+          ];
+        };
+        vl-dmz = {
+          network = "dmz";
+          sharesNetworkWith = [
+            (x: lib.strings.hasSuffix ".10" x)
             (x: x == "sfp2")
           ];
         };
