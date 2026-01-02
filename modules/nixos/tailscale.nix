@@ -90,9 +90,16 @@ in
 
     systemd = {
       services = {
-        tailscaled.after = mkIf (config.systemd.network.wait-online.enable) [
-          "systemd-networkd-wait-online.service"
-        ];
+        tailscaled = {
+          after = mkIf (config.systemd.network.wait-online.enable) [
+            "systemd-networkd-wait-online.service"
+          ];
+          serviceConfig.Environment = (
+            optionals config.networking.nftables.enable [
+              "TS_DEBUG_FIREWALL_MODE=nftables"
+            ]
+          );
+        };
 
         tsidp-auth = mkIf config.services.tsidp.bootstrap.enable {
           description = "Fetches OAuth token to authenticate tsidp service";
