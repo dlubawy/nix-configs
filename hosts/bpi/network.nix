@@ -18,6 +18,8 @@ let
   tv = (getInterface "tv" "wifi");
   tv2 = (getInterface "tv" "wifi2");
   lil-nas = (getInterface "lil-nas" "enp5s0");
+  prometheusPort = (builtins.toString config.services.prometheus.port);
+  lokiPort = (builtins.toString config.services.loki.configuration.server.http_listen_port);
 in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
@@ -32,6 +34,7 @@ in
       checkReversePath = true;
       extraInputRules = lib.strings.concatLines [
         ''iifname { "br-wan" } counter drop comment "Drop all unsolicited traffic from WAN"''
+        ''ip saddr { ${lil-nas.address} } tcp dport { ${prometheusPort}, ${lokiPort} } accept comment "Allow NAS to access local prometheus and loki"''
       ];
       extraForwardRules = lib.strings.concatLines [
         # Accept

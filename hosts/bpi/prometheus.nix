@@ -76,16 +76,13 @@
     exporters = {
       node = {
         enable = true;
-        listenAddress = "192.168.1.1";
+        listenAddress = "127.0.0.1";
         enabledCollectors = [
           "ethtool"
           "systemd"
           "wifi"
         ];
         extraFlags = [ "--collector.textfile.directory=/var/run/prometheus-node-exporter" ];
-        # disabledCollectors = [ "textfile" ];
-        openFirewall = true;
-        firewallRules = ''ip saddr { 192.168.1.0/24 } tcp dport ${toString config.services.prometheus.exporters.node.port} counter accept comment "Allow prometheus node export for LAN"'';
       };
     };
     scrapeConfigs = [
