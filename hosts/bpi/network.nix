@@ -97,7 +97,6 @@ in
         };
         "${config.services.tailscale.interfaceName}" = {
           allowedTCPPorts = [
-            22
             53
             80
             443

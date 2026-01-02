@@ -114,10 +114,12 @@ in
       openssh = {
         enable = true;
         listenAddresses = [
+          # Only allow vl-lan SSH on local net
           {
             addr = "192.168.1.1";
             port = 22;
           }
+          # Allow backup SSH from tailnet on 2222
           {
             addr = "100.64.0.1";
             port = 2222;
@@ -136,13 +138,13 @@ in
           enable = false;
           tag = "router";
         };
+        ssh.enable = true;
         disableTaildrop = true;
         useRoutingFeatures = "server";
         extraUpFlags = [
           "--advertise-routes=192.168.1.0/24,192.168.30.0/24"
           "--advertise-exit-node"
           "--accept-dns=false"
-          "--ssh"
         ];
       };
     };

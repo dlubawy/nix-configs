@@ -11,17 +11,21 @@ let
     mkDefault
     mkOption
     types
+    optionals
     ;
 in
 {
   options = {
     services = {
-      tailscale.bootstrap = {
-        enable = mkEnableOption "Bootstrap permanent node with auth key";
-        tag = mkOption {
-          description = "Tag to apply to node";
-          type = types.str;
+      tailscale = {
+        bootstrap = {
+          enable = mkEnableOption "Bootstrap permanent node with auth key";
+          tag = mkOption {
+            description = "Tag to apply to node";
+            type = types.str;
+          };
         };
+        ssh.enable = mkEnableOption "Enable Tailscale SSH";
       };
 
       tsidp.bootstrap = {
@@ -52,6 +56,17 @@ in
       tailscale.file = mkDefault ../../secrets/tailscale.age;
     };
 
+    networking.firewall = mkIf config.networking.firewall.enable {
+      interfaces = {
+        "${config.services.tailscale.interfaceName}" = mkIf config.services.tailscale.ssh.enable {
+          allowedTCPPorts = [
+            22
+          ]
+          ++ (optionals config.services.openssh.enable [ 2222 ]);
+        };
+      };
+    };
+
     services = {
       tailscale = {
         authKeyFile = mkDefault (
@@ -62,10 +77,15 @@ in
         };
         extraUpFlags = [
           "--advertise-tags=tag:${config.services.tailscale.bootstrap.tag}"
-        ];
+        ]
+        ++ (optionals config.services.tailscale.ssh.enable [
+          "--ssh"
+        ]);
       };
 
       tsidp.environmentFile = "/etc/tsidp";
+
+      openssh.ports = mkIf config.services.tailscale.ssh.enable [ 2222 ];
     };
 
     systemd = {

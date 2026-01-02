@@ -1,11 +1,10 @@
 {
-  config,
   lib,
   inputs,
   ...
 }:
 let
-  inherit (lib) mkForce mkIf;
+  inherit (lib) mkForce;
 in
 {
   imports = [

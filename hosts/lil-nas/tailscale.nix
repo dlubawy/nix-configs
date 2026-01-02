@@ -9,6 +9,7 @@
         enable = false;
         tag = "server";
       };
+      ssh.enable = true;
     };
 
     tsidp = {
