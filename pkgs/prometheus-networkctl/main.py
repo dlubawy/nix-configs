@@ -57,7 +57,7 @@ def get_hostname(address: Address, default: str = "") -> str:
 
 def main():
     output = []
-    for net in ["vl-lan", "vl-user", "vl-iot", "vl-guest"]:
+    for net in ["vl-lan", "vl-dmz", "vl-user", "vl-iot", "vl-guest"]:
         networkctl = json.loads(
             get_output(["networkctl", "--json=short", "status", net])
         )
