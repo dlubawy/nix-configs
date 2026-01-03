@@ -100,6 +100,14 @@ in
               rewrite ^/jellyfin/(.*)  /$1 break;
             '';
           };
+
+          # FIXME: Remove when ISSUE(#160) is solved
+          "/sso/" = {
+            return = "308 https://${homeDomain}/jellyfin$request_uri";
+          };
+          "/web/" = {
+            return = "308 https://${homeDomain}/jellyfin$request_uri";
+          };
         };
       };
     };
