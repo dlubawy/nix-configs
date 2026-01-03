@@ -117,10 +117,10 @@
         "frameIndex": 58,
         "showHeader": true,
         "sortBy": [ 
-           { 
-             "desc": false, 
-             "displayName": "address" 
-           } 
+          { 
+            "desc": false, 
+            "displayName": "address" 
+          } 
         ]
       },
       "pluginVersion": "12.3.1",
