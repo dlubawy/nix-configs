@@ -326,7 +326,6 @@ in
           Router = "192.168.1.1";
           PoolOffset = 100;
           PoolSize = 100;
-          PersistLeases = false;
         };
       };
       "35-vl-dmz" = {
@@ -345,7 +344,6 @@ in
           Router = "192.168.10.1";
           PoolOffset = 100;
           PoolSize = 100;
-          PersistLeases = false;
         };
         dhcpServerStaticLeases = [
           {
