@@ -116,11 +116,11 @@
         "cellHeight": "sm",
         "frameIndex": 58,
         "showHeader": true,
-        "sortBy": [ 
-          { 
-            "desc": false, 
-            "displayName": "address" 
-          } 
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "address"
+          }
         ]
       },
       "pluginVersion": "12.3.1",
@@ -151,7 +151,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "networkctl_dhcp_server_leases_info{instance=\"192.168.1.1:9100\", job=\"router_metrics\", hostname=\"\"}",
+          "expr": "networkctl_dhcp_server_leases_info{job=\"router_metrics\", hostname=\"\"}",
           "format": "table",
           "fullMetaSearch": false,
           "hide": false,
