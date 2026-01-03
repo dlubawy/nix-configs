@@ -116,7 +116,12 @@
         "cellHeight": "sm",
         "frameIndex": 58,
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [ 
+           { 
+             "desc": false, 
+             "displayName": "address" 
+           } 
+        ]
       },
       "pluginVersion": "12.3.1",
       "targets": [
