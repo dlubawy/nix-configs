@@ -76,7 +76,7 @@ groups:
                 uid: PBFA97CFB590B2093
               editorMode: code
               exemplar: false
-              expr: rate(nf_conntrack_nat_bytes{instance=~"192.168.1.1:9100",job=~"router_metrics",src=~"192.168.(1|20|30|40|50)..*"}[5m])
+              expr: rate(nf_conntrack_nat_bytes{job=~"router_metrics",src=~"192.168.(1|10|20|30|40|50)..*"}[5m])
               instant: false
               interval: ""
               intervalMs: 15000
@@ -341,8 +341,8 @@ groups:
               editorMode: code
               exemplar: false
               expr: |-
-                (count by(client_id, hostname) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""})) unless (count by(client_id, hostname) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!="", hostname!=""}[48h] offset 15m)) > bool 0) or
-                (count by(client_id) (networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""})) unless (count by(client_id) (count_over_time(networkctl_dhcp_server_leases_info{instance="192.168.1.1:9100", job="router_metrics", client_id!=""}[48h] offset 15m)) > bool 0)
+                (count by(client_id, hostname) (networkctl_dhcp_server_leases_info{job="router_metrics", client_id!="", hostname!=""})) unless (count by(client_id, hostname) (count_over_time(networkctl_dhcp_server_leases_info{job="router_metrics", client_id!="", hostname!=""}[48h] offset 15m)) > bool 0) or
+                (count by(client_id) (networkctl_dhcp_server_leases_info{job="router_metrics", client_id!=""})) unless (count by(client_id) (count_over_time(networkctl_dhcp_server_leases_info{job="router_metrics", client_id!=""}[48h] offset 15m)) > bool 0)
               format: table
               fullMetaSearch: false
               includeNullMetadata: true
