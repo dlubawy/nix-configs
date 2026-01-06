@@ -13,6 +13,7 @@ in
 {
   age.secrets = {
     nextcloud.file = ../../secrets/nextcloud.age;
+    nextcloud-whiteboard.file = ../../secrets/nextcloud-whiteboard.age;
     cloudflare-dns-token.file = ../../secrets/cloudflare-dns-token.age;
   };
 
@@ -21,49 +22,61 @@ in
     443
   ];
 
-  services.nextcloud = {
-    enable = true;
-    settings = {
-      loglevel = 1;
-      log_type = "systemd";
-      log_type_audit = "systemd";
-      allow_local_remote_servers = true;
-      user_oidc = {
-        enrich_login_id_token_with_userinfo = true;
+  services = {
+    nextcloud = {
+      enable = true;
+      settings = {
+        loglevel = 1;
+        log_type = "systemd";
+        log_type_audit = "systemd";
+        allow_local_remote_servers = true;
+        user_oidc = {
+          enrich_login_id_token_with_userinfo = true;
+        };
+        trusted_domains = [ "*.ts.net" ];
+        trusted_proxies = [ "127.0.0.1" ];
+        enabledPreviewProviders = [
+          "OC\\Preview\\BMP"
+          "OC\\Preview\\GIF"
+          "OC\\Preview\\HEIC"
+          "OC\\Preview\\JPEG"
+          "OC\\Preview\\Krita"
+          "OC\\Preview\\MP3"
+          "OC\\Preview\\MarkDown"
+          "OC\\Preview\\OpenDocument"
+          "OC\\Preview\\PNG"
+          "OC\\Preview\\TXT"
+          "OC\\Preview\\WebP"
+          "OC\\Preview\\XBitmap"
+        ];
       };
-      trusted_domains = [ "*.ts.net" ];
-      trusted_proxies = [ "127.0.0.1" ];
-      enabledPreviewProviders = [
-        "OC\\Preview\\BMP"
-        "OC\\Preview\\GIF"
-        "OC\\Preview\\HEIC"
-        "OC\\Preview\\JPEG"
-        "OC\\Preview\\Krita"
-        "OC\\Preview\\MP3"
-        "OC\\Preview\\MarkDown"
-        "OC\\Preview\\OpenDocument"
-        "OC\\Preview\\PNG"
-        "OC\\Preview\\TXT"
-        "OC\\Preview\\WebP"
-        "OC\\Preview\\XBitmap"
-      ];
+      extraApps = {
+        inherit (config.services.nextcloud.package.packages.apps)
+          news
+          contacts
+          cookbook
+          user_oidc
+          whiteboard
+          ;
+      };
+      extraAppsEnable = true;
+      database.createLocally = true;
+      hostName = cloudDomain;
+      https = true;
+      maxUploadSize = "1G";
+      config = {
+        adminpassFile = config.age.secrets.nextcloud.path;
+        dbtype = "pgsql";
+      };
     };
-    extraApps = {
-      inherit (config.services.nextcloud.package.packages.apps)
-        news
-        contacts
-        cookbook
-        user_oidc
-        ;
-    };
-    extraAppsEnable = true;
-    database.createLocally = true;
-    hostName = cloudDomain;
-    https = true;
-    maxUploadSize = "1G";
-    config = {
-      adminpassFile = config.age.secrets.nextcloud.path;
-      dbtype = "pgsql";
+    nextcloud-whiteboard-server = {
+      enable = true;
+      settings = {
+        NEXTCLOUD_URL = "https://${cloudDomain}";
+        HOST = "127.0.0.1";
+        PORT = "3005";
+      };
+      secrets = [ config.age.secrets.nextcloud-whiteboard.path ];
     };
   };
 
@@ -73,6 +86,16 @@ in
       forceSSL = true;
       useACMEHost = "${cloudDomain}";
       listenAddresses = [ (getAddress "lil-nas" "enp5s0") ];
+      locations = {
+        "/whiteboard/" = {
+          proxyPass = "http://${config.services.nextcloud-whiteboard-server.settings.HOST}:${config.services.nextcloud-whiteboard-server.settings.PORT}";
+          proxyWebsockets = true;
+          extraConfig = ''
+            proxy_set_header Host $host;
+            rewrite ^/whiteboard/(.*)  /$1 break;
+          '';
+        };
+      };
     };
     "nextcloud.ts.net" = {
       listen = [
@@ -85,9 +108,11 @@ in
           port = 8443;
         }
       ];
-      locations."/" = {
-        proxyPass = "https://${config.services.nextcloud.hostName}";
-        recommendedProxySettings = true;
+      locations = {
+        "/" = {
+          proxyPass = "https://${config.services.nextcloud.hostName}";
+          recommendedProxySettings = true;
+        };
       };
     };
   };
