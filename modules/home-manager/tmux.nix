@@ -1,4 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
+let
+  inherit (lib) mkDefault;
+in
 {
   programs.tmux = {
     enable = true;
@@ -60,7 +63,7 @@
     ];
     sensibleOnTop = false;
     shell = "${pkgs.zsh}/bin/zsh";
-    prefix = "C-Space";
+    shortcut = mkDefault "Space";
     terminal = "screen-256color";
     tmuxp.enable = true;
   };

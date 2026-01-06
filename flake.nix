@@ -194,6 +194,26 @@ rec {
             ./users/drew.nix
           ];
         };
+
+        # Android Virtualization Framework (AVF) Linux terminal
+        "droid@debian" = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { system = "aarch64-linux"; };
+          extraSpecialArgs = {
+            inherit inputs outputs vars;
+          };
+          modules = [
+            self.homeModules.default
+            ./users/drew.nix
+            {
+              nix-configs.users.drew.name = "droid";
+              gui.enable = false;
+              programs = {
+                nixvim.plugins.image.enable = false;
+                tmux.shortcut = "b";
+              };
+            }
+          ];
+        };
       };
 
       images = {

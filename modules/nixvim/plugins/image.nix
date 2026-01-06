@@ -3,6 +3,9 @@
   lib,
   ...
 }:
+let
+  inherit (lib) mkDefault;
+in
 {
   extraPackages = with pkgs; [
     imagemagick
@@ -10,9 +13,9 @@
     ueberzugpp
   ];
   plugins.image = {
-    enable = lib.nixvim.enableExceptInTests;
+    enable = mkDefault lib.nixvim.enableExceptInTests;
     settings = {
-      backend = lib.mkDefault "ueberzug";
+      backend = mkDefault "ueberzug";
       integrations = {
         markdown = {
           enabled = true;
