@@ -33,6 +33,20 @@ in
       };
       trusted_domains = [ "*.ts.net" ];
       trusted_proxies = [ "127.0.0.1" ];
+      enabledPreviewProviders = [
+        "OC\\Preview\\BMP"
+        "OC\\Preview\\GIF"
+        "OC\\Preview\\HEIC"
+        "OC\\Preview\\JPEG"
+        "OC\\Preview\\Krita"
+        "OC\\Preview\\MP3"
+        "OC\\Preview\\MarkDown"
+        "OC\\Preview\\OpenDocument"
+        "OC\\Preview\\PNG"
+        "OC\\Preview\\TXT"
+        "OC\\Preview\\WebP"
+        "OC\\Preview\\XBitmap"
+      ];
     };
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
