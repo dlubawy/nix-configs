@@ -141,7 +141,7 @@ vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 vendorHash = lib.fakeHash;  # Build will fail with correct hash
 ```
 
-4. Update the hash with the one from the error message
+1. Update the hash with the one from the error message
 1. Build again: `nix build`
 
 Alternatively, set `vendorHash = null` if you're not vendoring dependencies.
