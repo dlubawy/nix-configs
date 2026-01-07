@@ -38,7 +38,7 @@ The configuration is modular and organized into:
 - **Snippets**: LuaSnip with friendly-snippets
 - **Copilot**: GitHub Copilot integration
 - **Formatting**: conform.nvim for code formatting
-- **Linting**: nvim-lint with sqlfluff and other linters
+- **Linting**: nvim-lint (configured linters are defined per-filetype in the module)
 - **Autopairs**: Automatic bracket/quote pairing
 
 ### Editor

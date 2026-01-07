@@ -7,7 +7,7 @@ This is a home NAS server running on a GMKtec G9 mini PC with Intel hardware. It
 
 ## Hardware
 
-- Intel CPU with hardware graphics acceleration (iHD)
+- Intel CPU with hardware graphics acceleration (Intel Media Driver - iHD)
 - eMMC boot drive
 - Two NVMe SSDs in ZFS mirror configuration
 - Connected to LAN via Ethernet

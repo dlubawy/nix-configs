@@ -44,7 +44,7 @@ In a host configuration:
 - **Tmux**: Terminal multiplexer with custom keybindings
 - **Scripts**: Custom utility scripts (weather, colors, git helpers, etc.)
 - **Hyprland**: Wayland compositor (Linux only)
-- **Password Management**: qtpass for pass integration
+- **Password Management**: qtpass for password-store (pass) integration
 
 ## Sub-Modules
 
