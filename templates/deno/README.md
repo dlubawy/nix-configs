@@ -122,9 +122,9 @@ import express from "npm:express@4";
 The template includes a sophisticated Nix package that:
 
 1. Installs dependencies with Deno
-2. Runs the Vite build task
-3. Creates a deployable package with preview server
-4. Includes a wrapper script for serving the built application
+1. Runs the Vite build task
+1. Creates a deployable package with preview server
+1. Includes a wrapper script for serving the built application
 
 #### Building with Nix
 
@@ -339,16 +339,16 @@ Deno requires explicit permissions. Use flags like:
 ### Vite dev server not starting
 
 1. Check port availability (default: 5173)
-2. Ensure all dependencies are installed: `deno install`
-3. Check for errors in the console
+1. Ensure all dependencies are installed: `deno install`
+1. Check for errors in the console
 
 ### Build fails in Nix
 
 The Nix build creates temporary directories for Deno. If builds fail:
 
 1. Check the build phase in `flake.nix`
-2. Ensure all required files are included in `src`
-3. Check that `deno task build` works in dev shell first
+1. Ensure all required files are included in `src`
+1. Check that `deno task build` works in dev shell first
 
 ### Pre-commit hooks fail
 

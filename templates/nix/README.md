@@ -56,10 +56,10 @@ The shell sets:
 This template is a starting point. You'll likely want to add:
 
 1. **Packages**: Define derivations to build software
-2. **NixOS Modules**: Create reusable system configuration modules
-3. **Home Manager Modules**: Define user-level configurations
-4. **Applications**: Build and package applications
-5. **Development Tools**: Add language-specific tooling
+1. **NixOS Modules**: Create reusable system configuration modules
+1. **Home Manager Modules**: Define user-level configurations
+1. **Applications**: Build and package applications
+1. **Development Tools**: Add language-specific tooling
 
 #### Example: Adding a Package
 
@@ -293,17 +293,17 @@ packages = forEachSupportedSystem ({ pkgs }: {
 ### `nil` not working in IDE
 
 1. Ensure you're in the development shell
-2. Check that `NIL_PATH` is set: `echo $NIL_PATH`
-3. Configure your editor to use `$NIL_PATH`
-4. Restart your editor from within the Nix shell
+1. Check that `NIL_PATH` is set: `echo $NIL_PATH`
+1. Configure your editor to use `$NIL_PATH`
+1. Restart your editor from within the Nix shell
 
 ### Formatting issues
 
 The template uses `nixfmt-rfc-style` which follows [RFC 166](https://github.com/NixOS/rfcs/pull/166). If you prefer a different style:
 
 1. Change the formatter package
-2. Update the pre-commit hook
-3. Run `nix fmt` or your chosen formatter
+1. Update the pre-commit hook
+1. Run `nix fmt` or your chosen formatter
 
 ### Flake evaluation errors
 

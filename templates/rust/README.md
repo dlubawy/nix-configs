@@ -242,8 +242,8 @@ direnv allow
 ### IDE doesn't have code completion
 
 1. Ensure `RUST_SRC_PATH` is set (check with `echo $RUST_SRC_PATH`)
-2. Install `rust-analyzer` in your IDE
-3. Restart your IDE after entering the Nix shell
+1. Install `rust-analyzer` in your IDE
+1. Restart your IDE after entering the Nix shell
 
 ### Pre-commit hooks fail
 

@@ -52,10 +52,10 @@ No language-specific tools are included. Add what you need.
 This template is ideal for:
 
 1. **Quick Experiments**: Need a clean environment fast
-2. **Custom Environments**: Build your own from scratch
-3. **Non-Programming Projects**: Documentation, infrastructure, etc.
-4. **Learning Nix**: Minimal template to understand flakes
-5. **Mixed-Language Projects**: Add multiple language toolchains
+1. **Custom Environments**: Build your own from scratch
+1. **Non-Programming Projects**: Documentation, infrastructure, etc.
+1. **Learning Nix**: Minimal template to understand flakes
+1. **Mixed-Language Projects**: Add multiple language toolchains
 
 ## Pre-commit Hooks
 

@@ -344,7 +344,7 @@ direnv allow
 The package might not be in `scheme-small`. Either:
 
 1. Add the specific package to the `tex` combine block
-2. Switch to `scheme-medium` or `scheme-full`
+1. Switch to `scheme-medium` or `scheme-full`
 
 ### Compilation errors
 

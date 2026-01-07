@@ -95,8 +95,8 @@ The template includes `gopls` for IDE integration. Most editors will automatical
 For VS Code with Go extension:
 
 1. Enter the Nix shell (`nix develop`)
-2. Open VS Code from within the shell
-3. The Go extension will use the gopls from the Nix environment
+1. Open VS Code from within the shell
+1. The Go extension will use the gopls from the Nix environment
 
 ### Building Packages
 
@@ -130,8 +130,8 @@ nix run
 When you add Go dependencies:
 
 1. Add the dependency to your code and run `go mod tidy`
-2. Try building: `nix build`
-3. If it fails with a hash mismatch, update `vendorHash` in `flake.nix`:
+1. Try building: `nix build`
+1. If it fails with a hash mismatch, update `vendorHash` in `flake.nix`:
 
 ```nix
 # Replace null with the hash from the error message
@@ -142,7 +142,7 @@ vendorHash = lib.fakeHash;  # Build will fail with correct hash
 ```
 
 4. Update the hash with the one from the error message
-5. Build again: `nix build`
+1. Build again: `nix build`
 
 Alternatively, set `vendorHash = null` if you're not vendoring dependencies.
 
@@ -168,8 +168,8 @@ The template includes comprehensive quality checks that run automatically on com
 ### Changing the Package Name
 
 1. Update the `name` field in `flake.nix` under `packages.default`
-2. Update `module` name in `go.mod`
-3. Update import paths in your Go code
+1. Update `module` name in `go.mod`
+1. Update import paths in your Go code
 
 ### Changing Go Version
 
@@ -316,8 +316,8 @@ Update `vendorHash` in `flake.nix` with the hash from the error message. See [Up
 ### gopls not working in IDE
 
 1. Ensure you started your editor from within the Nix shell
-2. Check that gopls is in PATH: `which gopls`
-3. Restart your editor
+1. Check that gopls is in PATH: `which gopls`
+1. Restart your editor
 
 ### Module import errors
 

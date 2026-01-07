@@ -87,8 +87,8 @@ The flake uses `uv2nix` to convert `uv.lock` into Nix derivations:
 #### Adding Dependencies
 
 1. Edit `pyproject.toml` to add dependencies OR use `uv add <package>`
-2. Run `uv lock` to update the lock file
-3. Re-enter the dev shell with `nix develop` or `direnv allow`
+1. Run `uv lock` to update the lock file
+1. Re-enter the dev shell with `nix develop` or `direnv allow`
 
 The dev shell automatically provides the updated virtual environment.
 
@@ -160,9 +160,9 @@ The template includes comprehensive quality checks that run automatically on com
 ### Modifying the Package Name
 
 1. Update `name` in `pyproject.toml`
-2. Rename `src/template/` directory to match your package name
-3. Update `project.scripts` in `pyproject.toml` to point to your module
-4. Update references in `flake.nix` (search for "template")
+1. Rename `src/template/` directory to match your package name
+1. Update `project.scripts` in `pyproject.toml` to point to your module
+1. Update references in `flake.nix` (search for "template")
 
 ### Adding Build Fixups
 
@@ -204,15 +204,15 @@ This template supports:
 In the dev shell, your package is installed in editable mode. Changes to Python source files are immediately reflected without reinstalling. This is achieved through:
 
 1. `workspace.mkEditablePyprojectOverlay` creates an overlay with editable packages
-2. The overlay uses `$REPO_ROOT` environment variable to find sources
-3. A filtered source tree minimizes rebuilds on unrelated changes
+1. The overlay uses `$REPO_ROOT` environment variable to find sources
+1. A filtered source tree minimizes rebuilds on unrelated changes
 
 ### Virtual Environment Details
 
 The template creates two virtual environments:
 
 1. **Package**: `mkVirtualEnv "template-env" workspace.deps.default` - Production dependencies only
-2. **Dev Shell**: `mkVirtualEnv "template-dev-env" workspace.deps.all` - All dependencies including optional ones
+1. **Dev Shell**: `mkVirtualEnv "template-dev-env" workspace.deps.all` - All dependencies including optional ones
 
 ### Build System
 
@@ -243,7 +243,7 @@ pre-commit run --all-files  # run all hooks manually
 After modifying `pyproject.toml`:
 
 1. Run `uv lock` to update the lock file
-2. Re-enter the dev shell with `direnv allow` or `nix develop`
+1. Re-enter the dev shell with `direnv allow` or `nix develop`
 
 ## References
 
