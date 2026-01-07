@@ -14,4 +14,6 @@
 
 ## PR reviewing
 
-- Pull requests require the "Format 🔎" and "check-results" jobs pass
+- For a PR to be merged, both must be green:
+  - The "Format 🔎" workflow (runs on `push`)
+  - The "check-results" job in the pull request workflow (runs on `pull_request`)
