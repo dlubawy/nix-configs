@@ -9,6 +9,7 @@ let
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
   inherit (topology.lib.helpers) getAddress;
   cloudDomain = config.cloudDomain;
+  collaboraDomain = config.collaboraDomain;
 in
 {
   age.secrets = {
@@ -57,6 +58,7 @@ in
           cookbook
           user_oidc
           whiteboard
+          richdocuments
           ;
       };
       extraAppsEnable = true;
@@ -78,6 +80,30 @@ in
       };
       secrets = [ config.age.secrets.nextcloud-whiteboard.path ];
     };
+    collabora-online = {
+      enable = true;
+      settings = {
+        ssl = {
+          enable = false;
+          termination = true;
+        };
+
+        # Listen on loopback interface only, and accept requests from ::1
+        net = {
+          listen = "loopback";
+          post_allow.host = [ "::1" ];
+        };
+
+        # Restrict loading documents from WOPI Host nextcloud.example.com
+        storage.wopi = {
+          "@allow" = true;
+          host = [ cloudDomain ];
+        };
+
+        # Set FQDN of server
+        server_name = collaboraDomain;
+      };
+    };
   };
 
   users.users.nginx.extraGroups = [ "acme" ];
@@ -95,6 +121,15 @@ in
             rewrite ^/whiteboard/(.*)  /$1 break;
           '';
         };
+      };
+    };
+    "${config.services.collabora-online.settings.server_name}" = {
+      forceSSL = true;
+      useACMEHost = "${collaboraDomain}";
+      listenAddresses = [ (getAddress "lil-nas" "enp5s0") ];
+      locations."/" = {
+        proxyPass = "http://[::1]:${toString config.services.collabora-online.port}";
+        proxyWebsockets = true;
       };
     };
     "nextcloud.ts.net" = {
@@ -126,6 +161,12 @@ in
       };
       certs = {
         "${cloudDomain}" = {
+          dnsProvider = "cloudflare";
+          credentialFiles = {
+            CLOUDFLARE_DNS_API_TOKEN_FILE = config.age.secrets.cloudflare-dns-token.path;
+          };
+        };
+        "${collaboraDomain}" = {
           dnsProvider = "cloudflare";
           credentialFiles = {
             CLOUDFLARE_DNS_API_TOKEN_FILE = config.age.secrets.cloudflare-dns-token.path;

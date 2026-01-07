@@ -36,6 +36,11 @@ in
         nginx.info = "${cloudDomain}";
         jellyfin.info = "${homeDomain}/jellyfin";
         grafana.info = mkForce "${homeDomain}/grafana";
+        collabora-online = {
+          info = config.collaboraDomain;
+          icon = "services.collabora-online";
+          name = "Collabora Online";
+        };
         loki = {
           hidden = true;
           details = {
