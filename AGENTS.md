@@ -2,7 +2,7 @@
 
 ## Pre-commit
 
-- Pre-commit is managed by `git-hooks.nix` and defined in `./flake.nix`
+- Pre-commit hooks are configured directly in `./flake.nix` (under the `checks` section) using the `pre-commit-hooks` input from the git-hooks.nix repository
 - Make sure all pre-commit checks pass before committing work
 
 # Pull request guidance
