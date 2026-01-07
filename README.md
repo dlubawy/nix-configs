@@ -4,7 +4,29 @@
 
 # nix-configs
 
-My personal Nix configurations.
+My personal Nix configurations for managing multiple systems using [NixOS](https://nixos.org/) and [nix-darwin](https://github.com/LnL7/nix-darwin). This repository provides declarative configuration for workstations, servers, and network infrastructure.
+
+## Overview
+
+This configuration manages:
+
+- **NixOS systems**: Router (Banana Pi), NAS server (GMKtec G9), WSL
+- **macOS systems**: Development workstation (MacBook Pro M1)
+- **User environments**: Dotfiles and applications via Home Manager
+- **Network services**: Nextcloud, Jellyfin, Grafana, Prometheus, Loki
+- **Network infrastructure**: Router with VLANs, firewall, and monitoring
+
+## Getting Started
+
+To use these configurations:
+
+1. **Review the host documentation** for your target system in the [Hosts](#hosts) section
+1. **Define your users** in `./users` following the [nix-configs module](./modules/nix-configs/README.md) schema
+1. **Update `vars` in `flake.nix`** with your admin user email
+1. **Configure secrets** using `agenix` for passwords and sensitive data
+1. **Build and deploy** using the commands specific to your host
+
+Each host has detailed installation instructions in its README.
 
 ## Notes
 
@@ -15,37 +37,56 @@ These configurations make use of personal preferences. I have forked some tools 
 
 ## Hosts
 
-- Banana Pi BPI-R3: [`bpi`](./hosts/bpi/README.md)
-- MacBook Pro M1: [`laplace`](./hosts/laplace/README.md)
-- WSL: [`syringa`](./hosts/syringa/README.md)
+- Banana Pi BPI-R3: [`bpi`](./hosts/bpi/README.md) - Router and network infrastructure
+- GMKtec G9: [`lil-nas`](./hosts/lil-nas/README.md) - NAS server with Nextcloud, Jellyfin, and monitoring
+- MacBook Pro M1: [`laplace`](./hosts/laplace/README.md) - macOS development workstation
+- WSL: [`syringa`](./hosts/syringa/README.md) - Windows Subsystem for Linux
 
 Hosts import reusable system configuration modules based on the type of system being configured:
 
-- Darwin: `./modules/darwin`
-- Linux: `./modules/nixos`
+- Darwin: [`./modules/darwin`](./modules/darwin/README.md)
+- Linux: [`./modules/nixos`](./modules/nixos/README.md)
 
-All hosts import the Home Manager module (`./modules/home-manager`). This module brings in reusable configurations to be applied for each defined user in a host.
+All hosts import the Home Manager module ([`./modules/home-manager`](./modules/home-manager/README.md)). This module brings in reusable configurations to be applied for each defined user in a host.
+
+## Modules
+
+Reusable NixOS and nix-darwin modules provide the building blocks for host configurations:
+
+- [`darwin`](./modules/darwin/README.md): macOS system configuration via nix-darwin
+- [`home-manager`](./modules/home-manager/README.md): User-level dotfiles and application configuration
+- [`nix-configs`](./modules/nix-configs/README.md): Common user definition schema
+- [`nixos`](./modules/nixos/README.md): NixOS system configuration
+- [`nixvim`](./modules/nixvim/README.md): Neovim IDE configuration
+- [`topology`](./modules/topology/README.md): Network topology visualization
+
+Each module has its own README with detailed documentation on its purpose and usage.
 
 ## Users
 
-Users are defined in the `./users` module where the default imports all users, but hosts can selectively choose to import individual users as needed. An admin is specified in the `vars` within `flake.nix`. You should modify this user if copying this repo.
+Users are defined in the [`./users`](./users) directory using the schema from the [`nix-configs`](./modules/nix-configs/README.md) module. The default configuration imports all users, but hosts can selectively import individual users as needed.
 
-Default password for users are set in two ways:
+The admin user is specified in `vars` within `flake.nix`. **You should modify this user if copying this repository.**
 
-- Darwin: set based on the user's configuration `name`
-- NixOS: set based on `initialHashedPassword` or `hashedPasswordFile`
+### Password Management
 
-If `mutableUsers` are set in the host configuration then passwords may be changed from the initial values.
+Default passwords for users are set differently by platform:
 
-### NixOS
+- **Darwin**: Defaults to the user's configuration `name`
+- **NixOS**: Set via `initialHashedPassword` or `hashedPasswordFile`
 
-An additional `users.shadow.enable` option is available to move password management into individually managed `$HOME/.shadow` files with the `nixos-passwd` script within the `nixos-password` package.
-When a `/persist` mount is enabled, shadow files will be created in `/persist/$HOME/.shadow` for each managed user.
+If `mutableUsers` is enabled in the host configuration, passwords may be changed from their initial values.
+
+#### NixOS Shadow Files
+
+The `users.shadow.enable` option moves password management into individually managed `$HOME/.shadow` files using the `nixos-passwd` script from the `nixos-password` package. When a `/persist` mount is enabled, shadow files are created in `/persist/$HOME/.shadow` for each managed user.
 
 ## Templates
 
-Use any template to create a nix flake based development environment with:
+Development environment templates are available for quick project setup. Initialize a new project with:
 
-```
+```bash
 nix flake init --template github:dlubawy/nix-configs/main#[template]
 ```
+
+Available templates: `deno`, `go`, `latex`, `nix`, `python`, `rust`, `tofu`, and `empty`.
