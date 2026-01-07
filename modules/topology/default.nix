@@ -75,6 +75,9 @@ in
       devices = {
         nix-darwin.file = ./nix-darwin.png;
       };
+      services = {
+        collabora-online.file = ./code-logo.png;
+      };
     };
 
     networks = {

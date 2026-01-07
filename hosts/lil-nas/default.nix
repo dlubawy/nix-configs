@@ -27,6 +27,11 @@ in
       description = "Domain name for the Nextcloud ACME cert";
       default = "cloud.andrewlubawy.com";
     };
+    collaboraDomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Domain name for the Collabora ACME cert";
+      default = "collabora.andrewlubawy.com";
+    };
   };
 
   config = {
