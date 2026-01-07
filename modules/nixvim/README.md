@@ -33,6 +33,7 @@ The configuration is modular and organized into:
 ## Key Features
 
 ### Coding
+
 - **LSP**: Language server integration for multiple languages
 - **Completion**: nvim-cmp with multiple sources (LSP, buffer, path, snippets)
 - **Snippets**: LuaSnip with friendly-snippets
@@ -42,6 +43,7 @@ The configuration is modular and organized into:
 - **Autopairs**: Automatic bracket/quote pairing
 
 ### Editor
+
 - **File Navigation**: neo-tree file explorer with git integration
 - **Fuzzy Finding**: Telescope and fzf-lua for searching
 - **Git**: Gitsigns for inline git blame and hunks, Fugitive for git commands
@@ -49,6 +51,7 @@ The configuration is modular and organized into:
 - **Markdown**: Preview and rendering for markdown files
 
 ### UI
+
 - **Colorscheme**: Catppuccin Frappe theme
 - **Statusline**: Lualine with custom configuration
 - **Bufferline**: Buffer tabs at the top
@@ -57,6 +60,7 @@ The configuration is modular and organized into:
 - **Startup Screen**: Alpha dashboard
 
 ### Note-taking
+
 - **Org-mode**: Full org-mode support with agenda and capture
 - **Neorg**: Modern note-taking with org-mode-like syntax
 - **Zen Mode**: Distraction-free writing with tmux/alacritty integration
@@ -64,6 +68,7 @@ The configuration is modular and organized into:
 ### Plugins
 
 See `plugins/` directory for individual plugin configurations:
+
 - `alpha.nix`: Startup dashboard
 - `bufferline.nix`: Buffer tabs
 - `cmp.nix`: Code completion
@@ -87,6 +92,7 @@ See `plugins/` directory for individual plugin configurations:
 ## Extra Packages
 
 The module includes additional tools required by plugins:
+
 - fd, fzf, ripgrep: For searching
 - prettier, stylua: For formatting
 - pylatexenc: For LaTeX in org-mode

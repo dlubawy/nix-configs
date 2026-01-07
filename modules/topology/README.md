@@ -65,11 +65,13 @@ The module includes custom icons for:
 ## Networks
 
 Pre-configured networks:
+
 - **Tailscale**: VPN mesh network (100.64.0.0/10)
 
 ## Output
 
 Topology diagrams are generated as SVG files:
+
 - `assets/topology-main.svg`: Main topology view
 - `assets/topology-network.svg`: Network-focused view
 

@@ -21,10 +21,10 @@ This configuration manages:
 To use these configurations:
 
 1. **Review the host documentation** for your target system in the [Hosts](#hosts) section
-2. **Define your users** in `./users` following the [nix-configs module](./modules/nix-configs/README.md) schema
-3. **Update `vars` in `flake.nix`** with your admin user email
-4. **Configure secrets** using `agenix` for passwords and sensitive data
-5. **Build and deploy** using the commands specific to your host
+1. **Define your users** in `./users` following the [nix-configs module](./modules/nix-configs/README.md) schema
+1. **Update `vars` in `flake.nix`** with your admin user email
+1. **Configure secrets** using `agenix` for passwords and sensitive data
+1. **Build and deploy** using the commands specific to your host
 
 Each host has detailed installation instructions in its README.
 
@@ -64,7 +64,7 @@ Each module has its own README with detailed documentation on its purpose and us
 
 ## Users
 
-Users are defined in the [`./users`](./users) directory using the schema from the [`nix-configs`](./modules/nix-configs/README.md) module. The default configuration imports all users, but hosts can selectively import individual users as needed. 
+Users are defined in the [`./users`](./users) directory using the schema from the [`nix-configs`](./modules/nix-configs/README.md) module. The default configuration imports all users, but hosts can selectively import individual users as needed.
 
 The admin user is specified in `vars` within `flake.nix`. **You should modify this user if copying this repository.**
 

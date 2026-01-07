@@ -65,6 +65,6 @@ Passwords are applied in this order (left to right, right wins):
 ## Related Documentation
 
 - See [modules/darwin](../darwin) for Darwin-specific user management
-- See [modules/nixos](../nixos) for NixOS-specific user management  
+- See [modules/nixos](../nixos) for NixOS-specific user management
 - See [users/](../../users) for user definitions
 - See main [README.md](../../README.md) for password management details
