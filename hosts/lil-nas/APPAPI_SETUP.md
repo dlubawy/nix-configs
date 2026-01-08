@@ -39,7 +39,7 @@ After deploying this configuration with `nixos-rebuild switch`, you need to:
 The placeholder secret file must be replaced with a real encrypted secret:
 
 ```bash
-# Generate a secure random key
+# Generate a secure 256-bit (32-byte) random key
 openssl rand -hex 32
 # Copy the output to your clipboard
 
@@ -71,7 +71,7 @@ sudo nixos-rebuild switch --flake /path/to/nix-configs#lil-nas
 2. Click "Register Deploy Daemon"
 3. Enter the following details:
    - **Display Name**: "HaRP"
-   - **Host**: `http://localhost:8780`
+   - **Host**: `http://localhost:8780` (HTTP is secure here since traffic stays on localhost)
    - **Shared Secret**: (The HP_SHARED_KEY you generated)
    - **Deploy Method**: `docker_install`
    - **Network**: Leave default or set to appropriate network
