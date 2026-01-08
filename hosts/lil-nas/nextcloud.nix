@@ -38,10 +38,7 @@ in
       backend = "podman";
       containers.harp = {
         image = "ghcr.io/nextcloud/nextcloud-appapi-harp:release";
-        extraOptions = [
-          "--network=host"
-          "--security-opt=label=disable" # Fix for Podman SELinux/permission issues
-        ];
+        extraOptions = [ "--network=host" ];
         environment = {
           NC_INSTANCE_URL = "http://${cloudDomain}";
         };
