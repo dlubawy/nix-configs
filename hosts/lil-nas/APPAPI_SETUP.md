@@ -41,16 +41,15 @@ The placeholder secret file must be replaced with a real encrypted secret:
 ```bash
 # Generate a secure random key
 openssl rand -hex 32
+# Copy the output to your clipboard
 
-# Create a file with the key in environment variable format
-echo "HP_SHARED_KEY=<your-generated-key>" > /tmp/harp-key.txt
-
-# Encrypt it using agenix
+# Encrypt it using agenix (this opens your editor)
 cd /path/to/nix-configs
-agenix -e secrets/nextcloud-harp-key.age < /tmp/harp-key.txt
+agenix -e secrets/nextcloud-harp-key.age
 
-# Clean up the temporary file
-rm /tmp/harp-key.txt
+# In the editor, add the following line (replace <your-generated-key> with the key from above):
+# HP_SHARED_KEY=<your-generated-key>
+# Save and close the editor
 ```
 
 ### 2. Deploy the Configuration

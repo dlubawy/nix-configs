@@ -43,7 +43,7 @@ in
           "--security-opt=label=disable" # Fix for Podman SELinux/permission issues
         ];
         environment = {
-          NC_INSTANCE_URL = "http://localhost";
+          NC_INSTANCE_URL = "http://${cloudDomain}";
         };
         environmentFiles = [ config.age.secrets.nextcloud-harp-key.path ];
         volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
