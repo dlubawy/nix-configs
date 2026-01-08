@@ -40,7 +40,7 @@ in
         image = "ghcr.io/nextcloud/nextcloud-appapi-harp:release";
         extraOptions = [ "--network=host" ];
         environment = {
-          NC_INSTANCE_URL = "http://${cloudDomain}";
+          NC_INSTANCE_URL = "https://${cloudDomain}";
         };
         environmentFiles = [ config.age.secrets.nextcloud-harp-key.path ];
         volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
