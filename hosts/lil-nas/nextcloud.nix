@@ -16,6 +16,7 @@ in
     nextcloud.file = ../../secrets/nextcloud.age;
     nextcloud-whiteboard.file = ../../secrets/nextcloud-whiteboard.age;
     cloudflare-dns-token.file = ../../secrets/cloudflare-dns-token.age;
+    nextcloud-harp-key.file = ../../secrets/nextcloud-harp-key.age;
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -23,9 +24,37 @@ in
     443
   ];
 
+  # Podman configuration for AppAPI and HaRP
+  virtualisation = {
+    docker.enable = false;
+
+    podman = {
+      enable = true;
+      dockerCompat = true; # Required for HaRP to communicate via docker.sock
+      defaultNetwork.settings.dns_enabled = true; # Essential for ExApps DNS resolution
+    };
+
+    oci-containers = {
+      backend = "podman";
+      containers.harp = {
+        image = "ghcr.io/nextcloud/nextcloud-appapi-harp:release";
+        extraOptions = [
+          "--network=host"
+          "--security-opt=label=disable" # Fix for Podman SELinux/permission issues
+        ];
+        environment = {
+          NC_INSTANCE_URL = "http://localhost";
+        };
+        environmentFiles = [ config.age.secrets.nextcloud-harp-key.path ];
+        volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+      };
+    };
+  };
+
   services = {
     nextcloud = {
       enable = true;
+      appstoreEnable = true; # Required to fetch AppAPI
       settings = {
         loglevel = 1;
         log_type = "systemd";
