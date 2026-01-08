@@ -127,8 +127,8 @@ External Apps Containers
 
 - The HP_SHARED_KEY must be kept secret and properly encrypted using agenix
 - HaRP uses host networking for simplified communication
-- SELinux labels are disabled on the container for compatibility
-- All external app containers are managed by Podman in rootless mode when possible
+- All external app containers are managed by Podman in rootless mode for improved isolation
+- Container security is maintained using Podman's default security policies
 
 ## References
 
