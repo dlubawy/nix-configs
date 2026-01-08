@@ -16,7 +16,7 @@ This document explains the changes made to enable Nextcloud AppAPI with HaRP (Hi
 Added the HaRP container configuration with:
 - Image: `ghcr.io/nextcloud/nextcloud-appapi-harp:release`
 - Network: Host networking for simplified communication
-- Environment: `NC_INSTANCE_URL = "http://localhost"`
+- Environment: `NC_INSTANCE_URL = "http://${cloudDomain}"` (uses the configured Nextcloud domain)
 - Secret: HP_SHARED_KEY loaded from encrypted file
 - Volume: Docker socket mount for Podman compatibility
 
