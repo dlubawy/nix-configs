@@ -31,6 +31,7 @@ in
     podman = {
       enable = true;
       dockerCompat = true; # Required for HaRP to communicate via docker.sock
+      dockerSocket.enable = true;
       defaultNetwork.settings.dns_enabled = true; # Essential for ExApps DNS resolution
     };
 
@@ -52,7 +53,6 @@ in
   services = {
     nextcloud = {
       enable = true;
-      appstoreEnable = true; # Required to fetch AppAPI
       settings = {
         loglevel = 1;
         log_type = "systemd";
