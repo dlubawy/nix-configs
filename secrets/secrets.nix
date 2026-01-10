@@ -33,4 +33,5 @@ in
   "nextcloud.age" = mkSecret [ systems.lil-nas ];
   "nextcloud-exporter.age" = mkSecret [ systems.lil-nas ];
   "nextcloud-whiteboard.age" = mkSecret [ systems.lil-nas ];
+  "nextcloud-harp-key.age" = mkSecret [ systems.lil-nas ];
 }
