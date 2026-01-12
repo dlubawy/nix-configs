@@ -14,7 +14,7 @@ This configuration is customized for the Android environment with:
 2. Clone this repository
 3. Build and activate the configuration:
    ```bash
-   nix run home-manager/release-25.11 -- switch --flake github:dlubawy/nix-configs/main#droid@debian
+   nix run home-manager -- switch --flake github:dlubawy/nix-configs/main#droid@debian
    ```
 
 ## Updates
