@@ -190,7 +190,7 @@ rec {
           };
           modules = [
             self.homeModules.default
-            ./users/drew.nix
+            ./homes/companioncube
           ];
         };
 
@@ -202,15 +202,7 @@ rec {
           };
           modules = [
             self.homeModules.default
-            ./users/drew.nix
-            {
-              nix-configs.users.drew.name = "droid";
-              gui.enable = false;
-              programs = {
-                nixvim.plugins.image.enable = false;
-                tmux.shortcut = "b";
-              };
-            }
+            ./homes/debian
           ];
         };
       };
