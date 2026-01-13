@@ -19,3 +19,4 @@ To update the configuration:
 ```bash
 home-manager switch --flake github:dlubawy/nix-configs/main#drew@companioncube
 ```
+
