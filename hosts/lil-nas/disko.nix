@@ -160,6 +160,18 @@
                 "com.sun:auto-snapshot" = "false";
               };
             };
+            "local/jellyfin" = {
+              type = "zfs_fs";
+              mountpoint = "/var/cache/jellyfin";
+              options = {
+                "com.sun:auto-snapshot" = "false";
+                atime = "off";
+                sync = "disabled";
+                recordsize = "1M";
+                primarycache = "metadata";
+                secondarycache = "none";
+              };
+            };
             "safe/home" = {
               type = "zfs_fs";
               mountpoint = "/home";
