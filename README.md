@@ -20,13 +20,13 @@ This configuration manages:
 
 To use these configurations:
 
-1. **Review the host documentation** for your target system in the [Hosts](#hosts) section
+1. **Review the documentation** for your target system in the [Hosts](#hosts) or [Homes](#homes) section
 1. **Define your users** in `./users` following the [nix-configs module](./modules/nix-configs/README.md) schema
 1. **Update `vars` in `flake.nix`** with your admin user email
 1. **Configure secrets** using `agenix` for passwords and sensitive data
-1. **Build and deploy** using the commands specific to your host
+1. **Build and deploy** using the commands specific to your host or home
 
-Each host has detailed installation instructions in its README.
+Each host and home configuration has detailed installation instructions in its README.
 
 ## Notes
 
@@ -48,6 +48,15 @@ Hosts import reusable system configuration modules based on the type of system b
 - Linux: [`./modules/nixos`](./modules/nixos/README.md)
 
 All hosts import the Home Manager module ([`./modules/home-manager`](./modules/home-manager/README.md)). This module brings in reusable configurations to be applied for each defined user in a host.
+
+## Homes
+
+Standalone home-manager configurations for systems not managed by NixOS or nix-darwin:
+
+- Steam Deck: [`companioncube`](./homes/companioncube/README.md) - Portable gaming device
+- Android AVF: [`debian`](./homes/debian/README.md) - Android Virtualization Framework Linux terminal
+
+Each home configuration has its own README with installation and usage instructions.
 
 ## Modules
 
