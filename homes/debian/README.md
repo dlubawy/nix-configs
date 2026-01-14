@@ -6,7 +6,7 @@ This configuration is customized for the Android environment with:
 
 - GUI applications disabled
 - Terminal-only setup
-- Custom tmux keybinding (prefix: `b` instead of `a`)
+- Custom tmux keybinding (prefix: `b` instead of `Space`)
 - Nixvim image plugin disabled
 
 ## Installation
