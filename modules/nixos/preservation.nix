@@ -40,8 +40,12 @@ in
             mkOwnership config.services.grafana.dataDir "grafana" "grafana"
           );
           jellyfin = mkIf config.services.jellyfin.enable (
-            mkOwnership config.services.jellyfin.dataDir config.services.jellyfin.user
+            (mkOwnership config.services.jellyfin.dataDir config.services.jellyfin.user
               config.services.jellyfin.group
+            )
+            // (mkOwnership config.services.jellyfin.cacheDir config.services.jellyfin.user
+              config.services.jellyfin.group
+            )
           );
           nextcloud = mkIf config.services.nextcloud.enable (
             mkOwnership config.services.nextcloud.datadir "nextcloud" "nextcloud"
@@ -83,6 +87,11 @@ in
           ++ (optionals config.services.jellyfin.enable [
             {
               directory = config.services.jellyfin.dataDir;
+              group = config.services.jellyfin.group;
+              user = config.services.jellyfin.user;
+            }
+            {
+              directory = config.services.jellyfin.cacheDir;
               group = config.services.jellyfin.group;
               user = config.services.jellyfin.user;
             }
