@@ -204,12 +204,12 @@
             }
             {
               __unkeyed-1 = "<leader>st";
-              __unkeyed-2 = ''<cmd>TodoTelescope<CR>'';
+              __unkeyed-2 = "<cmd>TodoTelescope<CR>";
               desc = "Todo";
             }
             {
               __unkeyed-1 = "<leader>sT";
-              __unkeyed-2 = ''<cmd>TodoTelescope keywords=TODO,FIX,FIXME<CR>'';
+              __unkeyed-2 = "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<CR>";
               desc = "Todo/Fix/Fixme";
             }
             {
@@ -231,37 +231,37 @@
             }
             {
               __unkeyed-1 = "<leader>xx";
-              __unkeyed-2 = ''<cmd>Trouble diagnostics toggle<CR>'';
+              __unkeyed-2 = "<cmd>Trouble diagnostics toggle<CR>";
               desc = "Trouble";
             }
             {
               __unkeyed-1 = "<leader>xw";
-              __unkeyed-2 = ''<cmd>Trouble diagnostics_workspace toggle<CR>'';
+              __unkeyed-2 = "<cmd>Trouble diagnostics_workspace toggle<CR>";
               desc = "Workspace Diagnostics";
             }
             {
               __unkeyed-1 = "<leader>xd";
-              __unkeyed-2 = ''<cmd>Trouble diagnostics_document toggle<CR>'';
+              __unkeyed-2 = "<cmd>Trouble diagnostics_document toggle<CR>";
               desc = "Document Diagnostics";
             }
             {
               __unkeyed-1 = "<leader>xq";
-              __unkeyed-2 = ''<cmd>Trouble qflist toggle<CR>'';
+              __unkeyed-2 = "<cmd>Trouble qflist toggle<CR>";
               desc = "Quickfix";
             }
             {
               __unkeyed-1 = "<leader>xl";
-              __unkeyed-2 = ''<cmd>Trouble loclist toggle<CR>'';
+              __unkeyed-2 = "<cmd>Trouble loclist toggle<CR>";
               desc = "Location List";
             }
             {
               __unkeyed-1 = "<leader>xt";
-              __unkeyed-2 = ''<cmd>TodoTrouble<CR>'';
+              __unkeyed-2 = "<cmd>TodoTrouble<CR>";
               desc = "Todo (Trouble)";
             }
             {
               __unkeyed-1 = "<leader>xT";
-              __unkeyed-2 = ''<cmd>TodoTrouble keywords=TODO,FIX,FIXME<CR>'';
+              __unkeyed-2 = "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<CR>";
               desc = "Todo/Fix/Fixme (Trouble)";
             }
             {

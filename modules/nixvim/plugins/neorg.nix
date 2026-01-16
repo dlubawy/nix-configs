@@ -33,22 +33,22 @@
         }
         {
           __unkeyed-1 = "<leader>nn";
-          __unkeyed-2 = ''<cmd>Neorg<CR>'';
+          __unkeyed-2 = "<cmd>Neorg<CR>";
           desc = "Neorg";
         }
         {
           __unkeyed-1 = "<leader>nj";
-          __unkeyed-2 = ''<cmd>Neorg journal<CR>'';
+          __unkeyed-2 = "<cmd>Neorg journal<CR>";
           desc = "Neorg journal ";
         }
         {
           __unkeyed-1 = "<leader>ni";
-          __unkeyed-2 = ''<cmd>Neorg index<CR>'';
+          __unkeyed-2 = "<cmd>Neorg index<CR>";
           desc = "Neorg index";
         }
         {
           __unkeyed-1 = "<leader>nc";
-          __unkeyed-2 = ''<cmd>Neorg capture<CR>'';
+          __unkeyed-2 = "<cmd>Neorg capture<CR>";
           desc = "Neorg capture";
         }
       ];
