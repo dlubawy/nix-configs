@@ -32,7 +32,7 @@ gc:
 	sudo nix-collect-garbage --delete-old
 
 fmt:
-	nix fmt
+	pre-commit run nixfmt-rfc-style --all
 
 check:
     ifdef DEBUG
