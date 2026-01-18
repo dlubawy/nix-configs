@@ -73,14 +73,14 @@ in
           "PHONE(p)"
         ];
         org_todo_keyword_faces = {
-          TDOD = '':foreground #e78284 :weight bold'';
-          NEXT = '':foreground #85c1dc :weight bold'';
-          DONE = '':foreground #a6d189 :weight bold'';
-          WAITING = '':foreground #ef9f76 :weight bold'';
-          HOLD = '':foreground #ca9ee6 :weight bold'';
-          CANCELLED = '':foreground #a6d189 :weight bold'';
-          MEETING = '':foreground #a6d189 :weight bold'';
-          PHONE = '':foreground #a6d189 :weight bold'';
+          TDOD = ":foreground #e78284 :weight bold";
+          NEXT = ":foreground #85c1dc :weight bold";
+          DONE = ":foreground #a6d189 :weight bold";
+          WAITING = ":foreground #ef9f76 :weight bold";
+          HOLD = ":foreground #ca9ee6 :weight bold";
+          CANCELLED = ":foreground #a6d189 :weight bold";
+          MEETING = ":foreground #a6d189 :weight bold";
+          PHONE = ":foreground #a6d189 :weight bold";
         };
         org_startup_indented = true;
         org_adapt_indentation = false;
