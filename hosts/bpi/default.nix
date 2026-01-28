@@ -30,6 +30,11 @@ in
       description = "Domain name for the ACME cert";
       default = "home.andrewlubawy.com";
     };
+    services.tailscale.relay.port = lib.mkOption {
+      type = lib.types.int;
+      description = "Peer relay port for tailscale";
+      default = 40000;
+    };
   };
 
   config = {
@@ -145,6 +150,9 @@ in
           "--advertise-routes=192.168.1.1/32,192.168.10.0/24,192.168.30.0/24"
           "--advertise-exit-node"
           "--accept-dns=false"
+        ];
+        extraSetFlags = [
+          "--relay-server-port=${builtins.toString config.services.tailscale.relay.port}"
         ];
       };
     };
