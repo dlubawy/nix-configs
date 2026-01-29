@@ -166,15 +166,15 @@
                     },
                     {
                       "color": "yellow",
-                      "value": 30
+                      "value": 0.3
                     },
                     {
                       "color": "orange",
-                      "value": 40
+                      "value": 0.4
                     },
                     {
                       "color": "red",
-                      "value": 55
+                      "value": 0.55
                     }
                   ]
                 }
