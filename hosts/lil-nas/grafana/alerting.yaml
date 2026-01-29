@@ -166,7 +166,7 @@ groups:
                 type: loki
                 uid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
               editorMode: code
-              expr: count_over_time({host="lil-nas", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m])
+              expr: 'count_over_time({host="lil-nas", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m]) or count by(ip, username) (count by(session_id, ip, username) (count_over_time({host="lil-nas", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [5m])) * on(session_id) group_left() count_over_time({host="lil-nas", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [5m]) > 0)'
               instant: true
               intervalMs: 1000
               maxDataPoints: 43200
@@ -252,7 +252,7 @@ groups:
                 type: loki
                 uid: FECRLA1BDO9OGF
               editorMode: code
-              expr: count_over_time({host="bpi", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m])
+              expr: 'count_over_time({host="bpi", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m]) or count by(ip, username) (count by(session_id, ip, username) (count_over_time({host="bpi", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [5m])) * on(session_id) group_left() count_over_time({host="bpi", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [5m]) > 0)'
               instant: true
               intervalMs: 1000
               maxDataPoints: 43200
