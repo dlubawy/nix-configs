@@ -101,7 +101,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -113,6 +113,18 @@
           "expr": "sum by(instance) (count_over_time({host=\"$host\", unit=~\"sshd.service\"} |=\": session opened for\" | __error__=\"\" [$__interval]))",
           "queryType": "range",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(instance) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | __error__=\"\" [$__interval]))",
+          "hide": false,
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "Total Opened Connection",
@@ -182,7 +194,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -195,6 +207,18 @@
           "hide": false,
           "queryType": "range",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(instance) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [$__interval]))",
+          "hide": false,
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "Total Failed Connection",
@@ -266,7 +290,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -294,6 +318,19 @@
           "legendFormat": "{{ ip }}",
           "queryType": "range",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count by(ip) (sum by(session_id, username, ip) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [$__interval])) * on(session_id) group_left() count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [$__interval]) > 0)",
+          "hide": false,
+          "legendFormat": "{{ ip }}",
+          "queryType": "range",
+          "refId": "C"
         }
       ],
       "title": "Total Failed - Unique IP",
@@ -386,7 +423,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -396,11 +433,33 @@
           "direction": "backward",
           "editorMode": "code",
           "expr": "count_over_time({host=\"$host\", unit=~\"sshd.service\"} | __error__=\"\" [$__interval])",
+          "legendFormat": "",
           "queryType": "range",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count_over_time({host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-.*` [$__auto])",
+          "hide": false,
+          "legendFormat": "",
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "SSH Log Lines",
+      "transformations": [
+        {
+          "id": "joinByLabels",
+          "options": {
+            "value": "host"
+          }
+        }
+      ],
       "type": "stat"
     },
     {
@@ -463,7 +522,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -475,9 +534,29 @@
           "expr": "bytes_over_time({host=\"$host\", unit=~\"sshd.service\"} | __error__=\"\" [$__interval])",
           "queryType": "range",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "bytes_over_time({host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-.*`[$__auto])",
+          "hide": false,
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "SSH Log in bytes",
+      "transformations": [
+        {
+          "id": "joinByLabels",
+          "options": {
+            "value": "host"
+          }
+        }
+      ],
       "type": "stat"
     },
     {
@@ -536,7 +615,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -563,6 +642,19 @@
           "legendFormat": "{{ username }}",
           "queryType": "range",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(username) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | pattern `ssh-session(sess-<_>): access granted to <_> as ssh-user \"<username>\"` | __error__=\"\" [$__interval]))",
+          "hide": false,
+          "legendFormat": "{{ username }}",
+          "queryType": "range",
+          "refId": "C"
         }
       ],
       "title": "Session Opened by User",
@@ -622,7 +714,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -649,6 +741,19 @@
           "legendFormat": "{{ username }}",
           "queryType": "range",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(session_id, client_ip, username) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<client_ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [$__interval])) * on(session_id) group_left() count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [$__interval]) > 0",
+          "hide": false,
+          "legendFormat": "{{username}}",
+          "queryType": "range",
+          "refId": "C"
         }
       ],
       "title": "Failed Attempt by User",
@@ -688,9 +793,10 @@
         "showLabels": false,
         "showTime": false,
         "sortOrder": "Descending",
+        "syntaxHighlighting": false,
         "wrapLogMessage": false
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -702,6 +808,18 @@
           "expr": "{host=\"$host\", unit=~\"sshd.service\"} ",
           "queryType": "range",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-.*`",
+          "hide": false,
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "SSH Recent Log",
@@ -750,7 +868,7 @@
         "frameIndex": 0,
         "showHeader": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -765,6 +883,19 @@
           "queryType": "range",
           "refId": "A",
           "resolution": 1
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(ip) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*handling new SSH connection.*` | pattern `ssh-session(sess-<_>): handling new SSH connection from <_> (<ip>) to ssh-user \"<_>\"` | __error__=\"\" [$__interval]))",
+          "hide": false,
+          "legendFormat": "{{ ip }}",
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "Session Opened by Unique IP",
@@ -837,7 +968,7 @@
         "frameIndex": 0,
         "showHeader": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -865,6 +996,19 @@
           "legendFormat": "{{ ip }}",
           "queryType": "range",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(session_id, ip, username) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [$__interval])) * on(session_id) group_left() count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [$__interval]) > 0",
+          "hide": false,
+          "legendFormat": "{{ ip }}",
+          "queryType": "range",
+          "refId": "C"
         }
       ],
       "title": "Failed by Unique IP",
@@ -872,6 +1016,9 @@
         {
           "id": "labelsToFields",
           "options": {
+            "keepLabels": [
+              "ip"
+            ],
             "mode": "rows"
           }
         },
@@ -885,8 +1032,10 @@
             "excludeByName": {
               "label": true
             },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
+              "label": "",
               "value": "IP"
             }
           }
@@ -1016,7 +1165,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -1024,13 +1173,26 @@
             "uid": "${datasource}"
           },
           "direction": "backward",
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "{host=\"$host\", unit=~\"sshd.service\"} |=\"Accepted\" | pattern `Accepted <_> for <username> from <ip> port <_>` | __error__=\"\"",
           "hide": false,
           "legendFormat": "{{ ip }} {{ username }}",
           "queryType": "range",
           "refId": "A",
           "resolution": 1
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*handling new SSH connection.*` | pattern `ssh-session(sess-<_>): handling new SSH connection from <_> (<ip>) to ssh-user \"<username>\"` | __error__=\"\"",
+          "hide": false,
+          "legendFormat": "{{ ip }} {{ username }}",
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "Session Opened by User and IP",
@@ -1177,7 +1339,7 @@
         "cellHeight": "sm",
         "showHeader": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -1188,6 +1350,7 @@
           "editorMode": "code",
           "expr": "{host=\"$host\", unit=~\"sshd.service\"} |~\"Invalid|Failed .* user\" | pattern `<_> user <username> from <ip> <_> port` | __error__=\"\"",
           "hide": false,
+          "legendFormat": "{{ ip }} {{ username }}",
           "queryType": "range",
           "refId": "A"
         },
@@ -1200,6 +1363,7 @@
           "editorMode": "code",
           "expr": "{host=\"$host\", unit=~\"sshd.service\"} |=\"Failed\" !~\"invalid user\" | pattern `<_> for <username> from <ip> port` | __error__=\"\"",
           "hide": false,
+          "legendFormat": "{{ ip }} {{ username }}",
           "queryType": "range",
           "refId": "B"
         },
@@ -1212,8 +1376,23 @@
           "editorMode": "code",
           "expr": "{host=\"$host\", unit=~\"sshd.service\"} |=\"Connection closed by authenticating user\" | pattern `<_> user <username> <ip> port` | __error__=\"\"",
           "hide": false,
+          "legendFormat": "{{ ip }} {{ username }}",
           "queryType": "range",
           "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(session_id, ip, username) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [$__auto])) * on(session_id) group_left() count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [$__auto]) > 0",
+          "hide": false,
+          "legendFormat": "{{ ip }} {{ username }}",
+          "queryType": "instant",
+          "refId": "D",
+          "step": ""
         }
       ],
       "title": "SSH Failure by User and IP",
@@ -1225,7 +1404,14 @@
         {
           "id": "extractFields",
           "options": {
+            "delimiter": ",",
             "format": "auto",
+            "jsonPaths": [
+              {
+                "path": ""
+              }
+            ],
+            "keepTime": false,
             "replace": false,
             "source": "labels"
           }
@@ -1234,16 +1420,23 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "100.123.26.125 drew": false,
               "Line": true,
+              "Value #D": true,
               "env": true,
               "filename": true,
               "id": true,
               "job": true,
+              "labelTypes": true,
               "labels": true,
+              "session_id": true,
               "tsNs": true
             },
+            "includeByName": {},
             "indexByName": {},
+            "orderByMode": "manual",
             "renameByName": {
+              "100.123.26.125 drew": "",
               "Time": "",
               "env": "",
               "instance": "",
@@ -1377,7 +1570,7 @@
         "cellHeight": "sm",
         "showHeader": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -1402,6 +1595,19 @@
           "hide": false,
           "queryType": "range",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{host=\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*handling new SSH connection.*` | pattern `ssh-session(sess-<_>): handling new SSH connection from <_> (<_>) to ssh-user \"<username>\"` | __error__=\"\"",
+          "hide": false,
+          "legendFormat": "",
+          "queryType": "range",
+          "refId": "C"
         }
       ],
       "title": "SSH Session Opened by User",
@@ -1549,7 +1755,7 @@
         "cellHeight": "sm",
         "showHeader": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.3.1",
       "targets": [
         {
           "datasource": {
@@ -1560,6 +1766,7 @@
           "editorMode": "code",
           "expr": "{host=\"$host\", unit=~\"sshd.service\"} |~\"Invalid|Connection closed by authenticating user|Failed .* user\" | pattern `<_> user <username> <_> port` | __error__=\"\"",
           "hide": false,
+          "legendFormat": "{{ username }}",
           "queryType": "range",
           "refId": "A"
         },
@@ -1572,8 +1779,22 @@
           "editorMode": "code",
           "expr": "{host=\"$host\", unit=~\"sshd.service\"} |=\"Failed\" !~\"invalid user\" | pattern `<_> for <username> from <_> port` | __error__=\"\"",
           "hide": false,
+          "legendFormat": "{{ username }}",
           "queryType": "range",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by(session_id, ip, username) (count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [$__auto])) * on(session_id) group_left() count_over_time({host=\"$host\", unit=\"tailscaled.service\"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [$__auto]) > 0",
+          "hide": false,
+          "legendFormat": "{{ username }}",
+          "queryType": "instant",
+          "refId": "C"
         }
       ],
       "title": "SSH Failure by User",
@@ -1595,13 +1816,17 @@
           "options": {
             "excludeByName": {
               "Line": true,
+              "Value #C": true,
               "env": true,
               "filename": true,
               "id": true,
               "job": true,
+              "labelTypes": true,
               "labels": true,
+              "session_id": true,
               "tsNs": true
             },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
               "Time": "",
@@ -1684,5 +1909,5 @@
   "timezone": "",
   "title": "SSH Logs",
   "uid": "OMEuTfqVk",
-  "version": 1
+  "version": 2
 }
