@@ -61,14 +61,15 @@ in
         # vl-guest
         ''iifname { "vl-guest" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests to access curated subnet"''
         # tailscale
-        ''iifname { "${config.services.tailscale.interfaceName}" } ip daddr { ${lil-nas.address}, 192.168.30.10-192.168.30.20 } accept comment "Allow tailscale to access NAS and curated subnet"''
+        ''iifname { "${config.services.tailscale.interfaceName}" } oifname { "vl-dmz" } accept comment "Allow tailscale to access DMZ subnet"''
+        ''iifname { "${config.services.tailscale.interfaceName}" } oifname { "vl-iot" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow tailscale to access curated IoT subnet"''
         ################################################################
         # Reject
         ################################################################
         # vl-user
         ''iifname { "vl-user" } oifname { "vl-lan" } counter reject with icmp type net-prohibited comment "Reject user forwarding to management network"''
         # vl-iot
-        ''iifname { "vl-iot" } oifname { "vl-lan", "vl-user", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject IoT forwarding outside itself"''
+        ''iifname { "vl-iot" } oifname { "vl-lan", "vl-dmz", "vl-user", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject IoT forwarding outside itself"''
         # vl-dmz, vl-guest, tailscale
         ''iifname { "vl-dmz", "vl-guest", "${config.services.tailscale.interfaceName}" } oifname { "vl-lan", "vl-dmz", "vl-user", "vl-iot", "vl-guest" } counter reject with icmp type net-prohibited comment "Reject DMZ, guest, and tailscale forwarding to all internal networks"''
       ];
@@ -87,6 +88,7 @@ in
             853
             5353
             5355
+            config.services.tailscale.relay.port
           ];
         };
         "vl-user" = {
@@ -101,6 +103,7 @@ in
             853
             5353
             5355
+            config.services.tailscale.relay.port
           ];
         };
         "vl-iot" = {
@@ -141,6 +144,7 @@ in
           allowedUDPPorts = [
             53
             853
+            config.services.tailscale.relay.port
           ];
         };
       };
