@@ -61,7 +61,8 @@ in
         # vl-guest
         ''iifname { "vl-guest" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow guests to access curated subnet"''
         # tailscale
-        ''iifname { "${config.services.tailscale.interfaceName}" } oifname { "vl-dmz", "vl-iot" } accept comment "Allow tailscale to access advertised subnets"''
+        ''iifname { "${config.services.tailscale.interfaceName}" } oifname { "vl-dmz" } accept comment "Allow tailscale to access DMZ subnet"''
+        ''iifname { "${config.services.tailscale.interfaceName}" } oifname { "vl-iot" } ip daddr { 192.168.30.10-192.168.30.20 } accept comment "Allow tailscale to access curated IoT subnet"''
         ################################################################
         # Reject
         ################################################################
