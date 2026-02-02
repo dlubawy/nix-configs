@@ -193,11 +193,12 @@
               __unkeyed = "<leader>s";
               group = "search";
             }
-            {
-              __unkeyed-1 = "<leader>sr";
-              __unkeyed-2 = ''<cmd>lua require("spectre").open()<CR>'';
-              desc = "Replace in files (Spectre)";
-            }
+            # FIXME: re-enable when ISSUE(#133) is resolved
+            # {
+            #   __unkeyed-1 = "<leader>sr";
+            #   __unkeyed-2 = ''<cmd>lua require("spectre").open()<CR>'';
+            #   desc = "Replace in files (Spectre)";
+            # }
             {
               __unkeyed = "<leader>sn";
               group = "noice";
