@@ -17,16 +17,6 @@
     fuse-ext2 = prev.fuse-ext2.overrideAttrs (_: (import ./fuse-ext2 { inherit prev final; }));
     ntfs3g = prev.ntfs3g.overrideAttrs (_: (import ./ntfs3g { inherit prev final; }));
     hostapd = prev.hostapd.overrideAttrs (_: (import ./hostapd { inherit prev final; }));
-    spotify = prev.spotify.overrideAttrs (oldAttrs: {
-      src =
-        if (prev.stdenv.isDarwin && prev.stdenv.isAarch64) then
-          prev.fetchurl {
-            url = "https://web.archive.org/web/20251029235406/https://download.scdn.co/SpotifyARM64.dmg";
-            hash = "sha256-0gwoptqLBJBM0qJQ+dGAZdCD6WXzDJEs0BfOxz7f2nQ=";
-          }
-        else
-          oldAttrs.src;
-    });
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
