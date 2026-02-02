@@ -126,8 +126,7 @@
       };
     };
     spectre = {
-      # FIXME: enable when ISSUE(#133) is resolvable
-      enable = false;
+      enable = true;
       settings.open_cmd = "noswapfile vnew";
     };
     gitsigns.enable = true;
