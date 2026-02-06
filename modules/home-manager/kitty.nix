@@ -31,6 +31,7 @@ in
           update_check_interval = 0;
         };
       };
+      zsh.shellAliases.icat = "kitten icat";
     };
   };
 }
