@@ -13,7 +13,9 @@ in
     ueberzugpp
   ];
   plugins.image = {
-    enable = mkDefault lib.nixvim.enableExceptInTests;
+    # enable = mkDefault lib.nixvim.enableExceptInTests;
+    # FIXME: Enable whenever image-nvim is fixed
+    enable = false;
     settings = {
       backend = mkDefault "ueberzug";
       integrations = {

@@ -7,6 +7,13 @@
   ...
 }@args:
 let
+  inherit (lib)
+    mkDefault
+    mkIf
+    mkOption
+    types
+    optionals
+    ;
   useGlobalPkgs = builtins.hasAttr "darwinConfig" args || builtins.hasAttr "nixosConfig" args;
 in
 {
@@ -15,6 +22,7 @@ in
     ./alacritty.nix
     ./git.nix
     ./gpg.nix
+    ./kitty.nix
     ./nixvim.nix
     ./scripts
     ./ssh.nix
@@ -27,21 +35,21 @@ in
   ];
 
   options = {
-    gui.enable = lib.mkOption {
+    gui.enable = mkOption {
       default = true;
-      type = lib.types.bool;
+      type = types.bool;
       description = "Enable GUI applications";
     };
   };
 
   config = {
-    gui.programs = lib.mkIf config.gui.enable {
-      alacritty.enable = true;
+    gui.programs = mkIf config.gui.enable {
+      kitty.enable = mkDefault true;
       hyprland.enable = (!pkgs.stdenv.isDarwin);
       qtpass.enable = true;
     };
     nix = {
-      package = lib.mkIf (!useGlobalPkgs) pkgs.nix;
+      package = mkIf (!useGlobalPkgs) pkgs.nix;
       gc = {
         automatic = true;
         dates = "weekly";
@@ -49,12 +57,12 @@ in
       };
       settings = {
         experimental-features = "nix-command flakes";
-        extra-substituters = lib.mkIf (!useGlobalPkgs) vars.nixConfig.extra-substituters;
-        extra-trusted-public-keys = lib.mkIf (!useGlobalPkgs) vars.nixConfig.extra-trusted-public-keys;
+        extra-substituters = mkIf (!useGlobalPkgs) vars.nixConfig.extra-substituters;
+        extra-trusted-public-keys = mkIf (!useGlobalPkgs) vars.nixConfig.extra-trusted-public-keys;
       };
     };
 
-    nixpkgs = lib.mkIf (!useGlobalPkgs) {
+    nixpkgs = mkIf (!useGlobalPkgs) {
       overlays = (builtins.attrValues outputs.overlays);
       config = {
         allowUnfree = true;
@@ -83,7 +91,7 @@ in
           zip
           zstd
         ]
-        ++ (lib.optionals (config.gui.enable) [
+        ++ (optionals (config.gui.enable) [
           slack
           spotify
           zoom-us
@@ -95,7 +103,7 @@ in
     programs = {
       home-manager.enable = true;
       btop.enable = true;
-      firefox = lib.mkIf config.gui.enable { enable = lib.mkDefault true; };
+      firefox = mkIf config.gui.enable { enable = mkDefault true; };
       bat = {
         enable = true;
         config = {
@@ -142,17 +150,6 @@ in
         enable = true;
         enableZshIntegration = true;
         nix-direnv.enable = true;
-      };
-
-      kitty = lib.mkIf config.gui.enable {
-        enable = lib.mkDefault false;
-        themeFile = "Catppuccin-Frappe";
-        settings = {
-          confirm_os_window_close = 0;
-          enable_audio_bell = false;
-          font_family = "FantasqueSansM Nerd Font Mono";
-          font_size = 14;
-        };
       };
     };
 

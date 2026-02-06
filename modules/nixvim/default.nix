@@ -195,6 +195,12 @@
     notify.enable = true;
     lualine.enable = true;
     indent-blankline.enable = true;
+    snacks = {
+      enable = true;
+      settings = {
+        image.enable = true;
+      };
+    };
 
     # Util
     persistence.enable = true;
