@@ -118,18 +118,6 @@ in
     services = {
       openssh = {
         enable = true;
-        listenAddresses = [
-          # Only allow vl-lan SSH on local net
-          {
-            addr = "192.168.1.1";
-            port = 22;
-          }
-          # Allow backup SSH from tailnet on 2222
-          {
-            addr = "100.64.0.1";
-            port = 2222;
-          }
-        ];
         settings = {
           PasswordAuthentication = false;
           KbdInteractiveAuthentication = false;
