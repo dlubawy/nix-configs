@@ -70,9 +70,12 @@
                   "check-yaml"
                 ];
               };
-              checkmake = {
+              just = {
                 enable = true;
-                name = "🐮 Makefile · Lint";
+                name = "🤖 Justfile · Format";
+                entry = "just --fmt --unstable";
+                files = "^justfile$";
+                pass_filenames = false;
                 after = [
                   "mdformat"
                   "chktex"
@@ -81,12 +84,12 @@
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
-                after = [ "checkmake" ];
+                after = [ "just" ];
               };
               check-symlinks = {
                 enable = true;
                 name = "📁 Filesystem · Check symlinks";
-                after = [ "checkmake" ];
+                after = [ "just" ];
               };
               check-merge-conflicts = {
                 enable = true;
@@ -158,6 +161,7 @@
             packages =
               with pkgs;
               [
+                just
                 nil
                 nixfmt-rfc-style
                 texlivePackages.chktex
