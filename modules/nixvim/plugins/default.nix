@@ -10,6 +10,7 @@
     ./lsp.nix
     ./neorg.nix
     ./orgmode.nix
+    ./snacks.nix
     ./telescope.nix
     ./treesitter-textobjects.nix
     ./trouble.nix
