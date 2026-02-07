@@ -131,9 +131,12 @@ check-all:
 # Nix builds
 ################################################################
 
-# Build network topology
+# Build network topology and copy to ./assets dir
 topology:
-    nix build {{ GIT_REPO }}#topology.{{ HOST_PLATFORM }}.config.output
+    nix build {{ GIT_REPO }}#topology.{{ HOST_PLATFORM }}.config.output \
+    && cp ./result/main.svg {{ GIT_REPO }}/assets/topology-main.svg \
+    && cp ./result/network.svg {{ GIT_REPO }}/assets/topology-network.svg \
+    && rm ./result
 
 # Build NixOS ISO installer
 installer arch:
