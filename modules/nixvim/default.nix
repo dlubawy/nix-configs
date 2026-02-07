@@ -179,6 +179,7 @@
       grammarPackages = config.plugins.treesitter.package.passthru.allGrammars ++ [
         pkgs.tree-sitter-grammars.tree-sitter-org-nvim
         pkgs.tree-sitter-grammars.tree-sitter-norg-meta
+        pkgs.tree-sitter-grammars.tree-sitter-norg
       ];
     };
     treesitter-context = {
