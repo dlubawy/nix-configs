@@ -63,7 +63,7 @@ check-all:
 
 # Build network topology
 topology:
-    nix build .#topology.{{SYSTEM}}.config.output
+    nix build .#topology.{{ SYSTEM }}.config.output
 
 # Darwin systems
 
@@ -71,42 +71,42 @@ topology:
 laplace:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
-        sudo -u laplace sudo chown -R laplace:staff {{GIT_REPO}} && \
-        (sudo -Hu laplace sudo darwin-rebuild switch --flake {{GIT_REPO}}#laplace --show-trace --verbose || true) && \
-        sudo -u laplace sudo chown -R {{USER}}:staff {{GIT_REPO}}
+        sudo -u laplace sudo chown -R laplace:staff {{ GIT_REPO }} && \
+        (sudo -Hu laplace sudo darwin-rebuild switch --flake {{ GIT_REPO }}#laplace --show-trace --verbose || true) && \
+        sudo -u laplace sudo chown -R {{ USER }}:staff {{ GIT_REPO }}
     else
-        sudo -u laplace sudo chown -R laplace:staff {{GIT_REPO}} && \
-        (sudo -Hu laplace sudo darwin-rebuild switch --flake {{GIT_REPO}}#laplace || true) && \
-        sudo -u laplace sudo chown -R {{USER}}:staff {{GIT_REPO}}
+        sudo -u laplace sudo chown -R laplace:staff {{ GIT_REPO }} && \
+        (sudo -Hu laplace sudo darwin-rebuild switch --flake {{ GIT_REPO }}#laplace || true) && \
+        sudo -u laplace sudo chown -R {{ USER }}:staff {{ GIT_REPO }}
     fi
 
 # Build BPI image
 bpi-image:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
-        nix build {{GIT_REPO}}#images.bpi --show-trace --verbose
+        nix build {{ GIT_REPO }}#images.bpi --show-trace --verbose
     else
-        nix build {{GIT_REPO}}#images.bpi
+        nix build {{ GIT_REPO }}#images.bpi
     fi
 
 # Build and deploy bpi (Banana Pi)
 bpi:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
-        sudo nixos-rebuild switch --flake {{GIT_REPO}}#bpi --show-trace --verbose
+        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#bpi --show-trace --verbose
     else
-        sudo nixos-rebuild switch --flake {{GIT_REPO}}#bpi
+        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#bpi
     fi
 
 # Build and deploy lil-nas (GMKtec G9)
 lil-nas:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
-        sudo nixos-rebuild switch --flake {{GIT_REPO}}#lil-nas --show-trace --verbose
+        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#lil-nas --show-trace --verbose
     else
-        sudo nixos-rebuild switch --flake {{GIT_REPO}}#lil-nas
+        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#lil-nas
     fi
 
 # Generic system builder (used by all recipe)
 system hostname:
-    just {{hostname}}
+    just {{ hostname }}
