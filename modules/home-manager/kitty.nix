@@ -23,6 +23,9 @@ in
           name = "FantasqueSansM Nerd Font Mono";
           size = 14;
         };
+        keybindings = {
+          "shift+enter" = "send_key f2";
+        };
         settings = {
           confirm_os_window_close = 0;
           cursor_shape = "block";
