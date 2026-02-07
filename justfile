@@ -3,8 +3,8 @@ HOSTNAME := `hostname`
 HOST_PLATFORM := `nix eval -f flake:nixpkgs --raw 'pkgs.stdenv.hostPlatform.system'`
 USER := `whoami`
 
-# Default recipe: lint, test, and build for current hostname as system
-default: lint test (build 'default' HOSTNAME)
+# Default recipe: check and build for current hostname as system
+default: check (build 'default' HOSTNAME)
 
 # Build system with provided option
 build option system:
@@ -60,14 +60,6 @@ build option system:
         ;;
     esac
     just "$PLATFORM" "$OPTION" "$SYSTEM"
-
-# Run check for current system
-test: check
-
-# Run pre-commit against Nix files
-lint:
-    pre-commit run nixfmt-rfc-style --all
-    pre-commit run flake-checker --all
 
 ################################################################
 # Nix commands
