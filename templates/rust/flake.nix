@@ -80,20 +80,24 @@
                   "check-yaml"
                 ];
               };
-              checkmake = {
+              just = rec {
                 enable = true;
-                name = "🐮 Makefile · Lint";
+                package = pkgs.just;
+                name = "🤖 Justfile · Format";
+                entry = "${package}/bin/just --fmt --unstable";
+                files = "^justfile$";
+                pass_filenames = false;
                 after = [ "mdformat" ];
               };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
-                after = [ "checkmake" ];
+                after = [ "just" ];
               };
               check-symlinks = {
                 enable = true;
                 name = "📁 Filesystem · Check symlinks";
-                after = [ "checkmake" ];
+                after = [ "just" ];
               };
               check-merge-conflicts = {
                 enable = true;
@@ -158,6 +162,7 @@
                 nixfmt-rfc-style
               ])
               clippy
+              just
               rustfmt
             ];
             env = {

@@ -86,12 +86,25 @@
                   "check-yaml"
                 ];
               };
+              just = rec {
+                enable = true;
+                package = pkgs.just;
+                name = "🤖 Justfile · Format";
+                entry = "${package}/bin/just --fmt --unstable";
+                files = "^justfile$";
+                pass_filenames = false;
+                after = [
+                  "mdformat"
+                  "prettier"
+                ];
+              };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
                 after = [
                   "mdformat"
                   "prettier"
+                  "just"
                 ];
               };
               check-symlinks = {
@@ -100,6 +113,7 @@
                 after = [
                   "mdformat"
                   "prettier"
+                  "just"
                 ];
               };
               check-merge-conflicts = {
@@ -217,6 +231,7 @@
               (writeScriptBin "create-vite" ''
                 ${pkgs.deno}/bin/deno run -A npm:create-vite .
               '')
+              just
               nil
               nixfmt-rfc-style
             ];

@@ -33,7 +33,7 @@ Installation assumes a GMKtec G9 or similar x86_64 Intel-based system with eMMC 
   - Modify the `imports` to include/exclude the users for the system
 - Edit `vars` in `flake.nix` to use your desired user's email acting as the system admin (used for ACME cert management)
 - Change any static network configurations and passwords using `agenix`
-- Run `make lil-nas` to build and switch to the configuration on an existing installation
+- Run `just build switch lil-nas` to build and switch to the configuration on an existing installation
 
 ## Storage
 

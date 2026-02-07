@@ -80,20 +80,24 @@
                   "check-yaml"
                 ];
               };
-              checkmake = {
+              just = rec {
                 enable = true;
-                name = "🐮 Makefile · Lint";
+                package = pkgs.just;
+                name = "🤖 Justfile · Format";
+                entry = "${package}/bin/just --fmt --unstable";
+                files = "^justfile$";
+                pass_filenames = false;
                 after = [ "mdformat" ];
               };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
-                after = [ "checkmake" ];
+                after = [ "just" ];
               };
               check-symlinks = {
                 enable = true;
                 name = "📁 Filesystem · Check symlinks";
-                after = [ "checkmake" ];
+                after = [ "just" ];
               };
               check-merge-conflicts = {
                 enable = true;
@@ -150,6 +154,7 @@
             inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
             buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
             packages = with pkgs; [
+              just
               opentofu
               terragrunt
               nil

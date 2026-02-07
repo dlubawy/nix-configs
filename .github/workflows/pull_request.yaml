@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a
       - name: Run flake check
-        run: nix develop --command make check
+        run: nix develop --command just check
   check-results:
     needs:
       - check
