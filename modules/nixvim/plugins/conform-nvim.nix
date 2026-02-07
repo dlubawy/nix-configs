@@ -19,6 +19,10 @@
           "eslint"
           "trim_newlines"
         ];
+        just = [
+          "just"
+          "trim_newlines"
+        ];
         lua = [
           "stylua"
           "trim_newlines"

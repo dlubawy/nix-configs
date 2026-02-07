@@ -27,7 +27,7 @@ Enable topology in host configurations:
 Generate topology diagrams:
 
 ```bash
-make topology
+just topology
 # or
 nix build .#topology.<system>.config.output
 ```

@@ -22,6 +22,6 @@ This assumes starting from a fresh installation of macOS before initial setup an
 - As admin user (`laplace`), run the initial `nix --extra-experimental-features 'nix-command flakes' run nix-darwin -- switch --flake .#laplace`
   - The normal user may subsequently run the command with `sudo -Hu laplace darwin-rebuild switch --flake .#laplace`
   - An alias `laplace` is created to run the command against the remote flake set in the `vars`.
-  - A `make` command is supplied to make this easier: `make laplace`
+  - A `just` command is supplied to make this easier: `just laplace`
   - You may want to change the `shellAlias` for `laplace` to point to your own repo with any changes;
     Then you may run `laplace` as a command alias for rebuilding from the remote.

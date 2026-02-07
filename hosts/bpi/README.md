@@ -18,7 +18,7 @@ Installation assumes an assembled Banana Pi BPI-R3 without any additional PCI de
   - Modify the `imports` to include/exclude the users for the system
 - Edit `vars` in `flake.nix` to use your desired user's email acting as the system admin (used for ACME cert management)
 - Change any static network configurations such as DHCP leases and passwords using `agenix`
-- Run `make bpi-image` to build the initial SD card image or run `make bpi` to build the image from an existing installation.
+- Run `just bpi-image` to build the initial SD card image or run `just bpi` to build the image from an existing installation.
 - Using a 32 GB+ SD card (skip if using an existing bpi image)
   - Insert the SD and figure out the appropriate disk device (`fdisk` on Linux or `diskutil` on macOS)
   - Run `nix run nixpkgs#zstdcat ./result/sd-image/nixos-sd-image-*.zst | dd of=<disk> status=progress bs=64M`
