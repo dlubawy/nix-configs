@@ -94,7 +94,6 @@
     vim-mundo
     rainbow_csv
     vim-table-mode
-    vim-just
   ];
 
   plugins = {
