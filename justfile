@@ -1,35 +1,22 @@
 GIT_REPO := `git rev-parse --show-toplevel`
 HOSTNAME := `hostname`
-HOST_PLATFORM := `nix eval -f flake:nixpkgs 'pkgs.stdenv.hostPlatform.system'`
+HOST_PLATFORM := `nix eval -f flake:nixpkgs --raw 'pkgs.stdenv.hostPlatform.system'`
 USER := `whoami`
 
 # Default recipe: lint, test, and build for current hostname as system
-default: lint test (build 'test' HOSTNAME)
+default: lint test (build 'default' HOSTNAME)
 
-# Build local system with provided option
+# Build system with provided option
 build option system:
     #!/usr/bin/env bash
+    OPTION=""
     PLATFORM=""
-    case "{{ option }}" in
-        test|switch)
-        ;;
-        *)
-            echo "Invalid option: {{ option }}" 1>&2
-            exit 1
-        ;;
-    esac
     case "{{ HOST_PLATFORM }}" in
         *-darwin)
-            if [[ "{{ option }}" != "switch" ]]; then
-                echo "Only 'switch' option is supported by Darwin builder" 1>&2
-                exit 1
-            fi
             PLATFORM=darwin
-            OPTION={{ option }}
         ;;
         *-linux)
             PLATFORM=nixos
-            OPTION={{ option }}
         ;;
         *)
             echo "Not a valid host platform" 1>&2
@@ -37,13 +24,37 @@ build option system:
         ;;
     esac
     case "{{ system }}" in
-        companioncube|debian)
-            just home-manager {{ option }} '{{ USER }}@{{ system }}'
+        *-companioncube|*-debian)
+            PLATFORM=home-manager
         ;;
         *)
-            just "$PLATFORM" "$OPTION" {{ system }}
+            PLATFORM=$PLATFORM
         ;;
     esac
+    case "{{ option }}" in
+        default)
+            if [[ "$PLATFORM" == "nixos" ]]; then
+                OPTION=test
+            else
+                OPTION=switch
+            fi
+        ;;
+        test)
+            if [[ "$PLATFORM" != "nixos" ]]; then
+                echo "Only 'switch' option supported by Darwin and Home Manager builders" 1>&2
+                exit 1
+            fi
+            OPTION=test
+        ;;
+        switch)
+            OPTION=switch
+        ;;
+        *)
+            echo "Invalid option: {{ option }}" 1>&2
+            exit 1
+        ;;
+    esac
+    just "$PLATFORM" "$OPTION" "{{ system }}"
 
 # Run check for current system
 test: check
@@ -132,7 +143,7 @@ installer arch:
     nix build {{ GIT_REPO }}#images.nixos-iso-installer.{{ arch }}-linux
 
 # Build and deploy Darwin system
-darwin system:
+darwin option system:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
         sudo -u {{ system }} sudo chown -R {{ system }}:staff {{ GIT_REPO }} && \
