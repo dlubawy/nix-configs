@@ -98,6 +98,9 @@
       server = "python -m http.server";
       jp = "python -m json.tool";
 
+      # tmux
+      td = "tmux detach-client -E 'ZSH_TMUX_AUTOCONNECT=false tmux'";
+
       # Aliases
       qrdecode = "zbarimage";
     };
