@@ -11,6 +11,7 @@ build option system:
     #!/usr/bin/env bash
     OPTION=""
     PLATFORM=""
+    SYSTEM="{{ system }}"
     case "{{ HOST_PLATFORM }}" in
         *-darwin)
             PLATFORM=darwin
@@ -23,8 +24,12 @@ build option system:
             exit 1
         ;;
     esac
-    case "{{ system }}" in
-        *-companioncube|*-debian)
+    case "$SYSTEM" in
+        companioncube|debian)
+            PLATFORM=home-manager
+            SYSTEM="{{ USER }}@$SYSTEM"
+        ;;
+        *@companioncube|*@debian)
             PLATFORM=home-manager
         ;;
         *)
@@ -54,7 +59,7 @@ build option system:
             exit 1
         ;;
     esac
-    just "$PLATFORM" "$OPTION" "{{ system }}"
+    just "$PLATFORM" "$OPTION" "$SYSTEM"
 
 # Run check for current system
 test: check
