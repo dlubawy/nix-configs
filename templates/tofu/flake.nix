@@ -80,10 +80,11 @@
                   "check-yaml"
                 ];
               };
-              just = {
+              just = rec {
                 enable = true;
+                package = pkgs.just;
                 name = "🤖 Justfile · Format";
-                entry = "just --fmt --unstable";
+                entry = "${package}/bin/just --fmt --unstable";
                 files = "^justfile$";
                 pass_filenames = false;
                 after = [ "mdformat" ];
