@@ -1,6 +1,6 @@
 GIT_REPO := `git rev-parse --show-toplevel`
 HOSTNAME := `hostname`
-SYSTEM := `nix eval -f flake:nixpkgs 'system'`
+SYSTEM := `nix eval -f flake:nixpkgs 'pkgs.stdenv.hostPlatform.system'`
 USER := `whoami`
 
 # Default recipe: check and build for current hostname
@@ -9,14 +9,16 @@ all: check (system HOSTNAME)
 # Run checks for all systems
 test: check-all
 
+################################################################
 # Nix commands
+################################################################
 
 # Update flake inputs
 update:
     nix flake update
 
 # Show system profile history
-history:
+history: hm-history
     nix profile history --profile /nix/var/nix/profiles/system
 
 # Show home-manager profile history
@@ -28,8 +30,16 @@ repl:
     nix repl -f flake:nixpkgs
 
 # Clean old system profile generations (older than 7 days)
-clean:
-    sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d
+clean: hm-clean
+    #!/usr/bin/env bash
+    case "{{ SYSTEM }}" in
+        *-darwin)
+            sudo -u {{ HOSTNAME }} sudo -H nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d
+        ;;
+        *)
+            sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d
+        ;;
+    esac
 
 # Clean old home-manager profile generations
 hm-clean:
@@ -37,7 +47,15 @@ hm-clean:
 
 # Run garbage collection
 gc:
-    sudo nix-collect-garbage --delete-old
+    #!/usr/bin/env bash
+    case "{{ SYSTEM }}" in
+        *-darwin)
+            sudo -u {{ HOSTNAME }} sudo -H nix-collect-garbage --delete-old
+        ;;
+        *)
+            sudo nix-collect-garbage --delete-old
+        ;;
+    esac
 
 # Format Nix files
 fmt:
@@ -61,11 +79,13 @@ check-all:
         nix flake check --all-systems
     fi
 
+################################################################
+# Nix builds
+################################################################
+
 # Build network topology
 topology:
     nix build .#topology.{{ SYSTEM }}.config.output
-
-# Darwin systems
 
 # Build and deploy laplace (MacBook M1)
 laplace:
