@@ -1,13 +1,57 @@
 GIT_REPO := `git rev-parse --show-toplevel`
 HOSTNAME := `hostname`
-SYSTEM := `nix eval -f flake:nixpkgs 'pkgs.stdenv.hostPlatform.system'`
+HOST_PLATFORM := `nix eval -f flake:nixpkgs 'pkgs.stdenv.hostPlatform.system'`
 USER := `whoami`
 
-# Default recipe: check and build for current hostname
-all: check (system HOSTNAME)
+# Default recipe: lint, test, and build for current hostname as system
+default: lint test (build 'test' HOSTNAME)
 
-# Run checks for all systems
-test: check-all
+# Build local system with provided option
+build option system:
+    #!/usr/bin/env bash
+    PLATFORM=""
+    case "{{ option }}" in
+        test|switch)
+        ;;
+        *)
+            echo "Invalid option: {{ option }}" 1>&2
+            exit 1
+        ;;
+    esac
+    case "{{ HOST_PLATFORM }}" in
+        *-darwin)
+            if [[ "{{ option }}" != "switch" ]]; then
+                echo "Only 'switch' option is supported by Darwin builder" 1>&2
+                exit 1
+            fi
+            PLATFORM=darwin
+            OPTION={{ option }}
+        ;;
+        *-linux)
+            PLATFORM=nixos
+            OPTION={{ option }}
+        ;;
+        *)
+            echo "Not a valid host platform" 1>&2
+            exit 1
+        ;;
+    esac
+    case "{{ system }}" in
+        companioncube|debian)
+            just home-manager {{ option }} '{{ USER }}@{{ system }}'
+        ;;
+        *)
+            just "$PLATFORM" "$OPTION" {{ system }}
+        ;;
+    esac
+
+# Run check for current system
+test: check
+
+# Run pre-commit against Nix files
+lint:
+    pre-commit run nixfmt-rfc-style --all
+    pre-commit run flake-checker --all
 
 ################################################################
 # Nix commands
@@ -32,7 +76,7 @@ repl:
 # Clean old system profile generations (older than 7 days)
 clean: hm-clean
     #!/usr/bin/env bash
-    case "{{ SYSTEM }}" in
+    case "{{ HOST_PLATFORM }}" in
         *-darwin)
             sudo -u {{ HOSTNAME }} sudo -H nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d
         ;;
@@ -48,7 +92,7 @@ hm-clean:
 # Run garbage collection
 gc:
     #!/usr/bin/env bash
-    case "{{ SYSTEM }}" in
+    case "{{ HOST_PLATFORM }}" in
         *-darwin)
             sudo -u {{ HOSTNAME }} sudo -H nix-collect-garbage --delete-old
         ;;
@@ -56,10 +100,6 @@ gc:
             sudo nix-collect-garbage --delete-old
         ;;
     esac
-
-# Format Nix files
-fmt:
-    pre-commit run nixfmt-rfc-style --all
 
 # Check flake for current system
 check:
@@ -85,48 +125,53 @@ check-all:
 
 # Build network topology
 topology:
-    nix build .#topology.{{ SYSTEM }}.config.output
+    nix build {{ GIT_REPO }}#topology.{{ HOST_PLATFORM }}.config.output
 
-# Build and deploy laplace (MacBook M1)
-laplace:
+# Build NixOS ISO installer
+installer arch:
+    nix build {{ GIT_REPO }}#images.nixos-iso-installer.{{ arch }}-linux
+
+# Build and deploy Darwin system
+darwin system:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
-        sudo -u laplace sudo chown -R laplace:staff {{ GIT_REPO }} && \
-        (sudo -Hu laplace sudo darwin-rebuild switch --flake {{ GIT_REPO }}#laplace --show-trace --verbose || true) && \
-        sudo -u laplace sudo chown -R {{ USER }}:staff {{ GIT_REPO }}
+        sudo -u {{ system }} sudo chown -R {{ system }}:staff {{ GIT_REPO }} && \
+        (sudo -Hu {{ system }} sudo darwin-rebuild switch --flake {{ GIT_REPO }}#{{ system }} --show-trace --verbose || true) && \
+        sudo -u {{ system }} sudo chown -R {{ USER }}:staff {{ GIT_REPO }}
     else
-        sudo -u laplace sudo chown -R laplace:staff {{ GIT_REPO }} && \
-        (sudo -Hu laplace sudo darwin-rebuild switch --flake {{ GIT_REPO }}#laplace || true) && \
-        sudo -u laplace sudo chown -R {{ USER }}:staff {{ GIT_REPO }}
+        sudo -u {{ system }} sudo chown -R {{ system }}:staff {{ GIT_REPO }} && \
+        (sudo -Hu {{ system }} sudo darwin-rebuild switch --flake {{ GIT_REPO }}#{{ system }} || true) && \
+        sudo -u {{ system }} sudo chown -R {{ USER }}:staff {{ GIT_REPO }}
     fi
 
-# Build BPI image
-bpi-image:
+# Build NixOS system images [bpi]
+image system:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
-        nix build {{ GIT_REPO }}#images.bpi --show-trace --verbose
+        nix build {{ GIT_REPO }}#images.{{ system }} --show-trace --verbose
     else
-        nix build {{ GIT_REPO }}#images.bpi
+        nix build {{ GIT_REPO }}#images.{{ system }}
     fi
 
-# Build and deploy bpi (Banana Pi)
-bpi:
+# Build and deploy NixOS systems
+nixos option system:
+    #!/usr/bin/env bash
+    if [[ "{{ HOSTNAME }}" == "{{ system }}" ]]; then
+        CMD="sudo nixos-rebuild {{ option }} --flake {{ GIT_REPO }}#{{ system }}"
+    else
+        CMD="nixos-rebuild-ng {{ option }} --target-host {{ system }} --build-host {{ system }} --ask-sudo-password --use-substitutes --flake {{ GIT_REPO }}#{{ system }}"
+    fi
+    if [ -n "$DEBUG" ]; then
+        $CMD --show-trace --verbose
+    else
+        $CMD
+    fi
+
+# Build and deploy home-manager homes
+home-manager option home:
     #!/usr/bin/env bash
     if [ -n "$DEBUG" ]; then
-        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#bpi --show-trace --verbose
+        home-manager {{ option }} --flake '{{ GIT_REPO }}#{{ home }}' --show-trace --verbose
     else
-        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#bpi
+        home-manager {{ option }} --flake '{{ GIT_REPO }}#{{ home }}'
     fi
-
-# Build and deploy lil-nas (GMKtec G9)
-lil-nas:
-    #!/usr/bin/env bash
-    if [ -n "$DEBUG" ]; then
-        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#lil-nas --show-trace --verbose
-    else
-        sudo nixos-rebuild switch --flake {{ GIT_REPO }}#lil-nas
-    fi
-
-# Generic system builder (used by all recipe)
-system hostname:
-    just {{ hostname }}

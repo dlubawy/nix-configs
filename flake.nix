@@ -395,6 +395,7 @@ rec {
               just
               nil
               nixfmt-rfc-style
+              nixos-rebuild-ng
             ];
             env = {
               shell = "zsh";
