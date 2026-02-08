@@ -4,8 +4,12 @@ rec {
   nixConfig = {
     extra-substituters = [
       "https://dlubawy.cachix.org"
+      "https://nix-community.cachix.org"
     ];
-    extra-trusted-public-keys = [ "dlubawy.cachix.org-1:MdCmtrdwBMg8BLku2j4ZSfrzi68SwRKs2aZx7wDOWFc=" ];
+    extra-trusted-public-keys = [
+      "dlubawy.cachix.org-1:MdCmtrdwBMg8BLku2j4ZSfrzi68SwRKs2aZx7wDOWFc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
   };
 
   inputs = {
