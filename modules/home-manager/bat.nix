@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   justSublime = pkgs.callPackage (
     pkgs.stdenv.mkDerivation {
@@ -42,10 +47,16 @@ let
   );
 in
 {
-  home.file.".config/bat/syntaxes/just_sublime" = {
-    enable = true;
-    source = justSublime;
-  };
+  home.file.".config/bat/syntaxes/just_sublime" =
+    let
+      batBin = config.programs.bat.package;
+    in
+    {
+      enable = true;
+      recursive = true;
+      onChange = "${batBin}/bin/bat cache --build";
+      source = justSublime;
+    };
   programs = {
     bat = {
       enable = true;
