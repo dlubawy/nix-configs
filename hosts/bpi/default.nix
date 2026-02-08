@@ -69,7 +69,7 @@ in
 
     swapDevices = [
       {
-        device = "/var/lib/swapfile";
+        device = "/swap/swapfile";
         size = 4096;
       }
     ];
