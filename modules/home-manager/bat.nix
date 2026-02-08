@@ -53,7 +53,6 @@ in
     in
     {
       enable = true;
-      recursive = true;
       onChange = "${batBin}/bin/bat cache --build";
       source = justSublime;
     };
