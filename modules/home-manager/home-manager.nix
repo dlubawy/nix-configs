@@ -20,6 +20,7 @@ in
   imports = [
     ./agenix.nix
     ./alacritty.nix
+    ./bat.nix
     ./git.nix
     ./gpg.nix
     ./kitty.nix
@@ -104,23 +105,6 @@ in
       home-manager.enable = true;
       btop.enable = true;
       firefox = mkIf config.gui.enable { enable = mkDefault true; };
-      bat = {
-        enable = true;
-        config = {
-          theme = "catppuccin-frappe";
-        };
-        themes = {
-          catppuccin-frappe = {
-            src = pkgs.fetchFromGitHub {
-              owner = "catppuccin";
-              repo = "bat";
-              rev = "82e7ca555f805b53d2b377390e4ab38c20282e83";
-              hash = "sha256-/Ob9iCVyjJDBCXlss9KwFQTuxybmSSzYRBZxOT10PZg=";
-            };
-            file = "./themes/Catppuccin Frappe.tmTheme";
-          };
-        };
-      };
       eza = {
         enable = true;
         icons = "auto";
