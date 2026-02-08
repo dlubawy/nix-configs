@@ -5,46 +5,44 @@
   ...
 }:
 let
-  justSublime = pkgs.callPackage (
-    pkgs.stdenv.mkDerivation {
-      pname = "just-sublime-syntax";
-      version = "unstable-2025";
+  justSublime = pkgs.stdenv.mkDerivation {
+    pname = "just-sublime-syntax";
+    version = "unstable-2025";
 
-      src = pkgs.fetchFromGitHub {
-        owner = "nk9";
-        repo = "just_sublime";
-        rev = "f42cdb012b6033035ee46bfeac1ecd7dca460e55";
-        hash = "sha256-VxI5BPrNVOwIRwdZKm8OhTuXCVKOdG8OGKiCne9cwc8=";
-      };
+    src = pkgs.fetchFromGitHub {
+      owner = "nk9";
+      repo = "just_sublime";
+      rev = "f42cdb012b6033035ee46bfeac1ecd7dca460e55";
+      hash = "sha256-VxI5BPrNVOwIRwdZKm8OhTuXCVKOdG8OGKiCne9cwc8=";
+    };
 
-      # No build phase needed, just installing files
-      dontBuild = true;
+    # No build phase needed, just installing files
+    dontBuild = true;
 
-      installPhase = ''
-        runHook preInstall
+    installPhase = ''
+      runHook preInstall
 
-        # Install the relevant syntax files to $out
-        # We copy the 'Syntax' folder which contains the .sublime-syntax files
-        mkdir -p $out
-        cp -r Syntax/* $out/
+      # Install the relevant syntax files to $out
+      # We copy the 'Syntax' folder which contains the .sublime-syntax files
+      mkdir -p $out
+      cp -r Syntax/* $out/
 
-        # Remove the conflicting files as requested
-        # Note: Paths are relative to the $out directory now
-        rm "$out/Embeddings/Python (for Just).sublime-syntax"
-        rm "$out/Embeddings/ShellScript (for Just).sublime-syntax"
+      # Remove the conflicting files as requested
+      # Note: Paths are relative to the $out directory now
+      rm "$out/Embeddings/Python (for Just).sublime-syntax"
+      rm "$out/Embeddings/ShellScript (for Just).sublime-syntax"
 
-        runHook postInstall
-      '';
+      runHook postInstall
+    '';
 
-      meta = with lib; {
-        description = "Sublime Text syntax for Justfiles";
-        homepage = "https://github.com/nk9/just_sublime";
-        license = licenses.mit;
-        maintainers = [ ];
-        platforms = platforms.all;
-      };
-    }
-  );
+    meta = with lib; {
+      description = "Sublime Text syntax for Justfiles";
+      homepage = "https://github.com/nk9/just_sublime";
+      license = licenses.mit;
+      maintainers = [ ];
+      platforms = platforms.all;
+    };
+  };
 in
 {
   home.file.".config/bat/syntaxes/just_sublime" =
@@ -53,6 +51,7 @@ in
     in
     {
       enable = true;
+      recursive = true;
       onChange = "${batBin}/bin/bat cache --build";
       source = justSublime;
     };
