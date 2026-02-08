@@ -29,6 +29,7 @@ jobs:
       - uses: cachix/cachix-action@3ba601ff5bbb07c7220846facfa2cd81eeee15a1
         with:
           name: dlubawy
+          extraPullNames: nix-community
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Build derivation
         run: nix build ${{ matrix.derivation }}

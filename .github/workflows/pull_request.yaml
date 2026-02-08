@@ -38,6 +38,7 @@ jobs:
       - uses: cachix/cachix-action@3ba601ff5bbb07c7220846facfa2cd81eeee15a1
         with:
           name: dlubawy
+          extraPullNames: nix-community
       - name: Run flake check
         run: nix develop --command just check
   check-results:
