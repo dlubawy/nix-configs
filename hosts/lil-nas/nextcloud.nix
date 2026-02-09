@@ -69,12 +69,13 @@ in
       };
       extraApps = {
         inherit (config.services.nextcloud.package.packages.apps)
-          news
           contacts
           cookbook
+          cospend
+          news
+          richdocuments
           user_oidc
           whiteboard
-          richdocuments
           ;
       };
       extraAppsEnable = true;
