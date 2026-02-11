@@ -23,7 +23,7 @@ jobs:
           permission-pull-requests: write
       - name: Update flake.lock
         id: update-flake-lock
-        uses: DeterminateSystems/update-flake-lock@834c491b2ece4de0bbd00d85214bb5e83b4da5c6
+        uses: DeterminateSystems/update-flake-lock@834c491b2ece4de0bbd00d85214bb5e83b4da5c6 # v25
         with:
           pr-title: "chore: update flake.lock" # Title of PR to be created
           pr-labels: | # Labels to be set on the PR
@@ -31,10 +31,13 @@ jobs:
             automated
           token: ${{ steps.app-token.outputs.token }}
       - name: Sync template flake inputs
-        if: ${{ steps.update-flake-lock.outputs.pull-request-operation != '' }}
+        if: ${{ steps.update-flake-lock.outputs.pull-request-operation == 'created' || steps.update-flake-lock.outputs.pull-request-operation == 'updated' }}
         run: |
           # Fetch and checkout the PR branch
-          git fetch origin update_flake_lock_action
+          if ! git fetch origin update_flake_lock_action; then
+            echo "Failed to fetch PR branch, skipping template sync"
+            exit 0
+          fi
           git checkout update_flake_lock_action
           
           # Configure git for commits
