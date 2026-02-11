@@ -22,10 +22,33 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@834c491b2ece4de0bbd00d85214bb5e83b4da5c6
+        run: nix flake update --commit-lock-file
+      - name: Sync template flake inputs
+        run: |
+          nix develop --command sync-flake-inputs
+          git add templates/*/flake.lock
+          if ! git diff --staged --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: sync template flake inputs"
+          fi
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0
         with:
-          pr-title: "chore: update flake.lock" # Title of PR to be created
-          pr-labels: | # Labels to be set on the PR
+          token: ${{ steps.app-token.outputs.token }}
+          branch: update_flake_lock_action
+          delete-branch: true
+          title: "chore: update flake.lock"
+          labels: |
             dependencies
             automated
-          token: ${{ steps.app-token.outputs.token }}
+          body: |
+            Automated changes by the update workflow.
+
+            ### Changes
+            - Updated flake.lock with latest inputs
+            - Synced template flake inputs to match root flake
+
+            ### Running GitHub Actions on this PR
+
+            GitHub Actions workflows should run automatically on this PR.
