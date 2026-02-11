@@ -45,6 +45,7 @@ jobs:
           nix develop --command sync-flake-inputs
           
           # Commit and push changes if any
+          # Note: sync-flake-inputs modifies both flake.nix (nixos version) and flake.lock files
           git add templates/*/flake.lock templates/*/flake.nix
           if ! git diff --staged --quiet; then
             git commit -m "chore: sync template flake inputs"
