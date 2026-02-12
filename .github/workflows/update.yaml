@@ -32,6 +32,8 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
       - name: Sync template flake inputs
         if: ${{ steps.update-flake-lock.outputs.pull-request-operation == 'created' || steps.update-flake-lock.outputs.pull-request-operation == 'updated' }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           # Fetch and checkout the PR branch
           if ! git fetch origin update_flake_lock_action; then
@@ -52,5 +54,7 @@ jobs:
           git add templates/*/flake.lock templates/*/flake.nix
           if ! git diff --staged --quiet; then
             git commit -m "chore: sync template flake inputs"
+            # Use app token for authenticated push
+            git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
             git push origin update_flake_lock_action
           fi
