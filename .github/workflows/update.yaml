@@ -35,6 +35,9 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
+          # Mask the token to prevent it from appearing in logs
+          echo "::add-mask::${GH_TOKEN}"
+          
           # Fetch and checkout the PR branch
           if ! git fetch origin update_flake_lock_action; then
             echo "Failed to fetch PR branch, skipping template sync"
