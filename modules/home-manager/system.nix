@@ -11,10 +11,12 @@ let
 in
 {
   options = {
-    home-manager.gui.enable = lib.mkOption {
-      default = true;
-      type = lib.types.bool;
-      description = "Enable GUI applications";
+    home-manager = {
+      gui.enable = lib.mkOption {
+        default = true;
+        type = lib.types.bool;
+        description = "Enable GUI applications";
+      };
     };
   };
   config = {

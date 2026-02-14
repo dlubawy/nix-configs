@@ -46,7 +46,7 @@ in
   config = {
     gui.programs = mkIf config.gui.enable {
       kitty.enable = mkDefault true;
-      hyprland.enable = (!pkgs.stdenv.isDarwin);
+      hyprland.enable = mkDefault false;
       qtpass.enable = true;
     };
     nix = {

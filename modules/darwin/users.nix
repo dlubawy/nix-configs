@@ -37,7 +37,6 @@ in
 
     home-manager = {
       gui.enable = true;
-      backupFileExtension = "bak";
       users = lib.concatMapAttrs (name: _: {
         ${name} = {
           targets.darwin.defaults = {
