@@ -140,15 +140,6 @@ rec {
             ./hosts/${name}
           ];
         };
-    in
-    rec {
-      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.stdenv.hostPlatform.system) pkgs);
-      formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
-
-      overlays = import ./overlays { inherit inputs; };
-      nixosModules = import ./modules/nixos;
-      darwinModules = import ./modules/darwin;
-      homeModules = import ./modules/home-manager { inherit inputs; };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
@@ -176,6 +167,17 @@ rec {
           system = "x86_64-linux";
         };
       };
+    in
+    {
+      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.stdenv.hostPlatform.system) pkgs);
+      formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
+
+      overlays = import ./overlays { inherit inputs; };
+      nixosModules = import ./modules/nixos;
+      darwinModules = import ./modules/darwin;
+      homeModules = import ./modules/home-manager { inherit inputs; };
+
+      nixosConfigurations = nixosConfigurations;
 
       darwinConfigurations = {
         # MacBook M1
@@ -249,7 +251,10 @@ rec {
         { pkgs }:
         {
           pre-commit-check = pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
-            src = ./.;
+            src = builtins.path {
+              path = ./.;
+              name = "nix-configs";
+            };
             hooks = {
               trufflehog = {
                 enable = true;
@@ -282,15 +287,19 @@ rec {
                   "check-yaml"
                 ];
               };
-              just = rec {
-                enable = true;
-                package = pkgs.just;
-                name = "🤖 Justfile · Format";
-                entry = "${package}/bin/just --fmt --unstable";
-                files = "^justfile$";
-                pass_filenames = false;
-                after = [ "mdformat" ];
-              };
+              just =
+                let
+                  package = pkgs.just;
+                in
+                {
+                  enable = true;
+                  package = package;
+                  name = "🤖 Justfile · Format";
+                  entry = "${package}/bin/just --fmt --unstable";
+                  files = "^justfile$";
+                  pass_filenames = false;
+                  after = [ "mdformat" ];
+                };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
@@ -359,53 +368,63 @@ rec {
       devShells = forAllSystems (
         { pkgs }:
         {
-          default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
-            buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
-            packages = with pkgs; [
-              agenix.packages.${stdenv.hostPlatform.system}.default
-              (writeShellApplication {
-                name = "sync-flake-inputs";
-                runtimeInputs = [
-                  git
-                  gnugrep
-                  gnused
-                ];
-                text = ''
-                  gitRoot="$(git rev-parse --show-toplevel)"
-                  if [ -z "$gitRoot" ]; then
-                    echo "Not a git project"
-                    exit 1
-                  fi
-
-                  version="''${1:-""}"
-                  if [ -z "$version" ]; then
-                    version="$(grep --color=never -o 'nixos-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
-                    if [ -z "$version" ]; then
-                      echo "Could not determine root flake version"
+          default =
+            let
+              inherit (pkgs) writeShellApplication stdenv;
+            in
+            pkgs.mkShell {
+              inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
+              buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
+              packages = [
+                agenix.packages.${stdenv.hostPlatform.system}.default
+                (writeShellApplication {
+                  name = "sync-flake-inputs";
+                  runtimeInputs = builtins.attrValues {
+                    inherit (pkgs)
+                      git
+                      gnugrep
+                      gnused
+                      ;
+                  };
+                  text = ''
+                    gitRoot="$(git rev-parse --show-toplevel)"
+                    if [ -z "$gitRoot" ]; then
+                      echo "Not a git project"
                       exit 1
                     fi
-                  fi
 
-                  for template in "$gitRoot"/templates/*; do
-                    pushd "$template"
-                    sed -i "s/nixos-[0-9]\+.[0-9]\+/nixos-''${version/*-}/g" ./flake.nix
-                    cp ../../flake.lock ./flake.lock
-                    nix flake lock
-                    popd
-                  done
-                '';
-              })
-              just
-              nil
-              nixfmt-rfc-style
-              nixos-rebuild-ng
-            ];
-            env = {
-              shell = "zsh";
-              NIL_PATH = "${pkgs.nil}/bin/nil";
+                    version="''${1:-""}"
+                    if [ -z "$version" ]; then
+                      version="$(grep --color=never -o 'nixos-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
+                      if [ -z "$version" ]; then
+                        echo "Could not determine root flake version"
+                        exit 1
+                      fi
+                    fi
+
+                    for template in "$gitRoot"/templates/*; do
+                      pushd "$template"
+                      sed -i "s/nixos-[0-9]\+.[0-9]\+/nixos-''${version/*-}/g" ./flake.nix
+                      cp ../../flake.lock ./flake.lock
+                      nix flake lock
+                      popd
+                    done
+                  '';
+                })
+              ]
+              ++ (builtins.attrValues {
+                inherit (pkgs)
+                  just
+                  nil
+                  nixfmt-rfc-style
+                  nixos-rebuild-ng
+                  ;
+              });
+              env = {
+                shell = "zsh";
+                NIL_PATH = "${pkgs.nil}/bin/nil";
+              };
             };
-          };
         }
       );
 

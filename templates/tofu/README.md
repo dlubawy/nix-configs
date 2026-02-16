@@ -55,7 +55,7 @@ Create a `main.tf` file:
 ```hcl
 terraform {
   required_version = ">= 1.6"
-  
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -71,7 +71,7 @@ provider "aws" {
 resource "aws_instance" "example" {
   ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
-  
+
   tags = {
     Name = "example-instance"
   }
@@ -225,7 +225,8 @@ The template includes comprehensive quality checks that run automatically on com
 Add more tools to the `packages` list in `flake.nix`:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   opentofu
   terragrunt
   nil
@@ -235,7 +236,8 @@ packages = with pkgs; [
   tflint           # Linter for Terraform/OpenTofu
   tfsec            # Security scanner
   terraform-rover  # Visualize state and config
-];
+  ;
+};
 ```
 
 ### Using Specific OpenTofu Version

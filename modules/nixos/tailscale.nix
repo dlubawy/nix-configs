@@ -115,11 +115,13 @@ in
           serviceConfig = {
             Type = "notify";
           };
-          path = with pkgs; [
-            tailscale
-            gawk
-            jq
-          ];
+          path = builtins.attrValues {
+            inherit (pkgs)
+              tailscale
+              gawk
+              jq
+              ;
+          };
           enableStrictShellChecks = true;
           script = ''
             envFile=${config.services.tsidp.environmentFile}

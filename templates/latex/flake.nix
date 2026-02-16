@@ -29,7 +29,10 @@
         { pkgs }:
         {
           pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
-            src = ./.;
+            src = builtins.path {
+              path = ./.;
+              name = "template";
+            };
             hooks = {
               trufflehog = {
                 enable = true;
@@ -70,18 +73,22 @@
                   "check-yaml"
                 ];
               };
-              just = rec {
-                enable = true;
-                package = pkgs.just;
-                name = "🤖 Justfile · Format";
-                entry = "${package}/bin/just --fmt --unstable";
-                files = "^justfile$";
-                pass_filenames = false;
-                after = [
-                  "mdformat"
-                  "chktex"
-                ];
-              };
+              just =
+                let
+                  package = pkgs.just;
+                in
+                {
+                  enable = true;
+                  package = package;
+                  name = "🤖 Justfile · Format";
+                  entry = "${package}/bin/just --fmt --unstable";
+                  files = "^justfile$";
+                  pass_filenames = false;
+                  after = [
+                    "mdformat"
+                    "chktex"
+                  ];
+                };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
@@ -160,13 +167,18 @@
             inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
             buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
             packages =
-              with pkgs;
-              [
-                just
-                nil
-                nixfmt-rfc-style
-                texlivePackages.chktex
-              ]
+              (builtins.attrValues {
+                inherit (pkgs)
+                  just
+                  nil
+                  nixfmt-rfc-style
+                  ;
+              })
+              ++ (builtins.attrValues {
+                inherit (pkgs.texlivePackages)
+                  chktex
+                  ;
+              })
               ++ [ tex ];
             env = {
               shell = "zsh";

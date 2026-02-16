@@ -23,7 +23,7 @@ let
 in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
-  environment.systemPackages = with pkgs; [ ldns ];
+  environment.systemPackages = builtins.attrValues { inherit (pkgs) ldns; };
   networking = {
     enableIPv6 = true;
     dhcpcd.enable = false;

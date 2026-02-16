@@ -46,7 +46,7 @@ in
     ];
 
     environment = {
-      systemPackages = with pkgs; [ sbctl ];
+      systemPackages = builtins.attrValues { inherit (pkgs) sbctl; };
       shellAliases = {
         "${systemName}" = "sudo nixos-rebuild switch --flake ${vars.flake}#${systemName}";
       };

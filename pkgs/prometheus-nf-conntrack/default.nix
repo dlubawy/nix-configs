@@ -11,5 +11,8 @@ pkgs.python3Packages.buildPythonApplication {
     setuptools
   ];
 
-  src = ./.;
+  src = builtins.path {
+    path = ./.;
+    name = "prometheus-nf-conntrack";
+  };
 }

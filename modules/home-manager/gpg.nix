@@ -86,7 +86,14 @@ in
     };
 
     home.packages =
-      with pkgs;
+      let
+        inherit (pkgs)
+          pinentry-tty
+          pinentry_mac
+          pinentry-qt
+          stdenv
+          ;
+      in
       [ pinentry-tty ]
       ++ (lib.optionals (enableGUI && stdenv.isDarwin) [ pinentry_mac ])
       ++ (lib.optionals (enableGUI && !stdenv.isDarwin) [ pinentry-qt ]);

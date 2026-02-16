@@ -29,7 +29,10 @@
         { pkgs }:
         {
           pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
-            src = ./.;
+            src = builtins.path {
+              path = ./.;
+              name = "template";
+            };
             hooks = {
               trufflehog = {
                 enable = true;
@@ -62,15 +65,19 @@
                   "check-yaml"
                 ];
               };
-              just = rec {
-                enable = true;
-                package = pkgs.just;
-                name = "🤖 Justfile · Format";
-                entry = "${package}/bin/just --fmt --unstable";
-                files = "^justfile$";
-                pass_filenames = false;
-                after = [ "mdformat" ];
-              };
+              just =
+                let
+                  package = pkgs.just;
+                in
+                {
+                  enable = true;
+                  package = package;
+                  name = "🤖 Justfile · Format";
+                  entry = "${package}/bin/just --fmt --unstable";
+                  files = "^justfile$";
+                  pass_filenames = false;
+                  after = [ "mdformat" ];
+                };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
@@ -135,11 +142,13 @@
           default = pkgs.mkShell {
             inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
             buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
-            packages = with pkgs; [
-              just
-              nil
-              nixfmt-rfc-style
-            ];
+            packages = builtins.attrValues {
+              inherit (pkgs)
+                just
+                nil
+                nixfmt-rfc-style
+                ;
+            };
             env = {
               shell = "zsh";
               NIL_PATH = "${pkgs.nil}/bin/nil";

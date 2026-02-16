@@ -33,11 +33,13 @@
     cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
     graphics = {
       enable = true;
-      extraPackages = with pkgs; [
-        intel-media-driver
-        intel-compute-runtime
-        vpl-gpu-rt
-      ];
+      extraPackages = builtins.attrValues {
+        inherit (pkgs)
+          intel-media-driver
+          intel-compute-runtime
+          vpl-gpu-rt
+          ;
+      };
     };
   };
 }

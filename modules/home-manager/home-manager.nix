@@ -74,29 +74,34 @@ in
       preferXdgDirectories = true;
 
       packages =
-        with pkgs;
-        [
-          age-plugin-yubikey
-          gawk
-          gnused
-          gnutar
-          gopass
-          p7zip
-          python3
-          rage
-          tig
-          unzip
-          wget
-          which
-          xz
-          zip
-          zstd
-        ]
-        ++ (optionals (config.gui.enable) [
-          slack
-          spotify
-          zoom-us
-        ]);
+        (builtins.attrValues {
+          inherit (pkgs)
+            age-plugin-yubikey
+            gawk
+            gnused
+            gnutar
+            gopass
+            p7zip
+            python3
+            rage
+            tig
+            unzip
+            wget
+            which
+            xz
+            zip
+            zstd
+            ;
+        })
+        ++ (optionals (config.gui.enable) (
+          builtins.attrValues {
+            inherit (pkgs)
+              slack
+              spotify
+              zoom-us
+              ;
+          }
+        ));
 
       stateVersion = "${vars.stateVersion}";
     };

@@ -10,5 +10,8 @@ pkgs.python3Packages.buildPythonApplication {
   pyproject = true;
   build-system = with pkgs.python3Packages; [ setuptools ];
 
-  src = ./.;
+  src = builtins.path {
+    path = ./.;
+    name = "prometheus-networkctl";
+  };
 }

@@ -90,10 +90,11 @@ devShells = forEachSupportedSystem ({ pkgs }: {
   default = pkgs.mkShell {
     inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
     buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
-    packages = with pkgs; [
+    packages = builtins.attrValues {
+      inherit (pkgs)
       nil
       nixfmt-rfc-style
-      
+
       # Add your tools here:
       # Programming languages
       python3
@@ -101,22 +102,23 @@ devShells = forEachSupportedSystem ({ pkgs }: {
       go
       rustc
       cargo
-      
+
       # Build tools
       cmake
       gnumake
-      
+
       # Utilities
       jq
       yq
       curl
       wget
-      
+
       # Cloud tools
       awscli2
       google-cloud-sdk
       terraform
-    ];
+      ;
+    };
     env = {
       shell = "zsh";
       NIL_PATH = "${pkgs.nil}/bin/nil";
@@ -131,33 +133,35 @@ devShells = forEachSupportedSystem ({ pkgs }: {
 Perfect template for projects using multiple languages:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   # Nix tooling
   nil
   nixfmt-rfc-style
-  
+
   # Python
   python3
   python3Packages.pip
   python3Packages.virtualenv
-  
+
   # Node.js
   nodejs_20
   nodePackages.npm
-  
+
   # Go
   go
   gopls
-  
+
   # Rust
   rustc
   cargo
   rust-analyzer
-  
+
   # Shell scripting
   shellcheck
   shfmt
-];
+  ;
+};
 ```
 
 ### Adding Language-Specific Pre-commit Hooks
@@ -167,19 +171,19 @@ Extend the hooks based on your project:
 ```nix
 hooks = {
   # Existing hooks...
-  
+
   # Python
   black = {
     enable = true;
     name = "🔍 Code Quality · 🐍 Python · Format";
   };
-  
+
   # JavaScript/TypeScript
   prettier = {
     enable = true;
     name = "🔍 Code Quality · JS/TS · Format";
   };
-  
+
   # Shell scripts
   shellcheck = {
     enable = true;
@@ -225,19 +229,22 @@ outputs = { self, nixpkgs, ... }@inputs:
       default = pkgs.stdenv.mkDerivation {
         pname = "my-project";
         version = "1.0.0";
-        src = ./.;
-        
+        src = builtins.path {
+          path = ./.;
+          name = "template";
+        };
+
         buildPhase = ''
           # Your build commands
         '';
-        
+
         installPhase = ''
           mkdir -p $out
           # Copy outputs
         '';
       };
     });
-    
+
     # Existing checks and devShells...
   };
 ```
@@ -258,14 +265,16 @@ This template supports:
 Use for one-off scripts:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   nil
   nixfmt-rfc-style
   bash
   python3
   jq
   curl
-];
+  ;
+};
 ```
 
 ### Documentation Project
@@ -273,7 +282,8 @@ packages = with pkgs; [
 For documentation-only projects:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   nil
   nixfmt-rfc-style
   # Documentation tools
@@ -282,7 +292,8 @@ packages = with pkgs; [
   pandoc
   graphviz
   plantuml
-];
+  ;
+};
 ```
 
 ### Infrastructure as Code
@@ -290,7 +301,8 @@ packages = with pkgs; [
 For managing infrastructure:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   nil
   nixfmt-rfc-style
   # IaC tools
@@ -299,7 +311,8 @@ packages = with pkgs; [
   ansible
   kubectl
   helm
-];
+  ;
+};
 ```
 
 ### Data Analysis
@@ -307,7 +320,8 @@ packages = with pkgs; [
 For data science projects:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   nil
   nixfmt-rfc-style
   # Data tools
@@ -317,7 +331,8 @@ packages = with pkgs; [
   python3Packages.matplotlib
   R
   rstudio
-];
+  ;
+};
 ```
 
 ## Migrating to Specialized Templates

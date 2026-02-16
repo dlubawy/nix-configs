@@ -18,9 +18,12 @@ in
   networking.networkmanager.enable = true;
   networking.wireless.enable = false;
 
-  environment.systemPackages = with pkgs; [
-    networkmanager
-    inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko
-    inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko-install
-  ];
+  environment.systemPackages =
+    (builtins.attrValues {
+      inherit (pkgs) networkmanager;
+    })
+    ++ [
+      inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko
+      inputs.disko.packages.${pkgs.stdenv.hostPlatform.system}.disko-install
+    ];
 }

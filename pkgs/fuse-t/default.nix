@@ -129,20 +129,24 @@ let
 
     doCheck = false;
 
-    meta = with lib; {
-      description = "Library that allows filesystems to be implemented in user space";
-      longDescription = ''
-        FUSE (Filesystem in Userspace) is an interface for userspace programs to
-        export a filesystem to the Linux kernel. The FUSE project consists of two
-        components: The fuse kernel module (maintained in the regular kernel
-        repositories) and the libfuse userspace library (this package). libfuse
-        provides the reference implementation for communicating with the FUSE
-        kernel module.
-      '';
-      homepage = "https://github.com/macos-fuse-t/libfuse";
-      platforms = platforms.darwin;
-      license = licenses.lgpl21Only;
-    };
+    meta =
+      let
+        inherit (lib) platforms licenses;
+      in
+      {
+        description = "Library that allows filesystems to be implemented in user space";
+        longDescription = ''
+          FUSE (Filesystem in Userspace) is an interface for userspace programs to
+          export a filesystem to the Linux kernel. The FUSE project consists of two
+          components: The fuse kernel module (maintained in the regular kernel
+          repositories) and the libfuse userspace library (this package). libfuse
+          provides the reference implementation for communicating with the FUSE
+          kernel module.
+        '';
+        homepage = "https://github.com/macos-fuse-t/libfuse";
+        platforms = platforms.darwin;
+        license = licenses.lgpl21Only;
+      };
   };
 in
 stubs.overrideAttrs {

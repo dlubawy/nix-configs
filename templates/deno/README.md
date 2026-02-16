@@ -174,7 +174,7 @@ The template includes comprehensive quality checks that run automatically on com
 Update the `pname` field in `flake.nix`:
 
 ```nix
-default = pkgs.stdenv.mkDerivation rec {
+package = {
   pname = "my-app";  # Change this
   version = "0.1.0";
   # ...
@@ -237,9 +237,11 @@ Create a `deno.json` file for Deno-specific configuration:
 To use Node.js instead:
 
 ```nix
-buildInputs = with pkgs; [
+buildInputs = builtins.attrValues {
+  inherit (pkgs)
   nodejs_20  # Instead of deno
-];
+  ;
+};
 
 # Update build phase to use npm/pnpm/yarn
 ```

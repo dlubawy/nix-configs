@@ -18,51 +18,63 @@ let
 in
 {
   config = {
-    lib.helpers = rec {
-      hasNode = node: (builtins.hasAttr node config.nodes);
-      hasService =
-        node: service: ((hasNode node) && (builtins.hasAttr service config.nodes.${node}.services));
-      hasInterface =
-        node: interface: ((hasNode node) && (builtins.hasAttr interface config.nodes.${node}.interfaces));
-      getHomeDomain =
-        homeNode: proxy:
-        (if (hasService homeNode proxy) then config.nodes.${homeNode}.services.${proxy}.info else "");
-      getAddress =
-        node: interface:
-        (
-          if (hasInterface node interface) then
-            (builtins.head config.nodes.${node}.interfaces.${interface}.addresses)
-          else
-            ""
-        );
-      getMac =
-        node: interface:
-        (if (hasInterface node interface) then config.nodes.${node}.interfaces.${interface}.mac else "");
-      getJellyfinPort =
-        node:
-        if (hasService node "jellyfin") then
-          (lists.last (strings.split ":" config.nodes.${node}.services.jellyfin.details."listen.http".text))
-        else
-          "";
-      getPrometheusPort =
-        node:
-        if (hasService node "prometheus") then
-          (lists.last (strings.split ":" config.nodes.${node}.services.prometheus.details.listen.text))
-        else
-          "";
-      getGrafanaPort =
-        node:
-        if (hasService node "grafana") then
-          (lists.last (strings.split ":" config.nodes.${node}.services.grafana.details.listen.text))
-        else
-          "";
-      getLokiPort =
-        node:
-        if (hasService node "loki") then
-          (lists.last (strings.split ":" config.nodes.${node}.services.loki.details.listen.text))
-        else
-          "";
-    };
+    lib.helpers =
+      let
+        helpers = {
+          hasNode = node: (builtins.hasAttr node config.nodes);
+          hasService =
+            node: service: ((helpers.hasNode node) && (builtins.hasAttr service config.nodes.${node}.services));
+          hasInterface =
+            node: interface:
+            ((helpers.hasNode node) && (builtins.hasAttr interface config.nodes.${node}.interfaces));
+          getHomeDomain =
+            homeNode: proxy:
+            (
+              if (helpers.hasService homeNode proxy) then config.nodes.${homeNode}.services.${proxy}.info else ""
+            );
+          getAddress =
+            node: interface:
+            (
+              if (helpers.hasInterface node interface) then
+                (builtins.head config.nodes.${node}.interfaces.${interface}.addresses)
+              else
+                ""
+            );
+          getMac =
+            node: interface:
+            (
+              if (helpers.hasInterface node interface) then
+                config.nodes.${node}.interfaces.${interface}.mac
+              else
+                ""
+            );
+          getJellyfinPort =
+            node:
+            if (helpers.hasService node "jellyfin") then
+              (lists.last (strings.split ":" config.nodes.${node}.services.jellyfin.details."listen.http".text))
+            else
+              "";
+          getPrometheusPort =
+            node:
+            if (helpers.hasService node "prometheus") then
+              (lists.last (strings.split ":" config.nodes.${node}.services.prometheus.details.listen.text))
+            else
+              "";
+          getGrafanaPort =
+            node:
+            if (helpers.hasService node "grafana") then
+              (lists.last (strings.split ":" config.nodes.${node}.services.grafana.details.listen.text))
+            else
+              "";
+          getLokiPort =
+            node:
+            if (helpers.hasService node "loki") then
+              (lists.last (strings.split ":" config.nodes.${node}.services.loki.details.listen.text))
+            else
+              "";
+        };
+      in
+      helpers;
 
     nixosConfigurations = filterAttrs (
       _: value: (builtins.hasAttr "topology" value.config) && value.config.topology.enable

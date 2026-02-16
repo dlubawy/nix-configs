@@ -35,13 +35,17 @@ let
       runHook postInstall
     '';
 
-    meta = with lib; {
-      description = "Sublime Text syntax for Justfiles";
-      homepage = "https://github.com/nk9/just_sublime";
-      license = licenses.mit;
-      maintainers = [ ];
-      platforms = platforms.all;
-    };
+    meta =
+      let
+        inherit (lib) licenses platforms;
+      in
+      {
+        description = "Sublime Text syntax for Justfiles";
+        homepage = "https://github.com/nk9/just_sublime";
+        license = licenses.mit;
+        maintainers = [ ];
+        platforms = platforms.all;
+      };
   };
 in
 {

@@ -15,5 +15,8 @@ pkgs.python3Packages.buildPythonApplication {
   ];
   propagatedBuildInputs = with pkgs.python3Packages; [ prometheus-client ];
 
-  src = ./.;
+  src = builtins.path {
+    path = ./.;
+    name = "prometheus-iwinfo";
+  };
 }

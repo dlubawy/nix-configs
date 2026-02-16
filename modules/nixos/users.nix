@@ -66,7 +66,8 @@ in
     services.userborn.enable = true;
 
     # Enable to allow chattr for root if needing to remove a file
-    environment.systemPackages = with pkgs; [ ] ++ optionals config.users.shadow.enable [ e2fsprogs ];
+    environment.systemPackages =
+      [ ] ++ optionals config.users.shadow.enable (builtins.attrValues { inherit (pkgs) e2fsprogs; });
 
     # nixos-passwd needs chattr +/-i on user shadow files
     security.wrappers.nixos-passwd = {
