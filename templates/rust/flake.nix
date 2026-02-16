@@ -166,8 +166,6 @@
                   cargo
                   rustc
                   rustLibSrc
-                  nil
-                  nixfmt-rfc-style
                   ;
               })
               ++ (builtins.attrValues {
@@ -175,6 +173,8 @@
                   clippy
                   just
                   rustfmt
+                  nil
+                  nixfmt-rfc-style
                   ;
               });
             env = {
