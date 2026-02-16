@@ -20,6 +20,7 @@ let
     x86_64-linux = pkgs: {
       nixos-password = pkgs.callPackage ./nixos-password { };
     };
+    wasm32-wasi = _: { };
   };
 in
 if builtins.hasAttr system allPackages then
