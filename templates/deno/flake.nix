@@ -174,9 +174,6 @@
 
       packages = forEachSupportedSystem (
         { pkgs }:
-        let
-          denoBin = "${pkgs.deno}/bin/deno";
-        in
         {
           default =
             let
@@ -200,8 +197,8 @@
                   DENO_INSTALL_DIR="$DENO_DIR"/bin
                   mkdir -p "$DENO_INSTALL_DIR"
 
-                  env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" ${denoBin} install
-                  env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" ${denoBin} task build
+                  env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" deno install
+                  env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" deno task build
                   rm -rf "$DENO_DIR"
 
                   mkdir -p "$out"/lib
@@ -220,7 +217,7 @@
                   chmod -R u+rwX,go+rX,go-w "\$runtime"/*
 
                   cd "$out"/lib
-                  ${denoBin} task preview -c "\$runtime"/vite.config.*
+                  deno task preview -c "\$runtime"/vite.config.*
                   rm "\$runtime"/vite.config.*
                   rm -rf "\$runtime"/node_modules
                   rm -rf "\$runtime"
