@@ -136,13 +136,13 @@ packages = (builtins.attrValues {
     cargo
     rustc
     rustLibSrc
-    nil
-    nixfmt-rfc-style
     ;
   }) ++ (builtins.attrValues {
   inherit (pkgs)
   clippy
   rustfmt
+  nil
+  nixfmt-rfc-style
   ;
 });
 

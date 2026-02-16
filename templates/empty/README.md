@@ -231,7 +231,7 @@ outputs = { self, nixpkgs, ... }@inputs:
         version = "1.0.0";
         src = builtins.path {
           path = ./.;
-          name= "template";
+          name = "template";
         };
 
         buildPhase = ''

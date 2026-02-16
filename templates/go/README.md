@@ -106,7 +106,10 @@ The template includes a Nix package definition using `buildGoModule`:
 packages = forEachSupportedSystem ({ pkgs }: {
   default = pkgs.buildGoModule {
     name = "template";
-    src = builtins.path {path = ./.; name= "template";};
+    src = builtins.path {
+      path = ./.;
+      name = "template";
+    };
     vendorHash = null;  # Update this when adding dependencies
   };
 });
@@ -211,7 +214,7 @@ default = pkgs.buildGoModule {
   name = "template";
   src = builtins.path {
     path = ./.;
-    name= "template";
+    name = "template";
   };
   vendorHash = null;
 
