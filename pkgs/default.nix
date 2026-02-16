@@ -25,4 +25,4 @@ in
 if builtins.hasAttr system allPackages then
   allPackages.${system}
 else
-  _: builtins.abort "No system provided for pkgs"
+  builtins.abort "Unsupported system '${system}' for pkgs. Supported systems: ${builtins.concatStringsSep \", \" (builtins.attrNames allPackages)}"
