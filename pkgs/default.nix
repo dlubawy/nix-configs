@@ -25,9 +25,4 @@ in
 if builtins.hasAttr system allPackages then
   allPackages.${system}
 else
-  # TODO: make this cleaner
-  pkgs:
-  allPackages.aarch64-darwin pkgs
-  // allPackages.x86_64-darwin pkgs
-  // allPackages.aarch64-linux pkgs
-  // allPackages.x86_64-linux pkgs
+  builtins.abort "Unsupported system '${system}' for pkgs. Supported systems: ${builtins.concatStringsSep ", " (builtins.attrNames allPackages)}"
