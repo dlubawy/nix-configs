@@ -251,7 +251,10 @@ rec {
         { pkgs }:
         {
           pre-commit-check = pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
-            src = ./.;
+            src = builtins.path {
+              path = ./.;
+              name = "nix-configs";
+            };
             hooks = {
               trufflehog = {
                 enable = true;

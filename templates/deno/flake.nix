@@ -29,7 +29,10 @@
         { pkgs }:
         {
           pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
-            src = ./.;
+            src = builtins.path {
+              path = ./.;
+              name = "foo";
+            };
             hooks = {
               trufflehog = {
                 enable = true;
@@ -180,7 +183,10 @@
               package = {
                 pname = "template";
                 version = "0.1.0";
-                src = ./.;
+                src = builtins.path {
+                  path = ./.;
+                  name = "template";
+                };
 
                 buildInputs = builtins.attrValues {
                   inherit (pkgs)

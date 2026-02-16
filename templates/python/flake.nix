@@ -61,7 +61,10 @@
         { pkgs }:
         {
           pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
-            src = ./.;
+            src = builtins.path {
+              path = ./.;
+              name = "template";
+            };
             hooks = {
               trufflehog = {
                 enable = true;

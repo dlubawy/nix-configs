@@ -80,7 +80,10 @@ Extend `flake.nix` to build a package:
         default = pkgs.stdenv.mkDerivation {
           pname = "my-app";
           version = "1.0.0";
-          src = ./.;
+          src = builtins.path {
+            path = ./.;
+            name= "template";
+          };
 
           buildPhase = ''
             # Your build commands
