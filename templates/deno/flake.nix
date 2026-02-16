@@ -31,7 +31,7 @@
           pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = builtins.path {
               path = ./.;
-              name = "foo";
+              name = "template";
             };
             hooks = {
               trufflehog = {
