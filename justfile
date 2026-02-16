@@ -61,6 +61,15 @@ build option system:
     esac
     just "$PLATFORM" "$OPTION" "$SYSTEM"
 
+# Test NixOS builds in VM
+test system:
+    #!/usr/bin/env bash
+    SYSTEM="{{ system }}"
+    just nixos build-vm "$SYSTEM"
+    if [ -f "./nixos.qcow2" ]; then
+        rm -i ./nixos.qcow2
+    fi
+
 ################################################################
 # Nix commands
 ################################################################
@@ -167,11 +176,29 @@ image system:
 # Build and deploy NixOS systems
 nixos option system:
     #!/usr/bin/env bash
-    if [[ "{{ HOSTNAME }}" == "{{ system }}" ]]; then
-        CMD="sudo nixos-rebuild {{ option }} --flake {{ GIT_REPO }}#{{ system }}"
-    else
-        CMD="nixos-rebuild-ng {{ option }} --target-host {{ system }} --build-host {{ system }} --ask-sudo-password --use-substitutes --flake {{ GIT_REPO }}#{{ system }}"
-    fi
+    NIXOS_REBUILD=""
+    CMD=""
+    case "{{ HOST_PLATFORM }}" in
+        *-darwin)
+            NIXOS_REBUILD="nixos-rebuild-ng"
+        ;;
+        *)
+            NIXOS_REBUILD="nixos-rebuild"
+        ;;
+    esac
+    case "{{ option }}" in
+        build-vm)
+            $NIXOS_REBUILD {{ option }} --flake {{ GIT_REPO }}#{{ system }} && (QEMU_KERNEL_PARAMS=console=ttyS0 {{ GIT_REPO }}/result/bin/run-nixos-vm -nographic; reset)
+            exit 0
+        ;;
+        *)
+            if [[ "{{ HOSTNAME }}" == "{{ system }}" ]]; then
+                CMD="sudo $NIXOS_REBUILD {{ option }} --flake {{ GIT_REPO }}#{{ system }}"
+            else
+                CMD="$NIXOS_REBUILD {{ option }} --target-host {{ system }} --build-host {{ system }} --ask-sudo-password --use-substitutes --flake {{ GIT_REPO }}#{{ system }}"
+            fi
+        ;;
+    esac
     if [ -n "$DEBUG" ]; then
         $CMD --show-trace --verbose
     else
