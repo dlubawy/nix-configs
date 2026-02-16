@@ -182,9 +182,11 @@
                 version = "0.1.0";
                 src = ./.;
 
-                buildInputs = with pkgs; [
-                  deno
-                ];
+                buildInputs = builtins.attrValues {
+                  inherit (pkgs)
+                    deno
+                    ;
+                };
                 nativeBuildInputs = package.buildInputs;
 
                 buildPhase = ''
@@ -226,23 +228,31 @@
 
       devShells = forEachSupportedSystem (
         { pkgs }:
+        let
+          inherit (pkgs) writeScriptBin;
+        in
         {
           default = pkgs.mkShell {
             inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
             buildInputs =
-              with pkgs;
-              [
-                deno
-              ]
+              (builtins.attrValues {
+                inherit (pkgs)
+                  deno
+                  ;
+              })
               ++ self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
-            packages = with pkgs; [
+            packages = [
               (writeScriptBin "create-vite" ''
                 ${pkgs.deno}/bin/deno run -A npm:create-vite .
               '')
-              just
-              nil
-              nixfmt-rfc-style
-            ];
+            ]
+            ++ (builtins.attrValues {
+              inherit (pkgs)
+                just
+                nil
+                nixfmt-rfc-style
+                ;
+            });
             env = {
               shell = "zsh";
               NIL_PATH = "${pkgs.nil}/bin/nil";

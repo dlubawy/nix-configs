@@ -81,11 +81,11 @@ Extend `flake.nix` to build a package:
           pname = "my-app";
           version = "1.0.0";
           src = ./.;
-          
+
           buildPhase = ''
             # Your build commands
           '';
-          
+
           installPhase = ''
             mkdir -p $out/bin
             cp my-app $out/bin/
@@ -108,12 +108,12 @@ Extend `flake.nix` to build a package:
         options = {
           services.myservice.enable = lib.mkEnableOption "my service";
         };
-        
+
         config = lib.mkIf config.services.myservice.enable {
           # Module implementation
         };
       };
-      
+
       # ... existing outputs ...
     };
 }
@@ -146,7 +146,8 @@ The template includes comprehensive quality checks that run automatically on com
 Extend the `packages` list in the devShell:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   nil
   nixfmt-rfc-style
   # Add more tools:
@@ -156,7 +157,8 @@ packages = with pkgs; [
   statix          # Linter for Nix
   deadnix         # Find dead Nix code
   alejandra       # Another Nix formatter
-];
+  ;
+};
 ```
 
 ### Changing the Formatter
@@ -174,10 +176,12 @@ hooks = {
 };
 
 # In packages:
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   nil
   alejandra  # Instead of nixfmt-rfc-style
-];
+  ;
+};
 ```
 
 ### Adding More Pre-commit Hooks
@@ -187,12 +191,12 @@ Extend the hooks in `checks.pre-commit-check.hooks`:
 ```nix
 hooks = {
   # ... existing hooks ...
-  
+
   statix = {
     enable = true;
     name = "🔍 Code Quality · ❄️ Nix · Lint";
   };
-  
+
   deadnix = {
     enable = true;
     name = "🔍 Code Quality · ❄️ Nix · Dead code";
@@ -249,16 +253,20 @@ packages = forEachSupportedSystem ({ pkgs }: {
 ```nix
 devShells = forEachSupportedSystem ({ pkgs }: {
   default = pkgs.mkShell {
-    buildInputs = with pkgs; [
+    buildInputs = builtins.attrValues {
+      inherit (pkgs)
       # Add your language tooling
       nodejs
       python3
       go
-    ];
-    packages = with pkgs; [
+      ;
+    };
+    packages = builtins.attrValues {
+      inherit (pkgs)
       nil
       nixfmt-rfc-style
-    ];
+      ;
+    };
   };
 });
 ```

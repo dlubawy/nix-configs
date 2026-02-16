@@ -29,10 +29,12 @@
     };
     services = {
       prometheus-nf-conntrack = {
-        path = with pkgs; [
-          moreutils
-          prometheus-nf-conntrack
-        ];
+        path = builtins.attrValues {
+          inherit (pkgs)
+            moreutils
+            prometheus-nf-conntrack
+            ;
+        };
         script = ''
           ${pkgs.prometheus-nf-conntrack}/bin/main.py | ${pkgs.moreutils}/bin/sponge /var/run/prometheus-node-exporter/nf_conntrack.prom
         '';
@@ -42,11 +44,13 @@
         };
       };
       prometheus-iwinfo = {
-        path = with pkgs; [
-          moreutils
-          prometheus-iwinfo
-          iwinfo-lite
-        ];
+        path = builtins.attrValues {
+          inherit (pkgs)
+            moreutils
+            prometheus-iwinfo
+            iwinfo-lite
+            ;
+        };
         script = ''
           ${pkgs.prometheus-iwinfo}/bin/main.py | ${pkgs.moreutils}/bin/sponge /var/run/prometheus-node-exporter/iwinfo.prom
         '';
@@ -56,10 +60,12 @@
         };
       };
       prometheus-networkctl = {
-        path = with pkgs; [
-          moreutils
-          prometheus-networkctl
-        ];
+        path = builtins.attrValues {
+          inherit (pkgs)
+            moreutils
+            prometheus-networkctl
+            ;
+        };
         script = ''
           ${pkgs.prometheus-networkctl}/bin/main.py | ${pkgs.moreutils}/bin/sponge /var/run/prometheus-node-exporter/networkctl.prom
         '';

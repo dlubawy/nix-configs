@@ -176,11 +176,13 @@ The template includes comprehensive quality checks that run automatically on com
 The Go version is determined by the nixpkgs version. To use a specific Go version:
 
 ```nix
-nativeBuildInputs = with pkgs; [
+nativeBuildInputs = builtins.attrValues {
+  inherit (pkgs)
   go_1_22  # Use Go 1.22
   # or go_1_21, go (latest), etc.
   gopls
-];
+  ;
+};
 ```
 
 ### Adding Development Tools
@@ -188,14 +190,16 @@ nativeBuildInputs = with pkgs; [
 Add more tools to the `packages` list in the devShell:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   nil
   nixfmt-rfc-style
   # Add more tools:
   golangci-lint  # Linter aggregator
   delve          # Debugger
   gotools        # Additional Go tools
-];
+  ;
+};
 ```
 
 ### Build Flags
@@ -207,17 +211,17 @@ default = pkgs.buildGoModule {
   name = "template";
   src = ./.;
   vendorHash = null;
-  
+
   # Add build flags
   ldflags = [
     "-s"  # Strip debug info
     "-w"  # Strip DWARF symbols
     "-X main.version=${version}"  # Set variables
   ];
-  
+
   # Build tags
   tags = [ "netgo" ];
-  
+
   # Disable CGO
   CGO_ENABLED = 0;
 };

@@ -237,9 +237,11 @@ Create a `deno.json` file for Deno-specific configuration:
 To use Node.js instead:
 
 ```nix
-buildInputs = with pkgs; [
+buildInputs = builtins.attrValues {
+  inherit (pkgs)
   nodejs_20  # Instead of deno
-];
+  ;
+};
 
 # Update build phase to use npm/pnpm/yarn
 ```

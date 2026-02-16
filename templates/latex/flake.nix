@@ -164,13 +164,18 @@
             inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
             buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
             packages =
-              with pkgs;
-              [
-                just
-                nil
-                nixfmt-rfc-style
-                texlivePackages.chktex
-              ]
+              (builtins.attrValues {
+                inherit (pkgs)
+                  just
+                  nil
+                  nixfmt-rfc-style
+                  ;
+              })
+              ++ (builtins.attrValues {
+                inherit (pkgs.texlivePackages)
+                  chktex
+                  ;
+              })
               ++ [ tex ];
             env = {
               shell = "zsh";

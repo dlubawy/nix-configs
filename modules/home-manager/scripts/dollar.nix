@@ -1,6 +1,9 @@
 { pkgs, ... }:
+let
+  inherit (pkgs) writeScriptBin;
+in
 {
-  home.packages = with pkgs; [
+  home.packages = [
     (writeScriptBin "$" ''
       #!/usr/bin/env bash
 

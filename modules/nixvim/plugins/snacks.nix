@@ -1,10 +1,12 @@
 { pkgs, ... }:
 {
-  extraPackages = with pkgs; [
-    tectonic
-    ghostscript
-    mermaid-cli
-  ];
+  extraPackages = builtins.attrValues {
+    inherit (pkgs)
+      tectonic
+      ghostscript
+      mermaid-cli
+      ;
+  };
   plugins = {
     snacks = {
       enable = true;

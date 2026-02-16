@@ -1,6 +1,7 @@
 { pkgs, ... }:
 let
-  sedtrisFile = pkgs.writeTextFile {
+  inherit (pkgs) writeTextFile writeScriptBin;
+  sedtrisFile = writeTextFile {
     name = "sedtris.sed";
     text = ''
       #!/usr/bin/env sed -nf
@@ -351,7 +352,7 @@ let
   };
 in
 {
-  home.packages = with pkgs; [
+  home.packages = [
     (writeScriptBin "sedtris" ''
       #!/usr/bin/env bash
       # Bash script to make playing Sedtris more comfortable.

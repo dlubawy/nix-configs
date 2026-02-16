@@ -131,17 +131,20 @@ To use Rust nightly instead of stable, modify `flake.nix`:
 
 ```nix
 # Replace the packages section in devShells
-packages = with pkgs; [
-  (with rustPlatform; [
+packages = (builtins.attrValues {
+    inherit (pkgs.rustPlatform)
     cargo
     rustc
     rustLibSrc
     nil
     nixfmt-rfc-style
-  ])
+    ;
+  }) ++ (builtins.attrValues {
+  inherit (pkgs)
   clippy
   rustfmt
-];
+  ;
+});
 
 # With:
 packages = [
@@ -159,13 +162,15 @@ packages = [
 Add more development tools to the `packages` list in `flake.nix`:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   # ... existing packages ...
   cargo-watch    # Auto-rebuild on file changes
   cargo-edit     # Add/remove dependencies from command line
   cargo-audit    # Check dependencies for security vulnerabilities
   rust-analyzer  # Language server for IDE integration
-];
+  ;
+};
 ```
 
 ### Modifying Pre-commit Hooks
@@ -177,10 +182,12 @@ Edit the `checks.pre-commit-check.hooks` section in `flake.nix` to enable, disab
 The template sets `RUST_SRC_PATH` for IDE features. For full IDE support, consider adding `rust-analyzer`:
 
 ```nix
-packages = with pkgs; [
+packages = builtins.attrValues {
+  inherit (pkgs)
   # ... existing packages ...
   rust-analyzer
-];
+  ;
+};
 ```
 
 ## Platform Support

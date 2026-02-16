@@ -1,4 +1,4 @@
-{
+rec {
   description = "Andrew Lubawy's Nix Configs";
 
   nixConfig = {
@@ -114,7 +114,7 @@
         stateVersion = "25.11";
         flake = "github:dlubawy/nix-configs/main";
         admin = (import ./users/drew.nix).nix-configs.users.drew;
-        inherit (self) nixConfig;
+        inherit nixConfig;
       };
 
       mkSystem =
@@ -365,53 +365,63 @@
       devShells = forAllSystems (
         { pkgs }:
         {
-          default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
-            buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
-            packages = with pkgs; [
-              agenix.packages.${stdenv.hostPlatform.system}.default
-              (writeShellApplication {
-                name = "sync-flake-inputs";
-                runtimeInputs = [
-                  git
-                  gnugrep
-                  gnused
-                ];
-                text = ''
-                  gitRoot="$(git rev-parse --show-toplevel)"
-                  if [ -z "$gitRoot" ]; then
-                    echo "Not a git project"
-                    exit 1
-                  fi
-
-                  version="''${1:-""}"
-                  if [ -z "$version" ]; then
-                    version="$(grep --color=never -o 'nixos-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
-                    if [ -z "$version" ]; then
-                      echo "Could not determine root flake version"
+          default =
+            let
+              inherit (pkgs) writeShellApplication stdenv;
+            in
+            pkgs.mkShell {
+              inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
+              buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
+              packages = [
+                agenix.packages.${stdenv.hostPlatform.system}.default
+                (writeShellApplication {
+                  name = "sync-flake-inputs";
+                  runtimeInputs = builtins.attrValues {
+                    inherit (pkgs)
+                      git
+                      gnugrep
+                      gnused
+                      ;
+                  };
+                  text = ''
+                    gitRoot="$(git rev-parse --show-toplevel)"
+                    if [ -z "$gitRoot" ]; then
+                      echo "Not a git project"
                       exit 1
                     fi
-                  fi
 
-                  for template in "$gitRoot"/templates/*; do
-                    pushd "$template"
-                    sed -i "s/nixos-[0-9]\+.[0-9]\+/nixos-''${version/*-}/g" ./flake.nix
-                    cp ../../flake.lock ./flake.lock
-                    nix flake lock
-                    popd
-                  done
-                '';
-              })
-              just
-              nil
-              nixfmt-rfc-style
-              nixos-rebuild-ng
-            ];
-            env = {
-              shell = "zsh";
-              NIL_PATH = "${pkgs.nil}/bin/nil";
+                    version="''${1:-""}"
+                    if [ -z "$version" ]; then
+                      version="$(grep --color=never -o 'nixos-[0-9]\+.[0-9]\+' "$gitRoot"/flake.nix | head -n 1)"
+                      if [ -z "$version" ]; then
+                        echo "Could not determine root flake version"
+                        exit 1
+                      fi
+                    fi
+
+                    for template in "$gitRoot"/templates/*; do
+                      pushd "$template"
+                      sed -i "s/nixos-[0-9]\+.[0-9]\+/nixos-''${version/*-}/g" ./flake.nix
+                      cp ../../flake.lock ./flake.lock
+                      nix flake lock
+                      popd
+                    done
+                  '';
+                })
+              ]
+              ++ (builtins.attrValues {
+                inherit (pkgs)
+                  just
+                  nil
+                  nixfmt-rfc-style
+                  nixos-rebuild-ng
+                  ;
+              });
+              env = {
+                shell = "zsh";
+                NIL_PATH = "${pkgs.nil}/bin/nil";
+              };
             };
-          };
         }
       );
 

@@ -13,12 +13,14 @@ pkgs.stdenv.mkDerivation {
 
   meta.platforms = [ "aarch64-linux" ];
 
-  buildInputs = with pkgs; [
-    pkg-config
-    libnl
-    openssl
-    dbus
-  ];
+  buildInputs = builtins.attrValues {
+    inherit (pkgs)
+      pkg-config
+      libnl
+      openssl
+      dbus
+      ;
+  };
   buildPhase = ''
     cd ./hostapd
     cp defconfig .config

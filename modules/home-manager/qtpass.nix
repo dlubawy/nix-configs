@@ -14,7 +14,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      packages = with pkgs; [ qtpass ];
+      packages = builtins.attrValues { inherit (pkgs) qtpass; };
 
       sessionVariables = {
         GOPASS_GPG_OPTS = "--no-throw-keyids";

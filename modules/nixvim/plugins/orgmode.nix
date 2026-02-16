@@ -53,7 +53,7 @@ in
     require("org-bullets").setup()
   '';
 
-  extraPackages = with pkgs; [ pandoc ];
+  extraPackages = builtins.attrValues { inherit (pkgs) pandoc; };
 
   plugins = {
     orgmode = {
@@ -271,30 +271,34 @@ in
       '';
     };
   };
-  extraPlugins = with pkgs; [
-    (vimUtils.buildVimPlugin {
-      name = "org-bullets";
-      src = fetchFromGitHub {
-        owner = "nvim-orgmode";
-        repo = "org-bullets.nvim";
-        rev = "21437cfa99c70f2c18977bffd423f912a7b832ea";
-        hash = "sha256-/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0=";
-      };
-      buildInputs = [ vimPlugins.orgmode ];
-    })
-    (vimUtils.buildVimPlugin {
-      name = "telescope-orgmode";
-      src = fetchFromGitHub {
-        owner = "nvim-orgmode";
-        repo = "telescope-orgmode.nvim";
-        rev = "1.3.3";
-        hash = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE=";
-      };
-      buildInputs = [
-        vimPlugins.orgmode
-        vimPlugins.telescope-nvim
-      ];
-    })
-    vimPlugins.org-roam-nvim
-  ];
+  extraPlugins =
+    let
+      inherit (pkgs) vimUtils vimPlugins fetchFromGitHub;
+    in
+    [
+      (vimUtils.buildVimPlugin {
+        name = "org-bullets";
+        src = fetchFromGitHub {
+          owner = "nvim-orgmode";
+          repo = "org-bullets.nvim";
+          rev = "21437cfa99c70f2c18977bffd423f912a7b832ea";
+          hash = "sha256-/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0=";
+        };
+        buildInputs = [ vimPlugins.orgmode ];
+      })
+      (vimUtils.buildVimPlugin {
+        name = "telescope-orgmode";
+        src = fetchFromGitHub {
+          owner = "nvim-orgmode";
+          repo = "telescope-orgmode.nvim";
+          rev = "1.3.3";
+          hash = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE=";
+        };
+        buildInputs = [
+          vimPlugins.orgmode
+          vimPlugins.telescope-nvim
+        ];
+      })
+      vimPlugins.org-roam-nvim
+    ];
 }

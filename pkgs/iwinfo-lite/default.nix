@@ -13,10 +13,12 @@ pkgs.stdenv.mkDerivation {
 
   meta.platforms = [ "aarch64-linux" ];
 
-  buildInputs = with pkgs; [
-    libnl
-    pkg-config
-  ];
+  buildInputs = builtins.attrValues {
+    inherit (pkgs)
+      libnl
+      pkg-config
+      ;
+  };
   buildPhase = ''
     NIX_CFLAGS_COMPILE="$(pkg-config --cflags libnl-3.0) $NIX_CFLAGS_COMPILE"
     make BACKENDS=nl80211 LDFLAGS="-lnl-3 -lnl-genl-3" CFLAGS="$NIX_CFLAGS_COMPILE"

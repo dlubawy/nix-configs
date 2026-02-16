@@ -1,10 +1,11 @@
 { pkgs, ... }:
 let
+  inherit (pkgs) writeScriptBin;
   gitBin = "${pkgs.git}/bin/git";
   awkBin = "${pkgs.gawk}/bin/awk";
 in
 {
-  home.packages = with pkgs; [
+  home.packages = [
     (writeScriptBin "git_prune_orphans" ''
       #!/usr/bin/env bash
       ${gitBin} fetch -p

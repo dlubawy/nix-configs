@@ -69,7 +69,7 @@ in
       };
 
       environment = {
-        shells = with pkgs; [ zsh ];
+        shells = builtins.attrValues { inherit (pkgs) zsh; };
         shellAliases = {
           sudoedit = "sudo -Hu laplace sudo -e ";
           "${systemName}" =
@@ -84,18 +84,20 @@ in
           HOMEBREW_NO_ANALYTICS = "1";
           ZSH_DISABLE_COMPFIX = "true";
         };
-        systemPackages = with pkgs; [
-          e2fsprogs
-          fuse-ext2
-          fuse-t
-          git
-          nixos-rebuild-ng
-          ntfs3g
-        ];
+        systemPackages = builtins.attrValues {
+          inherit (pkgs)
+            e2fsprogs
+            fuse-ext2
+            fuse-t
+            git
+            nixos-rebuild-ng
+            ntfs3g
+            ;
+        };
       };
 
       fonts = {
-        packages = with pkgs; [ nerd-fonts.fantasque-sans-mono ];
+        packages = builtins.attrValues { inherit (pkgs.nerd-fonts) fantasque-sans-mono; };
       };
 
       programs = {

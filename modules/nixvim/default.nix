@@ -75,17 +75,18 @@
   '';
 
   extraPackages =
-    with pkgs;
-    [
-      fd
-      fzf
-      gawk
-      gnused
-      nodePackages.prettier
-      python313Packages.pylatexenc
-      ripgrep
-      stylua
-    ]
+    (builtins.attrValues {
+      inherit (pkgs)
+        fd
+        fzf
+        gawk
+        gnused
+        ripgrep
+        stylua
+        ;
+    })
+    ++ (builtins.attrValues { inherit (pkgs.python313Packages) pylatexenc; })
+    ++ (builtins.attrValues { inherit (pkgs.nodePackages) prettier; })
     ++ (lib.optionals (pkgs.stdenv.isDarwin) [
       (pkgs.writeShellScriptBin "gsed" "exec ${pkgs.gnused}/bin/sed \"$@\"")
     ]);

@@ -13,11 +13,13 @@
     };
   };
   environment = {
-    systemPackages = with pkgs; [
-      hostap-wpa3
-      iw
-      iwinfo-lite
-    ];
+    systemPackages = builtins.attrValues {
+      inherit (pkgs)
+        hostap-wpa3
+        iw
+        iwinfo-lite
+        ;
+    };
     etc."hostapd-wlan0.vlan".text = ''
       *  wlan0.#  br-lan
     '';

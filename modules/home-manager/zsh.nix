@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 {
-  home.packages = with pkgs; [ ruby ];
+  home.packages = builtins.attrValues { inherit (pkgs) ruby; };
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;

@@ -161,15 +161,19 @@
           default = pkgs.mkShell {
             inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
             buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
-            nativeBuildInputs = with pkgs; [
-              go
-              gopls
-            ];
-            packages = with pkgs; [
-              just
-              nil
-              nixfmt-rfc-style
-            ];
+            nativeBuildInputs = builtins.attrValues {
+              inherit (pkgs)
+                go
+                gopls
+                ;
+            };
+            packages = builtins.attrValues {
+              inherit (pkgs)
+                just
+                nil
+                nixfmt-rfc-style
+                ;
+            };
             env = {
               shell = "zsh";
               NIL_PATH = "${pkgs.nil}/bin/nil";
