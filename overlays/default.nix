@@ -8,7 +8,7 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
+    # example = prev.example.overrideAttrs (oldAttrs: {
     # ...
     # });
     age-plugin-yubikey = prev.age-plugin-yubikey.overrideAttrs (

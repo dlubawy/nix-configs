@@ -86,18 +86,22 @@
                   "check-yaml"
                 ];
               };
-              just = rec {
-                enable = true;
-                package = pkgs.just;
-                name = "🤖 Justfile · Format";
-                entry = "${package}/bin/just --fmt --unstable";
-                files = "^justfile$";
-                pass_filenames = false;
-                after = [
-                  "mdformat"
-                  "prettier"
-                ];
-              };
+              just =
+                let
+                  package = pkgs.just;
+                in
+                {
+                  enable = true;
+                  package = package;
+                  name = "🤖 Justfile · Format";
+                  entry = "${package}/bin/just --fmt --unstable";
+                  files = "^justfile$";
+                  pass_filenames = false;
+                  after = [
+                    "mdformat"
+                    "prettier"
+                  ];
+                };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
@@ -171,48 +175,52 @@
           denoBin = "${pkgs.deno}/bin/deno";
         in
         {
-          default = pkgs.stdenv.mkDerivation rec {
-            pname = "template";
-            version = "0.1.0";
-            src = ./.;
+          default =
+            let
+              package = {
+                pname = "template";
+                version = "0.1.0";
+                src = ./.;
 
-            buildInputs = with pkgs; [
-              deno
-            ];
-            nativeBuildInputs = buildInputs;
+                buildInputs = with pkgs; [
+                  deno
+                ];
+                nativeBuildInputs = package.buildInputs;
 
-            buildPhase = ''
-              DENO_DIR="$(mktemp -d)"
-              DENO_INSTALL_DIR="$DENO_DIR"/bin
-              mkdir -p "$DENO_INSTALL_DIR"
+                buildPhase = ''
+                  DENO_DIR="$(mktemp -d)"
+                  DENO_INSTALL_DIR="$DENO_DIR"/bin
+                  mkdir -p "$DENO_INSTALL_DIR"
 
-              env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" ${denoBin} install
-              env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" ${denoBin} task build
-              rm -rf "$DENO_DIR"
+                  env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" ${denoBin} install
+                  env DENO_DIR="$DENO_DIR" DENO_INSTALL_DIR="$DENO_INSTALL_DIR" ${denoBin} task build
+                  rm -rf "$DENO_DIR"
 
-              mkdir -p "$out"/lib
-              cp -a . "$out"/lib
-            '';
-            installPhase = ''
-              mkdir -p "$out"/bin
-              exe="$out"/bin/${pname}
-              touch "$exe"
-              chmod +x "$exe"
-              cat > "$exe" << EOF
-              #!/usr/bin/env bash
-              runtime="\$(mktemp -d)"
-              cp "$out"/lib/vite.config.* "\$runtime"
-              cp -R "$out"/lib/node_modules "\$runtime"/node_modules
-              chmod -R u+rwX,go+rX,go-w "\$runtime"/*
+                  mkdir -p "$out"/lib
+                  cp -a . "$out"/lib
+                '';
+                installPhase = ''
+                  mkdir -p "$out"/bin
+                  exe="$out"/bin/${package.pname}
+                  touch "$exe"
+                  chmod +x "$exe"
+                  cat > "$exe" << EOF
+                  #!/usr/bin/env bash
+                  runtime="\$(mktemp -d)"
+                  cp "$out"/lib/vite.config.* "\$runtime"
+                  cp -R "$out"/lib/node_modules "\$runtime"/node_modules
+                  chmod -R u+rwX,go+rX,go-w "\$runtime"/*
 
-              cd "$out"/lib
-              ${denoBin} task preview -c "\$runtime"/vite.config.*
-              rm "\$runtime"/vite.config.*
-              rm -rf "\$runtime"/node_modules
-              rm -rf "\$runtime"
-              EOF
-            '';
-          };
+                  cd "$out"/lib
+                  ${denoBin} task preview -c "\$runtime"/vite.config.*
+                  rm "\$runtime"/vite.config.*
+                  rm -rf "\$runtime"/node_modules
+                  rm -rf "\$runtime"
+                  EOF
+                '';
+              };
+            in
+            pkgs.stdenv.mkDerivation package;
         }
       );
 

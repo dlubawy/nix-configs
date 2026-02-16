@@ -1,4 +1,4 @@
-rec {
+{
   description = "Andrew Lubawy's Nix Configs";
 
   nixConfig = {
@@ -114,7 +114,7 @@ rec {
         stateVersion = "25.11";
         flake = "github:dlubawy/nix-configs/main";
         admin = (import ./users/drew.nix).nix-configs.users.drew;
-        inherit nixConfig;
+        inherit (self) nixConfig;
       };
 
       mkSystem =
@@ -140,15 +140,6 @@ rec {
             ./hosts/${name}
           ];
         };
-    in
-    rec {
-      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.stdenv.hostPlatform.system) pkgs);
-      formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
-
-      overlays = import ./overlays { inherit inputs; };
-      nixosModules = import ./modules/nixos;
-      darwinModules = import ./modules/darwin;
-      homeModules = import ./modules/home-manager { inherit inputs; };
 
       nixosConfigurations = {
         # TODO: move Dell laptop from Arch to NixOS
@@ -176,6 +167,17 @@ rec {
           system = "x86_64-linux";
         };
       };
+    in
+    {
+      packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.stdenv.hostPlatform.system) pkgs);
+      formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
+
+      overlays = import ./overlays { inherit inputs; };
+      nixosModules = import ./modules/nixos;
+      darwinModules = import ./modules/darwin;
+      homeModules = import ./modules/home-manager { inherit inputs; };
+
+      nixosConfigurations = nixosConfigurations;
 
       darwinConfigurations = {
         # MacBook M1
@@ -282,15 +284,19 @@ rec {
                   "check-yaml"
                 ];
               };
-              just = rec {
-                enable = true;
-                package = pkgs.just;
-                name = "🤖 Justfile · Format";
-                entry = "${package}/bin/just --fmt --unstable";
-                files = "^justfile$";
-                pass_filenames = false;
-                after = [ "mdformat" ];
-              };
+              just =
+                let
+                  package = pkgs.just;
+                in
+                {
+                  enable = true;
+                  package = package;
+                  name = "🤖 Justfile · Format";
+                  entry = "${package}/bin/just --fmt --unstable";
+                  files = "^justfile$";
+                  pass_filenames = false;
+                  after = [ "mdformat" ];
+                };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";

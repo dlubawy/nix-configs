@@ -174,7 +174,7 @@ The template includes comprehensive quality checks that run automatically on com
 Update the `pname` field in `flake.nix`:
 
 ```nix
-default = pkgs.stdenv.mkDerivation rec {
+package = {
   pname = "my-app";  # Change this
   version = "0.1.0";
   # ...

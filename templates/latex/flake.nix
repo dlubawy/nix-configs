@@ -70,18 +70,22 @@
                   "check-yaml"
                 ];
               };
-              just = rec {
-                enable = true;
-                package = pkgs.just;
-                name = "🤖 Justfile · Format";
-                entry = "${package}/bin/just --fmt --unstable";
-                files = "^justfile$";
-                pass_filenames = false;
-                after = [
-                  "mdformat"
-                  "chktex"
-                ];
-              };
+              just =
+                let
+                  package = pkgs.just;
+                in
+                {
+                  enable = true;
+                  package = package;
+                  name = "🤖 Justfile · Format";
+                  entry = "${package}/bin/just --fmt --unstable";
+                  files = "^justfile$";
+                  pass_filenames = false;
+                  after = [
+                    "mdformat"
+                    "chktex"
+                  ];
+                };
               check-case-conflicts = {
                 enable = true;
                 name = "📁 Filesystem · Check case sensitivity";
