@@ -165,274 +165,278 @@ in
     useDHCP = false;
     useNetworkd = true;
   };
-  systemd.network = {
-    enable = true;
-    wait-online.anyInterface = true;
-    links = {
-      "10-sfp1" = {
-        matchConfig.OriginalName = "eth1";
-        linkConfig = {
-          Name = "sfp1";
-          Description = "SFP 2.5 Gb WAN Port";
+  systemd = {
+    # See: https://github.com/nix-community/srvos/blob/main/nixos/common/networking.nix#L23
+    services.systemd-networkd.stopIfChanged = false;
+    network = {
+      enable = true;
+      wait-online.anyInterface = true;
+      links = {
+        "10-sfp1" = {
+          matchConfig.OriginalName = "eth1";
+          linkConfig = {
+            Name = "sfp1";
+            Description = "SFP 2.5 Gb WAN Port";
+          };
+        };
+        "10-sfp2" = {
+          matchConfig.OriginalName = "sfp2";
+          linkConfig = {
+            Description = "SFP 2.5 Gb LAN Port";
+          };
         };
       };
-      "10-sfp2" = {
-        matchConfig.OriginalName = "sfp2";
-        linkConfig = {
-          Description = "SFP 2.5 Gb LAN Port";
+      netdevs = {
+        "20-br-lan" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "br-lan";
+          };
+          bridgeConfig = {
+            DefaultPVID = 0;
+            VLANFiltering = true;
+          };
+        };
+        "20-br-wan" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "br-wan";
+          };
+        };
+        "20-vl-lan" = {
+          netdevConfig = {
+            Description = "For management of the LAN/VLAN";
+            Kind = "vlan";
+            Name = "vl-lan";
+          };
+          vlanConfig.Id = 99;
+        };
+        "20-vl-dmz" = {
+          netdevConfig = {
+            Description = "For anything exposed to the Internet";
+            Kind = "vlan";
+            Name = "vl-dmz";
+          };
+          vlanConfig.Id = 10;
+        };
+        "20-vl-user" = {
+          netdevConfig = {
+            Description = "For PCs, laptops, phones (to isolate from IoT devices)";
+            Kind = "vlan";
+            Name = "vl-user";
+          };
+          vlanConfig.Id = 20;
+        };
+        "20-vl-iot" = {
+          netdevConfig = {
+            Description = "For Internet of Things (IoT) devices to protect other parts of your network";
+            Kind = "vlan";
+            Name = "vl-iot";
+          };
+          vlanConfig.Id = 30;
+        };
+        "20-vl-guest" = {
+          netdevConfig = {
+            Description = "Guest network for visitors/untrusted devices";
+            Kind = "vlan";
+            Name = "vl-guest";
+          };
+          vlanConfig.Id = 40;
         };
       };
-    };
-    netdevs = {
-      "20-br-lan" = {
-        netdevConfig = {
-          Kind = "bridge";
-          Name = "br-lan";
+      networks = {
+        "30-sfp2" = {
+          matchConfig.Name = "sfp2";
+          bridge = [ "br-lan" ];
+          bridgeVLANs = [
+            {
+              VLAN = 10;
+              PVID = 10;
+              EgressUntagged = 10;
+            }
+          ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
-        bridgeConfig = {
-          DefaultPVID = 0;
-          VLANFiltering = true;
+        "30-lan" = {
+          matchConfig.Name = "lan*";
+          bridge = [ "br-lan" ];
+          bridgeVLANs = [
+            {
+              VLAN = 99;
+              PVID = 99;
+              EgressUntagged = 99;
+            }
+          ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
-      };
-      "20-br-wan" = {
-        netdevConfig = {
-          Kind = "bridge";
-          Name = "br-wan";
+        "30-sfp1" = {
+          matchConfig.Name = "sfp1";
+          bridge = [ "br-wan" ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
-      };
-      "20-vl-lan" = {
-        netdevConfig = {
-          Description = "For management of the LAN/VLAN";
-          Kind = "vlan";
-          Name = "vl-lan";
+        "30-wan" = {
+          matchConfig.Name = "wan";
+          bridge = [ "br-wan" ];
+          networkConfig.ConfigureWithoutCarrier = true;
         };
-        vlanConfig.Id = 99;
-      };
-      "20-vl-dmz" = {
-        netdevConfig = {
-          Description = "For anything exposed to the Internet";
-          Kind = "vlan";
-          Name = "vl-dmz";
+        "35-br-wan" = {
+          matchConfig.Name = "br-wan";
+          DHCP = "ipv4";
+          networkConfig = {
+            IPv6AcceptRA = true;
+            IPv6PrivacyExtensions = false;
+          };
+          linkConfig.RequiredForOnline = "routable";
         };
-        vlanConfig.Id = 10;
-      };
-      "20-vl-user" = {
-        netdevConfig = {
-          Description = "For PCs, laptops, phones (to isolate from IoT devices)";
-          Kind = "vlan";
-          Name = "vl-user";
+        "35-br-lan" = {
+          matchConfig.Name = "br-lan";
+          vlan = [
+            "vl-lan"
+            "vl-dmz"
+            "vl-user"
+            "vl-iot"
+            "vl-guest"
+          ];
+          bridgeVLANs = [
+            { VLAN = 99; }
+            { VLAN = 10; }
+            { VLAN = 20; }
+            { VLAN = 30; }
+            { VLAN = 40; }
+          ];
+          networkConfig = {
+            ConfigureWithoutCarrier = true;
+            BindCarrier = [
+              "sfp2"
+              "lan1"
+              "lan2"
+              "lan3"
+              "lan4"
+            ]
+            ++ (lib.attrNames config.services.hostapd.radios.wlan0.networks)
+            ++ (lib.attrNames config.services.hostapd.radios.wlan1.networks);
+          };
         };
-        vlanConfig.Id = 20;
-      };
-      "20-vl-iot" = {
-        netdevConfig = {
-          Description = "For Internet of Things (IoT) devices to protect other parts of your network";
-          Kind = "vlan";
-          Name = "vl-iot";
+        "35-vl-lan" = {
+          matchConfig.Name = "vl-lan";
+          address = [ "192.168.1.1/24" ];
+          networkConfig = {
+            DHCPServer = true;
+            MulticastDNS = true;
+            ConfigureWithoutCarrier = true;
+          };
+          dhcpServerConfig = {
+            ServerAddress = "192.168.1.1/24";
+            DefaultLeaseTimeSec = "12h";
+            MaxLeaseTimeSec = "24h";
+            DNS = "192.168.1.1";
+            Router = "192.168.1.1";
+            PoolOffset = 100;
+            PoolSize = 100;
+          };
         };
-        vlanConfig.Id = 30;
-      };
-      "20-vl-guest" = {
-        netdevConfig = {
-          Description = "Guest network for visitors/untrusted devices";
-          Kind = "vlan";
-          Name = "vl-guest";
+        "35-vl-dmz" = {
+          matchConfig.Name = "vl-dmz";
+          address = [ "192.168.10.1/24" ];
+          networkConfig = {
+            DHCPServer = true;
+            MulticastDNS = true;
+            ConfigureWithoutCarrier = true;
+          };
+          dhcpServerConfig = {
+            ServerAddress = "192.168.10.1/24";
+            DefaultLeaseTimeSec = "12h";
+            MaxLeaseTimeSec = "24h";
+            DNS = "192.168.1.1";
+            Router = "192.168.10.1";
+            PoolOffset = 100;
+            PoolSize = 100;
+          };
+          dhcpServerStaticLeases = [
+            {
+              Address = lil-nas.address;
+              MACAddress = lil-nas.mac;
+            }
+          ];
         };
-        vlanConfig.Id = 40;
-      };
-    };
-    networks = {
-      "30-sfp2" = {
-        matchConfig.Name = "sfp2";
-        bridge = [ "br-lan" ];
-        bridgeVLANs = [
-          {
-            VLAN = 10;
-            PVID = 10;
-            EgressUntagged = 10;
-          }
-        ];
-        networkConfig.ConfigureWithoutCarrier = true;
-      };
-      "30-lan" = {
-        matchConfig.Name = "lan*";
-        bridge = [ "br-lan" ];
-        bridgeVLANs = [
-          {
-            VLAN = 99;
-            PVID = 99;
-            EgressUntagged = 99;
-          }
-        ];
-        networkConfig.ConfigureWithoutCarrier = true;
-      };
-      "30-sfp1" = {
-        matchConfig.Name = "sfp1";
-        bridge = [ "br-wan" ];
-        networkConfig.ConfigureWithoutCarrier = true;
-      };
-      "30-wan" = {
-        matchConfig.Name = "wan";
-        bridge = [ "br-wan" ];
-        networkConfig.ConfigureWithoutCarrier = true;
-      };
-      "35-br-wan" = {
-        matchConfig.Name = "br-wan";
-        DHCP = "ipv4";
-        networkConfig = {
-          IPv6AcceptRA = true;
-          IPv6PrivacyExtensions = false;
+        "35-vl-user" = {
+          matchConfig.Name = "vl-user";
+          address = [ "192.168.20.1/24" ];
+          networkConfig = {
+            DHCPServer = true;
+            MulticastDNS = true;
+            ConfigureWithoutCarrier = true;
+          };
+          dhcpServerConfig = {
+            ServerAddress = "192.168.20.1/24";
+            DefaultLeaseTimeSec = "12h";
+            MaxLeaseTimeSec = "24h";
+            DNS = "192.168.1.1";
+            Router = "192.168.20.1";
+            PoolOffset = 100;
+            PoolSize = 100;
+          };
+          dhcpServerStaticLeases = [
+            {
+              Address = laptop.address;
+              MACAddress = laptop.mac;
+            }
+            # Gaming PC
+            {
+              Address = gamingPC.address;
+              MACAddress = gamingPC.mac;
+            }
+          ];
         };
-        linkConfig.RequiredForOnline = "routable";
-      };
-      "35-br-lan" = {
-        matchConfig.Name = "br-lan";
-        vlan = [
-          "vl-lan"
-          "vl-dmz"
-          "vl-user"
-          "vl-iot"
-          "vl-guest"
-        ];
-        bridgeVLANs = [
-          { VLAN = 99; }
-          { VLAN = 10; }
-          { VLAN = 20; }
-          { VLAN = 30; }
-          { VLAN = 40; }
-        ];
-        networkConfig = {
-          ConfigureWithoutCarrier = true;
-          BindCarrier = [
-            "sfp2"
-            "lan1"
-            "lan2"
-            "lan3"
-            "lan4"
-          ]
-          ++ (lib.attrNames config.services.hostapd.radios.wlan0.networks)
-          ++ (lib.attrNames config.services.hostapd.radios.wlan1.networks);
+        "35-vl-iot" = {
+          matchConfig.Name = "vl-iot";
+          address = [ "192.168.30.1/24" ];
+          networkConfig = {
+            DHCPServer = true;
+            MulticastDNS = true;
+            ConfigureWithoutCarrier = true;
+          };
+          dhcpServerConfig = {
+            ServerAddress = "192.168.30.1/24";
+            DefaultLeaseTimeSec = "12h";
+            MaxLeaseTimeSec = "24h";
+            DNS = "192.168.1.1";
+            Router = "192.168.30.1";
+            PoolOffset = 100;
+            PoolSize = 100;
+          };
+          dhcpServerStaticLeases = [
+            {
+              Address = printer.address;
+              MACAddress = printer.mac;
+            }
+            {
+              Address = tv.address;
+              MACAddress = tv.mac;
+            }
+            {
+              Address = tv2.address;
+              MACAddress = tv2.mac;
+            }
+          ];
         };
-      };
-      "35-vl-lan" = {
-        matchConfig.Name = "vl-lan";
-        address = [ "192.168.1.1/24" ];
-        networkConfig = {
-          DHCPServer = true;
-          MulticastDNS = true;
-          ConfigureWithoutCarrier = true;
-        };
-        dhcpServerConfig = {
-          ServerAddress = "192.168.1.1/24";
-          DefaultLeaseTimeSec = "12h";
-          MaxLeaseTimeSec = "24h";
-          DNS = "192.168.1.1";
-          Router = "192.168.1.1";
-          PoolOffset = 100;
-          PoolSize = 100;
-        };
-      };
-      "35-vl-dmz" = {
-        matchConfig.Name = "vl-dmz";
-        address = [ "192.168.10.1/24" ];
-        networkConfig = {
-          DHCPServer = true;
-          MulticastDNS = true;
-          ConfigureWithoutCarrier = true;
-        };
-        dhcpServerConfig = {
-          ServerAddress = "192.168.10.1/24";
-          DefaultLeaseTimeSec = "12h";
-          MaxLeaseTimeSec = "24h";
-          DNS = "192.168.1.1";
-          Router = "192.168.10.1";
-          PoolOffset = 100;
-          PoolSize = 100;
-        };
-        dhcpServerStaticLeases = [
-          {
-            Address = lil-nas.address;
-            MACAddress = lil-nas.mac;
-          }
-        ];
-      };
-      "35-vl-user" = {
-        matchConfig.Name = "vl-user";
-        address = [ "192.168.20.1/24" ];
-        networkConfig = {
-          DHCPServer = true;
-          MulticastDNS = true;
-          ConfigureWithoutCarrier = true;
-        };
-        dhcpServerConfig = {
-          ServerAddress = "192.168.20.1/24";
-          DefaultLeaseTimeSec = "12h";
-          MaxLeaseTimeSec = "24h";
-          DNS = "192.168.1.1";
-          Router = "192.168.20.1";
-          PoolOffset = 100;
-          PoolSize = 100;
-        };
-        dhcpServerStaticLeases = [
-          {
-            Address = laptop.address;
-            MACAddress = laptop.mac;
-          }
-          # Gaming PC
-          {
-            Address = gamingPC.address;
-            MACAddress = gamingPC.mac;
-          }
-        ];
-      };
-      "35-vl-iot" = {
-        matchConfig.Name = "vl-iot";
-        address = [ "192.168.30.1/24" ];
-        networkConfig = {
-          DHCPServer = true;
-          MulticastDNS = true;
-          ConfigureWithoutCarrier = true;
-        };
-        dhcpServerConfig = {
-          ServerAddress = "192.168.30.1/24";
-          DefaultLeaseTimeSec = "12h";
-          MaxLeaseTimeSec = "24h";
-          DNS = "192.168.1.1";
-          Router = "192.168.30.1";
-          PoolOffset = 100;
-          PoolSize = 100;
-        };
-        dhcpServerStaticLeases = [
-          {
-            Address = printer.address;
-            MACAddress = printer.mac;
-          }
-          {
-            Address = tv.address;
-            MACAddress = tv.mac;
-          }
-          {
-            Address = tv2.address;
-            MACAddress = tv2.mac;
-          }
-        ];
-      };
-      "35-vl-guest" = {
-        matchConfig.Name = "vl-guest";
-        address = [ "192.168.40.1/24" ];
-        networkConfig = {
-          DHCPServer = true;
-          MulticastDNS = true;
-          ConfigureWithoutCarrier = true;
-        };
-        dhcpServerConfig = {
-          ServerAddress = "192.168.40.1/24";
-          DefaultLeaseTimeSec = "12h";
-          MaxLeaseTimeSec = "24h";
-          DNS = "192.168.1.1";
-          Router = "192.168.40.1";
-          PoolOffset = 100;
-          PoolSize = 100;
+        "35-vl-guest" = {
+          matchConfig.Name = "vl-guest";
+          address = [ "192.168.40.1/24" ];
+          networkConfig = {
+            DHCPServer = true;
+            MulticastDNS = true;
+            ConfigureWithoutCarrier = true;
+          };
+          dhcpServerConfig = {
+            ServerAddress = "192.168.40.1/24";
+            DefaultLeaseTimeSec = "12h";
+            MaxLeaseTimeSec = "24h";
+            DNS = "192.168.1.1";
+            Router = "192.168.40.1";
+            PoolOffset = 100;
+            PoolSize = 100;
+          };
         };
       };
     };
