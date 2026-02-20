@@ -145,7 +145,6 @@
 
                 # Roaming
                 bss_transition = 1;
-                ap_max_inactivity = 15;
                 bss_max_idle = 2;
                 ft_over_ds = 0;
                 mobility_domain = "3143";
@@ -249,7 +248,6 @@
 
                 # Roaming
                 bss_transition = 1;
-                ap_max_inactivity = 15;
                 bss_max_idle = 2;
                 ft_over_ds = 0;
                 mobility_domain = "3143";
