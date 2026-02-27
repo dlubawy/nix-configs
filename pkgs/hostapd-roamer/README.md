@@ -28,3 +28,9 @@ or another file passed to the CLI with `-c <my_conf.ini>`.
 - `hostapd-roamer --help`
 - `hostapd-roamer -i wlan0,wlan1`
 - `hostapd-roamer -c config.ini`
+
+# License
+
+Code under this directory is subject to BSD license laid out in the `./LICENSE` due to
+inclusion of hostapd source code. Code outside this scope is still subject to the root
+license `../../LICENSE`.
