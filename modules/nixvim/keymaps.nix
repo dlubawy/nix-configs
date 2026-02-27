@@ -93,6 +93,7 @@
       action = {
         __raw = ''
           function()
+            require('fzf-lua').register_ui_select()
             require("CopilotChat").select_prompt()
           end
         '';
