@@ -12,6 +12,7 @@ let
     aarch64-linux = pkgs: {
       iwinfo-lite = pkgs.callPackage ./iwinfo-lite { };
       hostap-wpa3 = pkgs.callPackage ./hostap-wpa3 { };
+      hostapd-roamer = pkgs.callPackage ./hostapd-roamer { };
       prometheus-nf-conntrack = pkgs.callPackage ./prometheus-nf-conntrack { };
       prometheus-iwinfo = pkgs.callPackage ./prometheus-iwinfo { };
       prometheus-networkctl = pkgs.callPackage ./prometheus-networkctl { };
