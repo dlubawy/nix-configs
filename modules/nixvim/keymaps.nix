@@ -93,8 +93,7 @@
       action = {
         __raw = ''
           function()
-            local actions = require("CopilotChat.actions")
-            require("CopilotChat.integrations.fzflua").pick(actions.prompt_actions())
+            require("CopilotChat").select_prompt()
           end
         '';
       };
