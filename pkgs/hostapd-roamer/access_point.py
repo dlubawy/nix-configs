@@ -269,7 +269,7 @@ class NeighborReport(UserList):
         return self._set_neighbor(hapd, neighbor, self.data.append)
 
     @staticmethod
-    def request(hapd: Hostapd) -> str:
+    def request(hapd: Hostapd) -> "NeighborReport":
         """Request the current neighbor report string from a Hostapd instance.
 
         Returns a NeighborReport parsed from the hostapd "SHOW_NEIGHBOR" response.

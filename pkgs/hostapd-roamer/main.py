@@ -6,7 +6,7 @@ import os
 import time
 from itertools import chain, combinations
 from pathlib import Path
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from access_point import AccessPoint
 
@@ -45,7 +45,7 @@ def check_roamers(
     access_points: dict[int, list[AccessPoint]],
     roamers: set[str],
     signal_thresholds: dict[str, int],
-) -> dict[str, int]:
+) -> dict[str, dict[str, Any]]:
     need_roam = {}
     for frequency, frequency_access_points in access_points.items():
         for access_point in frequency_access_points:
@@ -91,7 +91,7 @@ def check_roamers(
 
 def steer(
     access_points: dict[str, list[AccessPoint]],
-    roamers: dict[str, dict[str, int | str]],
+    roamers: dict[str, dict[str, Any]],
 ):
     for roamer, info in roamers.items():
         target_frequency = info["target_frequency"]
