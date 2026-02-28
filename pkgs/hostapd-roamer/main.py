@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 import argparse
 import configparser
+import logging
 import os
 import time
-import warnings
 from itertools import chain, combinations
 from pathlib import Path
 from typing import NamedTuple
 
 from access_point import AccessPoint
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+)
+logger = logging.getLogger("hostapd-roamer")
 
 XDG_CONFIG_HOME = Path(os.getenv("XDG_CONFIG_HOME", "~/.config")).expanduser()
 OS_UID = os.getuid()
@@ -48,21 +53,21 @@ def check_roamers(
             stations = access_point.get_stations()
             for station in stations:
                 address = station.get("addr")
-                print(f"Checking {address}")
+                logger.debug("Checking %s", address)
                 if address not in roamers:
                     continue
 
                 signal = int(station.get("signal", "0"))
                 if signal == 0:
-                    warnings.warn(
-                        f"Station {address} does not have a signal", RuntimeWarning
-                    )
+                    logger.warning("Station %s does not have a signal", address)
 
                 # Check 2.4GHz -> 5GHz
                 # If our 2.4GHz signal is very strong we can try a roam to 5GHz
                 if frequency == 2 and signal <= signal_thresholds["2to5"]:
-                    print(
-                        f"Signal <= {signal_thresholds['2to5']} and frequency={frequency}"
+                    logger.debug(
+                        "Signal <= %s and frequency=%s",
+                        signal_thresholds["2to5"],
+                        frequency,
                     )
                     need_roam[address] = {
                         "current_access_point": access_point,
@@ -72,8 +77,10 @@ def check_roamers(
                 # Check 5GHz -> 2.4GHz
                 # If our 5GHz signal is very weak then force a roam to 2.4GHz
                 elif frequency == 5 and signal >= signal_thresholds["5to2"]:
-                    print(
-                        f"Signal >= {signal_thresholds['5to2']} and frequency={frequency}"
+                    logger.debug(
+                        "Signal >= %s and frequency=%s",
+                        signal_thresholds["5to2"],
+                        frequency,
                     )
                     need_roam[address] = {
                         "current_access_point": access_point,
@@ -97,11 +104,14 @@ def steer(
                 roamer, target_list[0], force=force_roam
             )
             if success:
-                print(
-                    f"Steered {roamer} from {current_access_point} to {target_list[0]}"
+                logger.info(
+                    "Steered %s from %s to %s",
+                    roamer,
+                    current_access_point,
+                    target_list[0],
                 )
             else:
-                print(f"Failed to steer {roamer}")
+                logger.warning("Failed to steer %s", roamer)
 
 
 def sync_neighbors(access_points: list[AccessPoint] | dict[str, list[AccessPoint]]):
@@ -159,7 +169,7 @@ def get_config(
     if roamers is None:
         roamers = config.get("Roamers")
         if roamers is None:
-            print("No roamers set. Defaulting to all stations.")
+            logger.info("No roamers set. Defaulting to all stations.")
             all = True
             roamers = all_stations(access_points)
         else:
@@ -179,9 +189,9 @@ def get_config(
 
 
 def main(config: Config):
-    print(f"Config: {config}")
+    logger.info("Config: %s", config)
     last_neighbor_sync = setup_neighbors(config.access_points)
-    print("Initial sync of neighbors complete")
+    logger.info("Initial sync of neighbors complete")
 
     sync_interval = 60 * config.sync_interval_minutes
     sleep_interval = sync_interval // 2
@@ -189,20 +199,20 @@ def main(config: Config):
         current_time = time.time()
         if current_time - last_neighbor_sync >= sync_interval:
             sync_neighbors(config.access_points)
-            print("Synced neighbors")
+            logger.info("Synced neighbors")
             if config.all_stations:
-                print("Syncing all stations list with roamers")
+                logger.info("Syncing all stations list with roamers")
                 updated_stations = all_stations(config.access_points)
                 new_stations = config.roamers.difference(updated_stations)
                 deleted_stations = updated_stations.difference(updated_stations)
-                print(f"Removed stations: {deleted_stations}")
-                print(f"Added stations: {new_stations}")
+                logger.info("Removed stations: %s", deleted_stations)
+                logger.info("Added stations: %s", new_stations)
                 config.roamers.clear()
                 config.roamers.update(updated_stations)
             need_roam = check_roamers(
                 config.access_points, config.roamers, config.signal_thresholds
             )
-            print("Checked roamers")
+            logger.info("Checked roamers")
             if need_roam:
                 steer(config.access_points, need_roam)
             last_neighbor_sync = time.time()
@@ -237,7 +247,17 @@ if __name__ == "__main__":
         type=str,
         help="Comma separated list of roaming stations. Supersedes config.ini values.",
     )
+    parser.add_argument(
+        "-l",
+        "--log-level",
+        dest="log_level",
+        default=None,
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Set logging level (overrides default INFO).",
+    )
     args = parser.parse_args()
+    if args.log_level:
+        logging.getLogger().setLevel(getattr(logging, args.log_level))
     interfaces = _parse_csv_to_set(args.interfaces) if args.interfaces else None
     roamers = _parse_csv_to_set(args.roamers) if args.roamers else None
     config = get_config(args.config_file, interfaces=interfaces, roamers=roamers)
