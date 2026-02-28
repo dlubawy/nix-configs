@@ -16,10 +16,9 @@ logging.basicConfig(
 logger = logging.getLogger("hostapd-roamer")
 
 XDG_CONFIG_HOME = Path(os.getenv("XDG_CONFIG_HOME", "~/.config")).expanduser()
-OS_UID = os.getuid()
 CONFIG_DIR = (
     f"{XDG_CONFIG_HOME}/hostapd-roamer"
-    if XDG_CONFIG_HOME.exists() and os.getuid() < 1000
+    if XDG_CONFIG_HOME.exists() and os.getuid() >= 1000
     else "/etc/hostapd-roamer"
 )
 CONFIG_FILE = f"{CONFIG_DIR}/config.ini"
