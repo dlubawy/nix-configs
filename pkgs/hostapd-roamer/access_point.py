@@ -466,6 +466,8 @@ class AccessPoint(Neighbor):
             addr=current_station.get("addr"),
             next=current_station.get("addr") is not None,
         ):
+            if current_station.get("addr").strip() == "FAIL":
+                raise ValueError("Failed to get stations")
             stations.append(current_station)
         return stations
 
