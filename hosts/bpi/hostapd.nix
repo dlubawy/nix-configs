@@ -95,9 +95,26 @@
         };
       };
     };
-    services.systemd-networkd.restartTriggers = (
-      lib.lists.flatten (builtins.split "\n" config.systemd.services.hostapd.preStart)
-    );
+    services =
+      let
+        hostapdPreStart = (
+          lib.lists.flatten (builtins.split "\n" config.systemd.services.hostapd.preStart)
+        );
+      in
+      {
+        systemd-networkd.restartTriggers = hostapdPreStart;
+        hostapd-roamer = {
+          wantedBy = [ "multi-user.target" ];
+          requires = [ "hostapd.service" ];
+          after = [ "hostapd.service" ];
+          restartTriggers = hostapdPreStart;
+          script = "${pkgs.hostapd-roamer}/bin/main.py -i wlan0,wlan1";
+          serviceConfig = {
+            Type = "simple";
+            User = "root";
+          };
+        };
+      };
   };
   services.hostapd =
     let
