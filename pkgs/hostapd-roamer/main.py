@@ -202,8 +202,8 @@ def main(config: Config):
             if config.all_stations:
                 logger.info("Syncing all stations list with roamers")
                 updated_stations = all_stations(config.access_points)
-                new_stations = config.roamers.difference(updated_stations)
-                deleted_stations = updated_stations.difference(updated_stations)
+                deleted_stations = config.roamers.difference(updated_stations)
+                new_stations = updated_stations.difference(config.roamers)
                 logger.info("Removed stations: %s", deleted_stations)
                 logger.info("Added stations: %s", new_stations)
                 config.roamers.clear()
