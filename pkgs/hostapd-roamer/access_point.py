@@ -25,6 +25,7 @@ import struct
 import warnings
 from collections import UserList
 from enum import Enum
+from time import sleep
 from typing import Callable
 
 from hostapd import Hostapd
@@ -93,12 +94,12 @@ class Neighbor:
         """User-friendly string representation (BSSID)."""
         return self.bssid
 
-    def detach_interface(self):
+    def detach_interface(self, close: bool = True):
         """Close and detach any Hostapd control interface associated with this neighbor.
 
         This is idempotent: if no interface is attached, this becomes a no-op.
         """
-        if self.interface is not None:
+        if self.interface is not None and close:
             self.interface.close_ctrl()
         self.interface = None
 
@@ -361,6 +362,10 @@ def request_beacon(hapd: Hostapd, address: str, request: str) -> tuple[str]:
     return token, resp
 
 
+class InterfaceConnectionError(Exception):
+    """Failed to connect to interface"""
+
+
 class AccessPoint(Neighbor):
     """Representation of the local access point with neighbor management helpers.
 
@@ -372,6 +377,15 @@ class AccessPoint(Neighbor):
     def __init__(self, name: str):
         # Needed for initial report
         self.interface = Hostapd(ifname=name)
+
+        counter = 0
+        while not self.interface.ping:
+            # Raise exception if no ping returned in 60 seconds
+            if counter >= 12:
+                raise InterfaceConnectionError()
+            sleep(5)
+            counter += 1
+
         self.bssid = self.interface.own_addr()
 
         # Get a cleared report
@@ -420,6 +434,9 @@ class AccessPoint(Neighbor):
             )
             if not new_neighbor_info:
                 continue
+            # Detach interface from old Neighbor without closing socket
+            neighbor.detach_interface(close=False)
+            # Attach interface to the new Neighbor
             new_neighbor_info[0].attach_interface(self.interface)
             self._neighbor_report.update(self.interface, new_neighbor_info[0])
 
@@ -477,8 +494,18 @@ class AccessPoint(Neighbor):
         Returns the fresh neighbor report after clearing.
         """
         report = NeighborReport.request(self.interface)
+
+        counter = 0
+        while not report:
+            if counter >= 12:
+                raise InterfaceConnectionError("Could not generate NeighborReport")
+            sleep(5)
+            report = NeighborReport.request(self.interface)
+            counter += 1
+
         for neighbor in report:
             if neighbor.bssid == self.bssid:
                 continue
+            neighbor.detach_interface(close=False)
             report.remove(self.interface, neighbor)
         return NeighborReport.request(self.interface)

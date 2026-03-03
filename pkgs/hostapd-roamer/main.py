@@ -191,6 +191,10 @@ def main(config: Config):
     logger.info("Config: %s", config)
     last_neighbor_sync = setup_neighbors(config.access_points)
     logger.info("Initial sync of neighbors complete")
+    need_roam = check_roamers(
+        config.access_points, config.roamers, config.signal_thresholds
+    )
+    logger.info("Initial check of roamers")
 
     sync_interval = 60 * config.sync_interval_minutes
     sleep_interval = sync_interval // 2
@@ -212,9 +216,10 @@ def main(config: Config):
                 config.access_points, config.roamers, config.signal_thresholds
             )
             logger.info("Checked roamers")
-            if need_roam:
-                steer(config.access_points, need_roam)
             last_neighbor_sync = time.time()
+        if need_roam:
+            steer(config.access_points, need_roam)
+            need_roam = {}
 
         # NOTE: there may be a better way to do this, but
         # this is needed to prevent over usage of the CPU
