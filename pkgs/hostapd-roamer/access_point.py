@@ -26,9 +26,15 @@ import warnings
 from collections import UserList
 from enum import Enum
 from time import sleep
-from typing import Callable
+from typing import Callable, NamedTuple
 
 from hostapd import Hostapd
+
+
+class NeighborComponents(NamedTuple):
+    op_class: int
+    channel: int
+    phy: int
 
 
 class ScanMode(Enum):
@@ -42,6 +48,29 @@ class ScanMode(Enum):
     PASSIVE = 0
     ACTIVE = 1
     TABLE = 2
+
+
+def parse_nr(compact_bssid: str, nr: str) -> NeighborComponents:
+    """Parse nr string into its sub components."""
+    # Parse the neighbor report (nr) to extract op_class, channel, and phy.
+    # The pattern expects the compact (no colons) bssid followed by TLV bytes.
+    pattern = re.compile(
+        r"^"
+        + re.escape(compact_bssid)
+        + r"([a-z0-9]{8})([a-z0-9]{2})([a-z0-9]{2})([a-z0-9]{2})",
+        re.IGNORECASE,
+    )
+    match = pattern.search(nr)
+
+    if match:
+        # match.group(1) is reserved (random/other bytes), groups 2-4 hold op_class,
+        # channel, and phy (hex) respectively.
+        op_class = int(match.group(2), 16)
+        channel = int(match.group(3), 16)
+        phy = int(match.group(4))
+    else:
+        raise ValueError(f"Could not parse nr: {nr}")
+    return NeighborComponents(op_class=op_class, channel=channel, phy=phy)
 
 
 class Neighbor:
@@ -64,24 +93,7 @@ class Neighbor:
         self.nr: str = nr
         self.interface = interface
 
-        # Parse the neighbor report (nr) to extract op_class, channel, and phy.
-        # The pattern expects the compact (no colons) bssid followed by TLV bytes.
-        pattern = re.compile(
-            r"^"
-            + re.escape(self.compact_bssid)
-            + r"([a-z0-9]{8})([a-z0-9]{2})([a-z0-9]{2})([a-z0-9]{2})",
-            re.IGNORECASE,
-        )
-        match = pattern.search(nr)
-
-        if match:
-            # match.group(1) is reserved (random/other bytes), groups 2-4 hold op_class,
-            # channel, and phy (hex) respectively.
-            self.op_class = int(match.group(2), 16)
-            self.channel = int(match.group(3), 16)
-            self.phy = int(match.group(4))
-        else:
-            raise ValueError(f"Could not parse nr: {nr}")
+        self.neighbor_components = parse_nr(self.compact_bssid, self.nr)
 
         # Ensure that when the program exits, any opened control connection is closed.
         atexit.register(self.detach_interface)
@@ -132,15 +144,23 @@ class Neighbor:
         scan_mode = (
             scan_mode.value if isinstance(scan_mode, ScanMode) else int(scan_mode)
         )
-        if None in {self.interface, self.op_class, self.channel}:
-            raise ValueError("Neighbor must have an interface attached")
+        if None in {self.interface, self.neighbor_components}:
+            raise ValueError(
+                "Neighbor must have an interface attached and parsed NeighborComponents"
+            )
         request = build_beacon_request(
-            op_class=self.op_class,
-            channel=self.channel,
+            op_class=self.neighbor_components.op_class,
+            channel=self.neighbor_components.channel,
             mode=scan_mode,
             bssid=self.bssid,
         )
         return request_beacon(self.interface, scanning_station, request)
+
+    def update_nr(self, new_nr: str):
+        """Update nr and parsed NeighborComponents."""
+        new_neighbor_components = parse_nr(self.compact_bssid, new_nr)
+        self.nr = new_nr
+        self.neighbor_components = new_neighbor_components
 
     @property
     def compact_bssid(self) -> str:
@@ -243,14 +263,14 @@ class NeighborReport(UserList):
         """
         old_neighbor = None
         for idx, value in enumerate(self.data):
-            if value.bssid == neighbor.bssid:
+            if value.bssid == neighbor.bssid and value.ssid == neighbor.ssid:
                 old_neighbor = value
                 break
         if old_neighbor is None:
             raise ValueError(f"Neighbor does not exist in report: {neighbor.bssid}")
 
         def ok_func(neighbor):
-            self.data[idx] = neighbor
+            self.data[idx].update_nr(neighbor.nr)
 
         return self._set_neighbor(hapd, neighbor, ok_func)
 
@@ -375,7 +395,6 @@ class AccessPoint(Neighbor):
     """
 
     def __init__(self, name: str):
-        # Needed for initial report
         self.interface = Hostapd(ifname=name)
 
         counter = 0
@@ -395,13 +414,9 @@ class AccessPoint(Neighbor):
         if not self._neighbor_report:
             raise ValueError("Could not determine own neighbor information")
         own_neighbor = self._neighbor_report[0]
-        own_neighbor.attach_interface(self.interface)
-        super().__init__(
-            bssid=own_neighbor.bssid,
-            ssid=own_neighbor.ssid,
-            nr=own_neighbor.nr,
-            interface=own_neighbor.interface,
-        )
+        self.ssid = own_neighbor.ssid
+        self.update_nr(own_neighbor.nr)
+        atexit.register(self.detach_interface)
 
     def add_neighbor(self, neighbor: "AccessPoint"):
         """Add a neighbor AccessPoint to this AP's neighbor report.
@@ -434,11 +449,8 @@ class AccessPoint(Neighbor):
             )
             if not new_neighbor_info:
                 continue
-            # Detach interface from old Neighbor without closing socket
-            neighbor.detach_interface(close=False)
-            # Attach interface to the new Neighbor
-            new_neighbor_info[0].attach_interface(self.interface)
-            self._neighbor_report.update(self.interface, new_neighbor_info[0])
+            new_neighbor = new_neighbor_info[0]
+            self._neighbor_report.update(self.interface, new_neighbor)
 
     def steer_station(
         self, station: str, target: Neighbor, force: bool = False
@@ -447,19 +459,19 @@ class AccessPoint(Neighbor):
 
         Parameters:
         - station: MAC address of the station to steer.
-        - target: Neighbor instance representing the target AP (must have parsed op_class, channel, phy).
+        - target: Neighbor instance representing the target AP (must have parsed NeighborComponents).
         - force: If True, include disassociation imminent flags to force the steer.
 
         Returns:
         - True if hostapd returned OK, False if FAIL.
 
         Raises:
-        - ValueError if target missing op_class/channel/phy or for unknown hostapd responses.
+        - ValueError if target missing NeighborComponents or for unknown hostapd responses.
         """
-        if None in {target.op_class, target.channel, target.phy}:
-            raise ValueError("Target Neighbor must have op_class, channel, and phy set")
+        if target.neighbor_components is None:
+            raise ValueError("Target Neighbor must have a NeighborComponents set")
 
-        request = f"BSS_TM_REQ {station} pref=1 abridged=1 neighbor={target.bssid.upper()},0x0000,{target.op_class},{target.channel},{target.phy}"
+        request = f"BSS_TM_REQ {station} pref=1 abridged=1 neighbor={target.bssid.upper()},0x0000,{target.neighbor_components.op_class},{target.neighbor_components.channel},{target.neighbor_components.phy}"
         if force:
             request = f"{request} disassoc_imminent=1 disassoc_timer=10"
 
