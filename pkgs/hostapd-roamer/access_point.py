@@ -89,11 +89,9 @@ class Neighbor:
 
     def __init__(self, bssid: str, ssid: str, nr: str, interface: Hostapd = None):
         self.bssid: str = bssid
-        self.ssid: str = ssid
-        self.nr: str = nr
+        self.ssid = ssid
+        self.nr = nr
         self.interface = interface
-
-        self.neighbor_components = parse_nr(self.compact_bssid, self.nr)
 
         # Ensure that when the program exits, any opened control connection is closed.
         atexit.register(self.detach_interface)
@@ -156,11 +154,27 @@ class Neighbor:
         )
         return request_beacon(self.interface, scanning_station, request)
 
-    def update_nr(self, new_nr: str):
-        """Update nr and parsed NeighborComponents."""
-        new_neighbor_components = parse_nr(self.compact_bssid, new_nr)
-        self.nr = new_nr
+    @property
+    def nr(self):
+        """The nr property."""
+        return self._nr
+
+    @nr.setter
+    def nr(self, value: str):
+        new_neighbor_components = parse_nr(self.compact_bssid, value)
+        self._nr = value
         self.neighbor_components = new_neighbor_components
+
+    @property
+    def ssid(self):
+        """The ssid property."""
+        return self._ssid
+
+    @ssid.setter
+    def ssid(self, value: str):
+        if not value:
+            raise ValueError("Must provide value for SSID to be updated")
+        self._ssid = value
 
     @property
     def compact_bssid(self) -> str:
@@ -263,14 +277,15 @@ class NeighborReport(UserList):
         """
         old_neighbor = None
         for idx, value in enumerate(self.data):
-            if value.bssid == neighbor.bssid and value.ssid == neighbor.ssid:
+            if value.bssid == neighbor.bssid:
                 old_neighbor = value
                 break
         if old_neighbor is None:
             raise ValueError(f"Neighbor does not exist in report: {neighbor.bssid}")
 
         def ok_func(neighbor):
-            self.data[idx].update_nr(neighbor.nr)
+            self.data[idx].nr = neighbor.nr
+            self.data[idx].ssid = neighbor.ssid
 
         return self._set_neighbor(hapd, neighbor, ok_func)
 
@@ -398,10 +413,14 @@ class AccessPoint(Neighbor):
         self.interface = Hostapd(ifname=name)
 
         counter = 0
-        while not self.interface.ping:
+        while not self.interface.ping():
             # Raise exception if no ping returned in 60 seconds
             if counter >= 12:
-                raise InterfaceConnectionError()
+                timeout_seconds = counter * 5
+                raise InterfaceConnectionError(
+                    f"Failed to establish connection to interface '{name}' "
+                    f"within {timeout_seconds} seconds"
+                )
             sleep(5)
             counter += 1
 
@@ -415,7 +434,7 @@ class AccessPoint(Neighbor):
             raise ValueError("Could not determine own neighbor information")
         own_neighbor = self._neighbor_report[0]
         self.ssid = own_neighbor.ssid
-        self.update_nr(own_neighbor.nr)
+        self.nr = own_neighbor.nr
         atexit.register(self.detach_interface)
 
     def add_neighbor(self, neighbor: "AccessPoint"):
@@ -515,9 +534,9 @@ class AccessPoint(Neighbor):
             report = NeighborReport.request(self.interface)
             counter += 1
 
-        for neighbor in report:
-            if neighbor.bssid == self.bssid:
-                continue
+        to_clear = [neighbor for neighbor in report if neighbor.bssid != self.bssid]
+        for neighbor in to_clear:
             neighbor.detach_interface(close=False)
             report.remove(self.interface, neighbor)
-        return NeighborReport.request(self.interface)
+
+        return report
