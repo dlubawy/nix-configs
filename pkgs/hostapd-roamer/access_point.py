@@ -32,6 +32,15 @@ from hostapd import Hostapd
 
 
 class NeighborComponents(NamedTuple):
+    """
+    Simple container for parsed neighbor components.
+
+    Fields:
+    - op_class: operating class (int)
+    - channel: radio channel number (int)
+    - phy: PHY identifier (int)
+    """
+
     op_class: int
     channel: int
     phy: int
@@ -40,6 +49,7 @@ class NeighborComponents(NamedTuple):
 class ScanMode(Enum):
     """Enumeration of beacon scan request modes.
 
+    Use these values when building beacon measurement requests:
     - PASSIVE: No active probing (listen only).
     - ACTIVE: Probe requests should be sent.
     - TABLE: Use an internal table (implementation-specific).
@@ -51,9 +61,25 @@ class ScanMode(Enum):
 
 
 def parse_nr(compact_bssid: str, nr: str) -> NeighborComponents:
-    """Parse nr string into its sub components."""
-    # Parse the neighbor report (nr) to extract op_class, channel, and phy.
-    # The pattern expects the compact (no colons) bssid followed by TLV bytes.
+    """Parse neighbor report (nr) string and extract TLV subcomponents.
+
+    The neighbor report format expected here contains a compact (no-colon)
+    bssid prefix followed by TLV bytes as a hex string. The regex extracts
+    reserved/random bytes plus the bytes holding operating class, channel and
+    phy. The extracted values are converted to integers and returned as a
+    NeighborComponents tuple.
+
+    Parameters:
+    - compact_bssid: BSSID with no separators and in lower-case (used as regex prefix).
+    - nr: neighbor report payload as a hex string.
+
+    Returns:
+    - NeighborComponents(op_class, channel, phy)
+
+    Raises:
+    - ValueError if the provided nr string does not match the expected pattern.
+    """
+    # Compile a regex to find the compact BSSID followed by 4/1/1/1 bytes groups.
     pattern = re.compile(
         r"^"
         + re.escape(compact_bssid)
@@ -67,6 +93,7 @@ def parse_nr(compact_bssid: str, nr: str) -> NeighborComponents:
         # channel, and phy (hex) respectively.
         op_class = int(match.group(2), 16)
         channel = int(match.group(3), 16)
+        # Note: original code converts group(4) without explicit base; preserve behavior.
         phy = int(match.group(4))
     else:
         raise ValueError(f"Could not parse nr: {nr}")
@@ -76,15 +103,15 @@ def parse_nr(compact_bssid: str, nr: str) -> NeighborComponents:
 class Neighbor:
     """Representation of a neighbor AP entry.
 
-    A neighbor is initialized using:
-      - bssid: MAC address in colon-separated format (e.g. "aa:bb:cc:dd:ee:ff")
-      - ssid: SSID represented as a hex string in the neighbor report
-      - nr:  Neighbor report TLV (hex string) from which op_class, channel, and
-             phy are parsed
+    A Neighbor encapsulates the parsed SSID and neighbor report TLV for a
+    remote AP, and may optionally hold an attached Hostapd control interface
+    to issue commands against that neighbor.
 
-    The constructor parses the 'nr' field to extract operating class, channel,
-    and PHY. An attached Hostapd interface may be provided to perform requests
-    against the neighbor's hostapd instance.
+    Typical initialization:
+      Neighbor(bssid="aa:bb:cc:dd:ee:ff", ssid="6d7953736964", nr="<hex-tlv>")
+
+    The neighbor registers atexit cleanup to ensure any attached control
+    interface is closed when the process exits.
     """
 
     def __init__(self, bssid: str, ssid: str, nr: str, interface: Hostapd = None):
@@ -108,6 +135,9 @@ class Neighbor:
         """Close and detach any Hostapd control interface associated with this neighbor.
 
         This is idempotent: if no interface is attached, this becomes a no-op.
+
+        Parameters:
+        - close: if True, call close_ctrl() on the attached Hostapd interface.
         """
         if self.interface is not None and close:
             self.interface.close_ctrl()
@@ -127,6 +157,11 @@ class Neighbor:
         scan_mode: ScanMode = ScanMode.PASSIVE,
     ) -> tuple[str]:
         """Request a beacon measurement from this neighbor via the attached interface.
+
+        This builds a beacon measurement request TLV using the neighbor's parsed
+        components and sends a REQ_BEACON command via the attached Hostapd
+        instance. It then waits for response events and returns the dialog token
+        and collected response events.
 
         Parameters:
         - scanning_station: MAC address of the station performing the scan.
@@ -156,22 +191,28 @@ class Neighbor:
 
     @property
     def nr(self):
-        """The nr property."""
+        """The nr property: neighbor report TLV as a hex string."""
         return self._nr
 
     @nr.setter
     def nr(self, value: str):
+        """Setter for nr: parse and update neighbor_components when nr is updated.
+
+        The setter parses the provided nr value to extract NeighborComponents and
+        stores the raw nr string. Parsing failures will raise ValueError.
+        """
         new_neighbor_components = parse_nr(self.compact_bssid, value)
         self._nr = value
         self.neighbor_components = new_neighbor_components
 
     @property
     def ssid(self):
-        """The ssid property."""
+        """The ssid property: SSID stored as a hex string."""
         return self._ssid
 
     @ssid.setter
     def ssid(self, value: str):
+        """Setter for ssid; disallow empty values to avoid invalid neighbor entries."""
         if not value:
             raise ValueError("Must provide value for SSID to be updated")
         self._ssid = value
@@ -197,9 +238,10 @@ class RemoveNeighborError(Exception):
 class NeighborReport(UserList):
     """Container and manager for Neighbor objects parsed from a raw neighbor report.
 
-    The container behaves like a list of Neighbor objects and provides helper
-    methods to add, update and remove neighbors by issuing corresponding
-    hostapd control commands.
+    Behaves like a standard Python list (UserList) but provides helpers to
+    interact with hostapd control commands for adding, updating and removing
+    neighbors. The Neighbor objects inside the report do not, by default, have
+    Hostapd interfaces attached — those must be set explicitly using attach_interface.
     """
 
     def __init__(self, raw_report: str):
@@ -251,9 +293,8 @@ class NeighborReport(UserList):
         - neighbor: Neighbor object to set.
         - ok_func: Function to call on success (typically list.append or a setter).
 
-        Raises:
-        - SetNeighborError if hostapd returns FAIL.
-        - ValueError for unknown hostapd responses.
+        The method sends a SET_NEIGHBOR <BSSID> ssid=<hex> nr=<hex> command and
+        dispatches based on the hostapd response.
         """
         match hapd.request(
             f"SET_NEIGHBOR {neighbor.bssid.upper()} ssid={neighbor.ssid} nr={neighbor.nr}"
@@ -284,6 +325,7 @@ class NeighborReport(UserList):
             raise ValueError(f"Neighbor does not exist in report: {neighbor.bssid}")
 
         def ok_func(neighbor):
+            # On successful SET_NEIGHBOR, update the in-memory fields for the entry.
             self.data[idx].nr = neighbor.nr
             self.data[idx].ssid = neighbor.ssid
 
@@ -333,6 +375,7 @@ def build_beacon_request(
     Returns:
     - Hex string representing the request accepted by hostapd's REQ_BEACON command.
     """
+    # Pack the fields into binary (little-endian) and return hex + compact BSSID.
     request = struct.pack("<BBHHB", op_class, channel, random_int, duration, mode)
     return binascii.hexlify(request).decode() + bssid.replace(":", "")
 
@@ -351,6 +394,13 @@ class NoAckError(Exception):
 
 def request_beacon(hapd: Hostapd, address: str, request: str) -> tuple[str]:
     """Send a REQ_BEACON command and wait for response events.
+
+    This function performs the following steps:
+    - Send REQ_BEACON <addr> <request> to hostapd and capture the dialog token.
+    - Wait for BEACON-RESP-RX events (responses) until a BEACON-REQ-TX-STATUS
+      event is received which signals the TX completion.
+    - Validate the TX status contains the expected station address, dialog token,
+      and an ACK (ack=1).
 
     Parameters:
     - hapd: Hostapd instance used to send the REQ_BEACON command.
@@ -372,15 +422,20 @@ def request_beacon(hapd: Hostapd, address: str, request: str) -> tuple[str]:
         raise ReqBeaconError()
 
     resp = []
+    # Wait for response events until we receive a TX status event.
     for i in range(24):
         ev = hapd.wait_event(["BEACON-REQ-TX-STATUS", "BEACON-RESP-RX"], timeout=5)
         if ev is None:
             raise ValueError("No TX status event for beacon request received")
+        # If the event is the TX status, break and validate it below.
         if "BEACON-REQ-TX-STATUS" in ev:
             break
+        # Otherwise accumulate response events (BEACON-RESP-RX).
         resp.append(ev)
     else:
+        # Loop exhausted without a TX status.
         raise TimeoutError()
+    # Validate the TX status payload format and expected values.
     fields = ev.split(" ")
     if fields[1] != address:
         raise ValueError("Unexpected STA address in TX status: " + fields[1])
@@ -410,8 +465,10 @@ class AccessPoint(Neighbor):
     """
 
     def __init__(self, name: str):
+        # Create and store a Hostapd control wrapper for the given interface name.
         self.interface = Hostapd(ifname=name)
 
+        # Wait for the control interface to become responsive (ping).
         counter = 0
         while not self.interface.ping():
             # Raise exception if no ping returned in 60 seconds
@@ -424,17 +481,19 @@ class AccessPoint(Neighbor):
             sleep(5)
             counter += 1
 
+        # Set the AP's own BSSID from the hostapd instance.
         self.bssid = self.interface.own_addr()
 
-        # Get a cleared report
+        # Get a cleared neighbor report (only includes own entry after clearing).
         self._neighbor_report = self._clear_neighbors()
 
-        # Init super class using own report as the only neighbor in list
+        # Init super class using own report as the only neighbor in list.
         if not self._neighbor_report:
             raise ValueError("Could not determine own neighbor information")
         own_neighbor = self._neighbor_report[0]
         self.ssid = own_neighbor.ssid
         self.nr = own_neighbor.nr
+        # Ensure any attached interface is detached when process exits.
         atexit.register(self.detach_interface)
 
     def add_neighbor(self, neighbor: "AccessPoint"):
@@ -463,6 +522,7 @@ class AccessPoint(Neighbor):
                 )
                 continue
             new_neighbor_report = NeighborReport.request(neighbor.interface)
+            # Filter to find the entry corresponding to the neighbor's own BSSID.
             new_neighbor_info = list(
                 filter(lambda x: x.bssid == neighbor.bssid, new_neighbor_report)
             )
@@ -507,6 +567,11 @@ class AccessPoint(Neighbor):
         """Return a list of stations known to this AP by iterating get_sta.
 
         The method iterates hostapd.get_sta until no next station is returned.
+        Each returned entry is expected to be a dict-like object; the function
+        accumulates those and returns the list.
+
+        Note: the declared return type is the original project's annotation;
+        the implementation actually returns a list of station dictionaries.
         """
         stations = []
         current_station = {}
@@ -522,7 +587,9 @@ class AccessPoint(Neighbor):
     def _clear_neighbors(self) -> NeighborReport:
         """Clear all neighbors except the AP's own entry from the hostapd neighbor report.
 
-        Returns the fresh neighbor report after clearing.
+        The function requests the current neighbor report, waits for a non-empty
+        report (with retries), removes every neighbor that does not match the
+        AP's own BSSID, and returns the resulting fresh NeighborReport.
         """
         report = NeighborReport.request(self.interface)
 
@@ -534,8 +601,10 @@ class AccessPoint(Neighbor):
             report = NeighborReport.request(self.interface)
             counter += 1
 
+        # Remove any neighbor entries that do not belong to this AP.
         to_clear = [neighbor for neighbor in report if neighbor.bssid != self.bssid]
         for neighbor in to_clear:
+            # Detach any attached interface reference before removing the entry.
             neighbor.detach_interface(close=False)
             report.remove(self.interface, neighbor)
 

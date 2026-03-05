@@ -1,4 +1,21 @@
 #!/usr/bin/env python3
+"""
+hostapd-roamer
+
+A small utility to steer wireless stations (clients) between hostapd interfaces
+(e.g. 2.4GHz and 5GHz radios) based on RSSI thresholds.
+
+This module:
+- Discovers hostapd interfaces and groups them by frequency (2GHz vs 5GHz).
+- Periodically synchronizes neighbor information between access points.
+- Checks stations against configured roamers and decides if they should be
+  steered between radios based on signal thresholds.
+- Invokes AccessPoint.steer_station to perform the steer when appropriate.
+
+The main entrypoint is the `main` function. A simple CLI at the bottom allows
+overriding config file, interfaces and roamers.
+"""
+
 import argparse
 import configparser
 import logging
@@ -10,11 +27,14 @@ from typing import Any, NamedTuple
 
 from access_point import AccessPoint
 
+# Configure basic logging for the module.
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
 )
 logger = logging.getLogger("hostapd-roamer")
 
+# Configuration file discovery:
+# Prefer per-user XDG_CONFIG_HOME if it exists and this is a non-system user.
 XDG_CONFIG_HOME = Path(os.getenv("XDG_CONFIG_HOME", "~/.config")).expanduser()
 CONFIG_DIR = (
     f"{XDG_CONFIG_HOME}/hostapd-roamer"
@@ -25,6 +45,18 @@ CONFIG_FILE = f"{CONFIG_DIR}/config.ini"
 
 
 class Config(NamedTuple):
+    """
+    Configuration container returned by get_config.
+
+    Fields:
+    - access_points: Mapping from frequency (2 or 5) to list of AccessPoint objects.
+    - interfaces: Set of hostapd interface names that are being managed.
+    - roamers: Set of station MAC addresses that should be considered for roaming.
+    - signal_thresholds: Dict with keys "2to5" and "5to2" containing RSSI thresholds.
+    - sync_interval_minutes: How often (in minutes) to sync neighbor information.
+    - all_stations: If True the roamers set is populated from all attached stations.
+    """
+
     access_points: dict[int, list[AccessPoint]]
     interfaces: set[str]
     roamers: set[str]
@@ -34,6 +66,13 @@ class Config(NamedTuple):
 
 
 def setup_neighbors(access_points: dict[int, list[AccessPoint]]) -> float:
+    """
+    Initialize neighbor relationships between all AccessPoint instances.
+
+    For every pair of access points the function calls add_neighbor on both
+    so that each AP knows about the others. Returns the timestamp when the
+    sync was performed (time.time()).
+    """
     all_access_points = list(chain.from_iterable(access_points.values()))
     for access_point_a, access_point_b in combinations(all_access_points, 2):
         access_point_a.add_neighbor(access_point_b)
@@ -46,6 +85,19 @@ def check_roamers(
     roamers: set[str],
     signal_thresholds: dict[str, int],
 ) -> dict[str, dict[str, Any]]:
+    """
+    Inspect stations on each access point and decide which roamers need steering.
+
+    Returns a mapping keyed by station MAC address with values containing:
+    - current_access_point: AccessPoint instance the station is currently on
+    - target_frequency: int (2 or 5) for the desired frequency band
+    - force: bool indicating whether the steer should be forced
+
+    Decision logic:
+    - If on 2.4GHz and signal <= 2to5 threshold -> consider moving to 5GHz.
+    - If on 5GHz and signal >= 5to2 threshold -> force move to 2.4GHz
+      (5GHz may require forcing because clients often prefer it).
+    """
     need_roam = {}
     for frequency, frequency_access_points in access_points.items():
         for access_point in frequency_access_points:
@@ -61,7 +113,8 @@ def check_roamers(
                     logger.warning("Station %s does not have a signal", address)
 
                 # Check 2.4GHz -> 5GHz
-                # If our 2.4GHz signal is very strong we can try a roam to 5GHz
+                # If our 2.4GHz signal is very strong (low absolute RSSI value)
+                # we can try a roam to 5GHz.
                 if frequency == 2 and signal <= signal_thresholds["2to5"]:
                     logger.debug(
                         "Signal <= %s and frequency=%s",
@@ -93,6 +146,13 @@ def steer(
     access_points: dict[str, list[AccessPoint]],
     roamers: dict[str, dict[str, Any]],
 ):
+    """
+    Attempt to steer each roamer to its target frequency.
+
+    For each roamer found in the `roamers` mapping, try to steer it from the
+    current access point to the first available access point on the target
+    frequency. Logs success or failure.
+    """
     for roamer, info in roamers.items():
         target_frequency = info["target_frequency"]
         current_access_point = info["current_access_point"]
@@ -114,6 +174,12 @@ def steer(
 
 
 def sync_neighbors(access_points: list[AccessPoint] | dict[str, list[AccessPoint]]):
+    """
+    Ensure neighbor information is synced for every AccessPoint.
+
+    Accepts either a list of AccessPoint objects or a dict mapping frequency to
+    lists of AccessPoint objects.
+    """
     if isinstance(access_points, dict):
         for freq_access_points in access_points.values():
             sync_neighbors(freq_access_points)
@@ -123,10 +189,18 @@ def sync_neighbors(access_points: list[AccessPoint] | dict[str, list[AccessPoint
 
 
 def _parse_csv_to_set(line: str) -> set[str]:
+    """
+    Parse a comma separated string into a set of stripped non-empty values.
+
+    Example: "wlan0, wlan1" -> {"wlan0", "wlan1"}
+    """
     return {item.strip() for item in line.split(",") if item.strip()}
 
 
 def all_stations(access_points: dict[int, list[AccessPoint]]) -> set[str]:
+    """
+    Return a set of all station MAC addresses seen across all access points.
+    """
     roamers = set()
     for frequency_access_points in access_points.values():
         for access_point in frequency_access_points:
@@ -139,6 +213,20 @@ def get_config(
     interfaces: set[str] | None = None,
     roamers: set[str] | None = None,
 ) -> Config:
+    """
+    Load configuration from config_file and construct a Config NamedTuple.
+
+    Parameters:
+    - config_file: Path to an INI-style config file with a [HostapdRoamer] section.
+    - interfaces: Optional set of interface names to override the config file.
+    - roamers: Optional set of station MACs to override the config file.
+
+    Behavior:
+    - If the config file has no sections a default HostapdRoamer section is used.
+    - Interfaces are required either via parameter or config file.
+    - If roamers are not provided the function will default to all stations
+      discovered on the listed interfaces.
+    """
     config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
     if config_parser.sections() and "HostapdRoamer" not in config_parser:
@@ -158,6 +246,7 @@ def get_config(
     access_points: dict[int, list[AccessPoint]] = {2: [], 5: []}
     for name in interfaces:
         access_point = AccessPoint(name=name)
+        # Determine if the interface is 2.4GHz or 5GHz by examining its freq.
         is_2g = int(access_point.interface.get_status().get("freq")) < 3000
         if is_2g:
             access_points[2].append(access_point)
@@ -188,6 +277,15 @@ def get_config(
 
 
 def main(config: Config):
+    """
+    Main event loop.
+
+    - Performs an initial neighbor setup and roamer check.
+    - Periodically re-syncs neighbors and re-evaluates roaming needs based on
+      the configured sync interval.
+    - If config.all_stations is enabled the roamers list will be refreshed with
+      all currently seen stations on each neighbor sync.
+    """
     logger.info("Config: %s", config)
     last_neighbor_sync = setup_neighbors(config.access_points)
     logger.info("Initial sync of neighbors complete")
