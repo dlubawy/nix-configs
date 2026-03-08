@@ -66,6 +66,19 @@ in
           };
         };
       };
+      guest_tv = mkDevice "📺 Guest TV" {
+        interfaceGroups = [ [ "wifi" ] ];
+        interfaces = {
+          wifi = {
+            addresses = [ "192.168.30.13" ];
+            mac = "a6:9e:70:0a:3f:7a";
+            physicalConnections = [
+              (mkConnection "bpi" "wlan0.30")
+              (mkConnection "bpi" "wlan1.30")
+            ];
+          };
+        };
+      };
       iot = mkDevice "🤖 IoT Devices" {
         interfaceGroups = [ [ "wifi" ] ];
         connections.wifi = mkConnection "bpi" "wlan0-1.30";
