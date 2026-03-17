@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a
-      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+      - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
         id: app-token
         with:
           app-id: ${{ secrets.APP_ID }}
