@@ -17,6 +17,7 @@ let
   printer = (getInterface "printer" "wifi");
   tv = (getInterface "tv" "wifi");
   tv2 = (getInterface "tv" "wifi2");
+  guestTV = (getInterface "guestTV" "wifi");
   lil-nas = (getInterface "lil-nas" "enp5s0");
   prometheusPort = (builtins.toString config.services.prometheus.port);
   lokiPort = (builtins.toString config.services.loki.configuration.server.http_listen_port);
@@ -417,6 +418,10 @@ in
             {
               Address = tv2.address;
               MACAddress = tv2.mac;
+            }
+            {
+              Address = guestTV.address;
+              MACAddress = guestTV.mac;
             }
           ];
         };
