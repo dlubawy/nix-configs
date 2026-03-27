@@ -66,7 +66,7 @@ in
           };
         };
       };
-      guest_tv = mkDevice "📺 Guest TV" {
+      guestTV = mkDevice "📺 Guest TV" {
         interfaceGroups = [ [ "wifi" ] ];
         interfaces = {
           wifi = {
