@@ -2,7 +2,7 @@
   description = "A Nix flake based Go environment";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    pre-commit-hooks = {
+    git-hooks = {
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -12,7 +12,7 @@
     {
       self,
       nixpkgs,
-      pre-commit-hooks,
+      git-hooks,
     }@inputs:
     let
       supportedSystems = [
@@ -28,11 +28,12 @@
       checks = forEachSupportedSystem (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
+          pre-commit-check = inputs.git-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = builtins.path {
               path = ./.;
               name = "template";
             };
+            package = pkgs.prek;
             hooks = {
               trufflehog = {
                 enable = true;

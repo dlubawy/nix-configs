@@ -21,7 +21,7 @@
     };
 
     # Dev inputs
-    pre-commit-hooks = {
+    git-hooks = {
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -34,7 +34,7 @@
       pyproject-nix,
       uv2nix,
       pyproject-build-systems,
-      pre-commit-hooks,
+      git-hooks,
     }@inputs:
     let
       inherit (nixpkgs) lib;
@@ -60,11 +60,12 @@
       checks = forEachSupportedSystem (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
+          pre-commit-check = inputs.git-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = builtins.path {
               path = ./.;
               name = "template";
             };
+            package = pkgs.prek;
             hooks = {
               trufflehog = {
                 enable = true;

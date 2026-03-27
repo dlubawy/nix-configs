@@ -45,7 +45,7 @@ rec {
       url = "github:dlubawy/agenix/launchd_settings";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pre-commit-hooks = {
+    git-hooks = {
       url = "github:cachix/git-hooks.nix/9c52372878df6911f9afc1e2a1391f55e4dfc864";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -75,7 +75,7 @@ rec {
       home-manager,
       nixvim,
       agenix,
-      pre-commit-hooks,
+      git-hooks,
       nix-topology,
       ...
     }@inputs:
@@ -250,11 +250,12 @@ rec {
       checks = forAllSystems (
         { pkgs }:
         {
-          pre-commit-check = pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
+          pre-commit-check = git-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = builtins.path {
               path = ./.;
               name = "nix-configs";
             };
+            package = pkgs.prek;
             hooks = {
               trufflehog = {
                 enable = true;
