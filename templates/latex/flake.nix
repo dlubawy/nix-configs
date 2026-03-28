@@ -162,11 +162,12 @@
                 ;
             }
           );
+          inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook enabledPackages;
         in
         {
           default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
-            buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
+            inherit shellHook;
+            buildInputs = (builtins.attrValues { inherit (pkgs) prek; }) ++ enabledPackages;
             packages =
               (builtins.attrValues {
                 inherit (pkgs)

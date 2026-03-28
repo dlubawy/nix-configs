@@ -234,17 +234,19 @@
         { pkgs }:
         let
           inherit (pkgs) writeScriptBin;
+          inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook enabledPackages;
         in
         {
           default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
+            inherit shellHook;
             buildInputs =
               (builtins.attrValues {
                 inherit (pkgs)
                   deno
+                  prek
                   ;
               })
-              ++ self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
+              ++ enabledPackages;
             packages = [
               (writeScriptBin "create-vite" ''
                 ${pkgs.deno}/bin/deno run -A npm:create-vite .

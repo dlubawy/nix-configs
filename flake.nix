@@ -372,10 +372,11 @@ rec {
           default =
             let
               inherit (pkgs) writeShellApplication stdenv;
+              inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) enabledPackages shellHook;
             in
             pkgs.mkShell {
-              inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
-              buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
+              inherit shellHook;
+              buildInputs = (builtins.attrValues { inherit (pkgs) prek; }) ++ enabledPackages;
               packages = [
                 agenix.packages.${stdenv.hostPlatform.system}.default
                 (writeShellApplication {
