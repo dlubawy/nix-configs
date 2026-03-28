@@ -108,21 +108,17 @@
           requires = [ "hostapd.service" ];
           after = [ "hostapd.service" ];
           restartTriggers = hostapdPreStart;
+          preStart = "sleep 5";
           script = "${pkgs.hostapd-roamer}/bin/main.py -i wlan0,wlan1";
+          startLimitIntervalSec = 60;
+          startLimitBurst = 5;
           serviceConfig = {
             Type = "simple";
             User = "root";
 
-            # Delay start by 5 seconds
-            ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-
             # Retry on failure
             Restart = "on-failure";
             RestartSec = "5s";
-          };
-          unitConfig = {
-            StartLimitBurst = 5;
-            StartLimitIntervalSec = 60;
           };
         };
       };
