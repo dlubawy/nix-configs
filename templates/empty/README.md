@@ -383,7 +383,7 @@ Run hooks manually to see detailed error messages:
 ```bash
 git commit  # hooks run automatically
 # OR
-pre-commit run --all-files  # run all hooks manually
+prek run --all-files  # run all hooks manually
 ```
 
 ## When to Use This Template

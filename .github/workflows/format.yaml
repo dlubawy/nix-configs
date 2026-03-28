@@ -14,5 +14,5 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a
-      - name: Running pre-commit 🚧
-        run: "nix develop --command pre-commit run --all-files"
+      - name: Running prek 🚧
+        run: "nix develop --command prek run --all-files"

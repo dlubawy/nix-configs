@@ -21,7 +21,7 @@
     };
 
     # Dev inputs
-    pre-commit-hooks = {
+    git-hooks = {
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -34,7 +34,7 @@
       pyproject-nix,
       uv2nix,
       pyproject-build-systems,
-      pre-commit-hooks,
+      git-hooks,
     }@inputs:
     let
       inherit (nixpkgs) lib;
@@ -60,11 +60,12 @@
       checks = forEachSupportedSystem (
         { pkgs }:
         {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
+          pre-commit-check = inputs.git-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = builtins.path {
               path = ./.;
               name = "template";
             };
+            package = pkgs.prek;
             hooks = {
               trufflehog = {
                 enable = true;
@@ -225,6 +226,7 @@
       devShells = forEachSupportedSystem (
         { pkgs }:
         let
+          inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook enabledPackages;
           pythonSet =
             # Use base package set from pyproject.nix builders
             (pkgs.callPackage pyproject-nix.build.packages {
@@ -291,7 +293,7 @@
 
             in
             pkgs.mkShell {
-              buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
+              buildInputs = (builtins.attrValues { inherit (pkgs) prek; }) ++ enabledPackages;
               packages = [
                 virtualenv
                 pkgs.uv
@@ -315,7 +317,7 @@
               };
 
               shellHook = lib.strings.concatLines [
-                self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.shellHook
+                shellHook
                 # Undo dependency propagation by nixpkgs.
                 "unset PYTHONPATH"
                 # Get repository root using git. This is expanded at runtime by the editable `.pth` machinery.

@@ -45,8 +45,8 @@ rec {
       url = "github:dlubawy/agenix/launchd_settings";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix/9c52372878df6911f9afc1e2a1391f55e4dfc864";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix/f799ae951fde0627157f40aec28dec27b22076d0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-topology = {
@@ -75,7 +75,7 @@ rec {
       home-manager,
       nixvim,
       agenix,
-      pre-commit-hooks,
+      git-hooks,
       nix-topology,
       ...
     }@inputs:
@@ -250,11 +250,12 @@ rec {
       checks = forAllSystems (
         { pkgs }:
         {
-          pre-commit-check = pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
+          pre-commit-check = git-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
             src = builtins.path {
               path = ./.;
               name = "nix-configs";
             };
+            package = pkgs.prek;
             hooks = {
               trufflehog = {
                 enable = true;
@@ -371,10 +372,11 @@ rec {
           default =
             let
               inherit (pkgs) writeShellApplication stdenv;
+              inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) enabledPackages shellHook;
             in
             pkgs.mkShell {
-              inherit (self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
-              buildInputs = self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
+              inherit shellHook;
+              buildInputs = (builtins.attrValues { inherit (pkgs) prek; }) ++ enabledPackages;
               packages = [
                 agenix.packages.${stdenv.hostPlatform.system}.default
                 (writeShellApplication {
