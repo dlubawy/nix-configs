@@ -112,6 +112,17 @@
           serviceConfig = {
             Type = "simple";
             User = "root";
+
+            # Delay start by 5 seconds
+            ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+
+            # Retry on failure
+            Restart = "on-failure";
+            RestartSec = "5s";
+          };
+          unitConfig = {
+            StartLimitBurst = 5;
+            StartLimitIntervalSec = 60;
           };
         };
       };
