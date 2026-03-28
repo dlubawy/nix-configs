@@ -46,7 +46,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     git-hooks = {
-      url = "github:cachix/git-hooks.nix/9c52372878df6911f9afc1e2a1391f55e4dfc864";
+      url = "github:cachix/git-hooks.nix/f799ae951fde0627157f40aec28dec27b22076d0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-topology = {
