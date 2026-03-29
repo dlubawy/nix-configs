@@ -6,7 +6,7 @@
     owner = "dlubawy";
     repo = "age-plugin-yubikey";
     rev = "combined_encryption";
-    sha256 = "sha256-jSbAWNazFaU9rFbKYKn2JF7QcQF1Utla21Y3oV0qU8Y=";
+    hash = "sha256-jSbAWNazFaU9rFbKYKn2JF7QcQF1Utla21Y3oV0qU8Y=";
   };
   cargoHash = "";
   cargoDeps = prev.rustPlatform.importCargoLock {
