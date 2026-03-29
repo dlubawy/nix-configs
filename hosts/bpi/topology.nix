@@ -114,6 +114,20 @@ in
           ];
         };
       };
+      soundbar = mkDevice "🔊 Soundbar" {
+        interfaceGroups = [
+          [ "wifi" ]
+        ];
+        interfaces = {
+          wifi = {
+            addresses = [ "192.168.30.14" ];
+            mac = "1c:ce:51:fc:f2:bc";
+            physicalConnections = [
+              (mkConnection "bpi" "wlan0.30")
+            ];
+          };
+        };
+      };
     };
 
     networks = {

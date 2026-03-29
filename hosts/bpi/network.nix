@@ -19,6 +19,7 @@ let
   tv2 = (getInterface "tv" "wifi2");
   guestTV = (getInterface "guestTV" "wifi");
   lil-nas = (getInterface "lil-nas" "enp5s0");
+  soundbar = (getInterface "soundbar" "wifi");
   prometheusPort = (builtins.toString config.services.prometheus.port);
   lokiPort = (builtins.toString config.services.loki.configuration.server.http_listen_port);
 in
@@ -422,6 +423,10 @@ in
             {
               Address = guestTV.address;
               MACAddress = guestTV.mac;
+            }
+            {
+              Address = soundbar.address;
+              MACAddress = soundbar.mac;
             }
           ];
         };
