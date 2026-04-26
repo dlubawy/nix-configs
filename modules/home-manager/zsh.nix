@@ -59,15 +59,15 @@
       sudo = "sudo ";
 
       # Remap to newer tool alternatives
-      l = "eza -lhF";
+      l = "eza -lhF auto";
       ll = "exec_scmb_expand_args ls_with_file_shortcuts";
       la = "exec_scmb_expand_args ls_with_file_shortcuts -A";
       ls = "eza";
-      lt = "ls -lhF -s date";
-      lS = "ls -1lhF -s size --no-permissions --total-size --no-user --no-time";
-      lart = "ls -1arF -s date";
-      lrt = "ls -1rF -s date";
-      lsr = "ls -lARhF";
+      lt = "ls -lhF auto -s date";
+      lS = "ls -1lhF auto -s size --no-permissions --total-size --no-user --no-time";
+      lart = "ls -1arF auto -s date";
+      lrt = "ls -1rF auto -s date";
+      lsr = "ls -lARhF auto";
       lsn = "ls -1";
       find = "fd";
       ff = "find --type f";
