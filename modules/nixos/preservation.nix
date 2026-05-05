@@ -6,7 +6,9 @@
 }:
 let
   inherit (lib) optionals mkIf;
-  hasPersist = (builtins.hasAttr "/persist" config.fileSystems) && config.disko.persist.enable;
+  hasPersist =
+    (builtins.hasAttr "/persist" config.fileSystems)
+    && (config.fileSystems."/persist".enable || config.disko.persist.enable);
 in
 {
   imports = [
