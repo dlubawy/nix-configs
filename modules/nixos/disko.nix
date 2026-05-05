@@ -68,7 +68,13 @@ in
           path = [ pkgs.zfs ];
           unitConfig.DefaultDependencies = "no";
           serviceConfig.Type = "oneshot";
-          script = "zfs rollback -r rpool/local/root@blank";
+          script = ''
+            if zfs list -t snapshot -H -o name | grep -qE '^rpool/local/root@blank$'; then
+              zfs rollback -r rpool/local/root@blank
+            else
+              echo "WARNING: snapshot rpool/local/root@blank not found, skipping rollback" >&2
+            fi
+          '';
         };
       };
     };
