@@ -173,7 +173,7 @@ in
                 };
               };
 
-              "safe/home" = mkIf (!cfg.zfs.tank.enable) {
+              "safe/home" = {
                 type = "zfs_fs";
                 mountpoint = "/home";
               };
