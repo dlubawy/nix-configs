@@ -65,7 +65,12 @@ build option system:
 test system:
     #!/usr/bin/env bash
     SYSTEM="{{ system }}"
-    just nixos build-vm "$SYSTEM"
+    read -r HAS_DISKO_VM < <(nix eval '.#nixosConfigurations.'"$SYSTEM"'.config.system.build' --apply 'builtins.hasAttr "vmWithDisko"')
+    if [[ "$HAS_DISKO_VM" == "true" ]]; then
+        nix run -L '.#nixosConfigurations.'"$SYSTEM"'.config.system.build.vmWithDisko'
+    else
+        just nixos build-vm "$SYSTEM"
+    fi
     if [ -f "./nixos.qcow2" ]; then
         rm -i ./nixos.qcow2
     fi
