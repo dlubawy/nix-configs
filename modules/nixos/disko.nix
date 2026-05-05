@@ -48,8 +48,8 @@ in
         message = "Must set hostId when using ZFS with disko. Use 'head -c4 /dev/urandom | od -A none -t x4' to generate one.";
       }
       {
-        assertion = (lists.count (x: x) [ cfg.zfs.enable ]) == 1;
-        message = "Only one filesystem can be configured";
+        assertion = cfg.enable -> ((lists.count (x: x) [ cfg.zfs.enable ]) == 1);
+        message = "Only one filesystem can be configured at a time with disko";
       }
     ];
 
