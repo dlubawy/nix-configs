@@ -69,7 +69,7 @@ in
           unitConfig.DefaultDependencies = "no";
           serviceConfig.Type = "oneshot";
           script = ''
-            if zfs list -t snapshot -H -o name | grep -qE '^rpool/local/root@blank$'; then
+            if zfs list -H -o name rpool/local/root@blank 2>/dev/null; then
               zfs rollback -r rpool/local/root@blank
             else
               echo "WARNING: snapshot rpool/local/root@blank not found, skipping rollback" >&2
