@@ -17,14 +17,15 @@ let
 in
 {
   imports = [
-    inputs.agenix.nixosModules.default
-    inputs.nix-topology.nixosModules.default
-    inputs.nixvim.nixosModules.nixvim
-    inputs.lanzaboote.nixosModules.lanzaboote
+    ./disko.nix
     ./nix.nix
-    ./users.nix
     ./preservation.nix
     ./tailscale.nix
+    ./users.nix
+    inputs.agenix.nixosModules.default
+    inputs.lanzaboote.nixosModules.lanzaboote
+    inputs.nix-topology.nixosModules.default
+    inputs.nixvim.nixosModules.nixvim
   ];
 
   options = {
