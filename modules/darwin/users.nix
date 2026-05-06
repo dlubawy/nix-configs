@@ -4,8 +4,10 @@
   ...
 }:
 let
+  inherit (lib) attrsets;
   systemName = config.systemName;
   nixConfigUsers = config.nix-configs.users;
+  adminUsers = attrsets.filterAttrs (_: v: v.isAdmin) nixConfigUsers;
 in
 {
   imports = [
@@ -26,10 +28,10 @@ in
     }) nixConfigUsers;
 
     security = {
-      # Allows standard user to run darwin-rebuild through the admin user
+      # Allows admin user to run darwin-rebuild through the system admin user
       # sudo -Hu ${systemName} darwin-rebuild
       sudo.extraConfig = lib.concatLines (
-        lib.concatMap (user: [ "${user.name} ALL = (${systemName}) ALL" ]) (lib.attrValues nixConfigUsers)
+        lib.concatMap (user: [ "${user.name} ALL = (${systemName}) ALL" ]) (lib.attrValues adminUsers)
       );
     };
 

@@ -34,6 +34,11 @@ let
           default = "";
           description = "User's email address";
         };
+        isAdmin = mkOption {
+          type = types.bool;
+          default = false;
+          description = "User is an admin";
+        };
         sshKey = mkOption {
           type = types.nullOr types.str;
           default = null;

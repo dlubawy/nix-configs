@@ -141,9 +141,9 @@ in
             shell = pkgs.zsh;
             description = value.fullName;
             extraGroups = [
-              "wheel"
               "networkmanager"
-            ];
+            ]
+            ++ (optionals value.isAdmin [ "wheel" ]);
             initialPassword = mkDefault (
               if
                 (
