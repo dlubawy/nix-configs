@@ -10,6 +10,7 @@ let
     mkIf
     mkEnableOption
     mkOption
+    optionals
     optionalString
     types
     lists
@@ -37,7 +38,21 @@ in
         enable = mkEnableOption "Enable ZFS configurations";
         tank = {
           enable = mkEnableOption "Enable ZFS tank pool for data storage";
+          mirrors = mkOption {
+            description = "List of mirrored pairs";
+            type = types.listOf (types.listOf types.str);
+          };
         };
+        key = {
+          enable = mkEnableOption "Enable using a device key for drive unlock";
+          device = mkOption {
+            description = "Device key to use for unlocking zfs pool";
+            default = "/dev/disk/by-partlabel/zfs-key";
+            type = types.str;
+          };
+        };
+        # TODO: expand this to setup the raid config too
+        bootRaid.enable = mkEnableOption "Enable using RAID1 on /boot";
       };
     };
   };
@@ -51,7 +66,15 @@ in
         assertion = cfg.enable -> ((lists.count (x: x) [ cfg.zfs.enable ]) == 1);
         message = "Only one filesystem can be configured at a time with disko";
       }
+      {
+        assertion = (cfg.zfs.tank.enable) -> (lists.count (x: x) cfg.zfs.tank.mirrors > 0);
+        message = "Must have configured devices for vdev mirrors";
+      }
     ];
+
+    environment.variables = mkIf cfg.zfs.bootRaid.enable {
+      SYSTEMD_RELAX_ESP_CHECKS = 1;
+    };
 
     boot = {
       loader = {
@@ -59,6 +82,21 @@ in
       };
 
       initrd.systemd.services = {
+        "zfs-wait" = mkIf (cfg.persist.enable && cfg.zfs.enable && cfg.zfs.key.enable) {
+          description = "Wait for ZFS key to unlock pools";
+          wantedBy = [ "initrd.target" ];
+          before = [
+            "zfs-import-rpool.service"
+          ]
+          ++ (optionals cfg.zfs.tank.enable [
+            "zfs-import-tank.service"
+          ]);
+          after = [ "initrd-root-device.target" ];
+
+          unitConfig.DefaultDependencies = "no";
+          serviceConfig.Type = "oneshot";
+          script = "udevadm wait ${cfg.zfs.key.device}";
+        };
         "zfs-rollback" = mkIf (cfg.persist.enable && cfg.zfs.enable) {
           description = "Rollback root ZFS dataset to snapshot before mounting root";
           wantedBy = [ "initrd.target" ];
@@ -94,77 +132,23 @@ in
 
     disko = {
       devices = {
-        zpool = mkIf cfg.zfs.enable {
-          rpool = {
-            type = "zpool";
-            rootFsOptions = {
-              encryption = "on";
-              keyformat = "passphrase";
-              keylocation = "prompt";
-              mountpoint = "none";
-              compression = "zstd";
-              acltype = "posixacl";
-              xattr = "sa";
-              "com.sun:auto-snapshot" = "${toString (!cfg.zfs.tank.enable)}";
-            };
-            datasets = {
-              "local" = {
-                type = "zfs_fs";
-                options."com.sun:auto-snapshot" = "false";
-              };
-              "local/root" = {
-                type = "zfs_fs";
-                mountpoint = "/";
-                postCreateHook = optionalString cfg.persist.enable "zfs list -t snapshot -H -o name | grep -E '^rpool/local/root@blank$' || zfs snapshot rpool/local/root@blank";
-              };
-              "local/nix" = mkIf (!cfg.zfs.tank.enable) {
-                type = "zfs_fs";
-                mountpoint = "/nix";
-              };
-              "local/swap" = mkIf (cfg.swap.enable && !cfg.zfs.tank.enable) {
-                type = "zfs_volume";
-                size = cfg.swap.size;
-                options = {
-                  volblocksize = "4096";
-                  compression = "zle";
-                  logbias = "throughput";
-                  sync = "always";
-                  primarycache = "metadata";
-                  secondarycache = "none";
-                };
-              };
-
-              "safe/home" = mkIf (!cfg.zfs.tank.enable) {
-                type = "zfs_fs";
-                mountpoint = "/home";
-              };
-              "safe/persist" = mkIf (cfg.persist.enable && !cfg.zfs.tank.enable) {
-                type = "zfs_fs";
-                mountpoint = "/persist";
-              };
-            };
-          };
-
-          tank = mkIf cfg.zfs.tank.enable {
-            type = "zpool";
-            rootFsOptions = {
-              encryption = "on";
-              keyformat = "passphrase";
-              keylocation = "prompt";
-              mountpoint = "none";
-              compression = "zstd";
-              acltype = "posixacl";
-              xattr = "sa";
-              "com.sun:auto-snapshot" = "true";
-            };
-            datasets = {
-              "local" = {
-                type = "zfs_fs";
-                options."com.sun:auto-snapshot" = "false";
-              };
+        zpool =
+          let
+            dynamicDatasets = {
               "local/nix" = {
                 type = "zfs_fs";
                 mountpoint = "/nix";
+              };
+              "local/jellyfin" = mkIf config.services.jellyfin.enable {
+                type = "zfs_fs";
+                mountpoint = "/var/cache/jellyfin";
+                options = {
+                  atime = "off";
+                  sync = "disabled";
+                  recordsize = "1M";
+                  primarycache = "metadata";
+                  secondarycache = "none";
+                };
               };
               "local/swap" = mkIf cfg.swap.enable {
                 type = "zfs_volume";
@@ -187,9 +171,88 @@ in
                 type = "zfs_fs";
                 mountpoint = "/persist";
               };
+              "safe/jellyfin" = mkIf config.services.jellyfin.enable {
+                type = "zfs_fs";
+                mountpoint = "/srv/jellyfin";
+                options = {
+                  recordsize = "1M";
+                };
+              };
+              "safe/postgresql" = mkIf config.services.postgresql.enable {
+                type = "zfs_fs";
+                mountpoint = "/var/lib/postgresql";
+                options = {
+                  redundant_metadata = "most";
+                  recordsize = "32k";
+                  logbias = "throughput";
+                };
+              };
+              "safe/nextcloud" = mkIf config.services.nextcloud.enable {
+                type = "zfs_fs";
+                mountpoint = "/var/lib/nextcloud";
+                options = {
+                  recordsize = "1M";
+                };
+              };
+            };
+          in
+          mkIf cfg.zfs.enable {
+            rpool = {
+              type = "zpool";
+              rootFsOptions = {
+                encryption = "on";
+                keyformat = "passphrase";
+                keylocation = if cfg.zfs.key.enable then "file://${cfg.zfs.key.device}" else "prompt";
+                mountpoint = "none";
+                compression = "zstd";
+                acltype = "posixacl";
+                xattr = "sa";
+                "com.sun:auto-snapshot" = "${toString (!cfg.zfs.tank.enable)}";
+              };
+              datasets = {
+                "local" = {
+                  type = "zfs_fs";
+                  options."com.sun:auto-snapshot" = "false";
+                };
+                "local/root" = {
+                  type = "zfs_fs";
+                  mountpoint = "/";
+                  postCreateHook = optionalString cfg.persist.enable "zfs list -t snapshot -H -o name | grep -E '^rpool/local/root@blank$' || zfs snapshot rpool/local/root@blank";
+                };
+              }
+              // (mkIf (!cfg.zfs.tank.enable) dynamicDatasets);
+            };
+
+            tank = mkIf cfg.zfs.tank.enable {
+              type = "zpool";
+              mode = {
+                topology = {
+                  type = "topology";
+                  vdev = map (x: {
+                    mode = "mirror";
+                    members = x;
+                  }) cfg.zfs.tank.mirrors;
+                };
+              };
+              rootFsOptions = {
+                encryption = "on";
+                keyformat = "passphrase";
+                keylocation = if cfg.zfs.key.enable then "file://${cfg.zfs.key.device}" else "prompt";
+                mountpoint = "none";
+                compression = "zstd";
+                acltype = "posixacl";
+                xattr = "sa";
+                "com.sun:auto-snapshot" = "true";
+              };
+              datasets = {
+                "local" = {
+                  type = "zfs_fs";
+                  options."com.sun:auto-snapshot" = "false";
+                };
+              }
+              // dynamicDatasets;
             };
           };
-        };
       };
     };
   };
