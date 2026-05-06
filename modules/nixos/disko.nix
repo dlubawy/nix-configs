@@ -10,6 +10,7 @@ let
     mkIf
     mkEnableOption
     mkOption
+    mkMerge
     optionals
     optionalString
     types
@@ -121,14 +122,15 @@ in
       neededForBoot = true;
     };
 
-    zramSwap =
-      mkIf cfg.swap.enable {
+    zramSwap = mkMerge [
+      (mkIf cfg.swap.enable {
         enable = true;
-      }
-      // (mkIf cfg.zfs.enable {
+      })
+      (mkIf cfg.zfs.enable {
         writebackDevice =
           if cfg.zfs.tank.enable then "/dev/zvol/tank/local/swap" else "/dev/zvol/rpool/local/swap";
-      });
+      })
+    ];
 
     disko = {
       devices = {
@@ -209,18 +211,20 @@ in
                 xattr = "sa";
                 "com.sun:auto-snapshot" = "${toString (!cfg.zfs.tank.enable)}";
               };
-              datasets = {
-                "local" = {
-                  type = "zfs_fs";
-                  options."com.sun:auto-snapshot" = "false";
-                };
-                "local/root" = {
-                  type = "zfs_fs";
-                  mountpoint = "/";
-                  postCreateHook = optionalString cfg.persist.enable "zfs list -t snapshot -H -o name | grep -E '^rpool/local/root@blank$' || zfs snapshot rpool/local/root@blank";
-                };
-              }
-              // (mkIf (!cfg.zfs.tank.enable) dynamicDatasets);
+              datasets = mkMerge [
+                {
+                  "local" = {
+                    type = "zfs_fs";
+                    options."com.sun:auto-snapshot" = "false";
+                  };
+                  "local/root" = {
+                    type = "zfs_fs";
+                    mountpoint = "/";
+                    postCreateHook = optionalString cfg.persist.enable "zfs list -t snapshot -H -o name | grep -E '^rpool/local/root@blank$' || zfs snapshot rpool/local/root@blank";
+                  };
+                }
+                (mkIf (!cfg.zfs.tank.enable) dynamicDatasets)
+              ];
             };
 
             tank = mkIf cfg.zfs.tank.enable {
@@ -244,13 +248,15 @@ in
                 xattr = "sa";
                 "com.sun:auto-snapshot" = "true";
               };
-              datasets = {
-                "local" = {
-                  type = "zfs_fs";
-                  options."com.sun:auto-snapshot" = "false";
-                };
-              }
-              // dynamicDatasets;
+              datasets = mkMerge [
+                {
+                  "local" = {
+                    type = "zfs_fs";
+                    options."com.sun:auto-snapshot" = "false";
+                  };
+                }
+                dynamicDatasets
+              ];
             };
           };
       };
