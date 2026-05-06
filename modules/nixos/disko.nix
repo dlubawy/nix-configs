@@ -67,7 +67,7 @@ in
         message = "Only one filesystem can be configured at a time with disko";
       }
       {
-        assertion = (cfg.zfs.tank.enable) -> (lists.count (x: x) cfg.zfs.tank.mirrors > 0);
+        assertion = (cfg.zfs.tank.enable) -> (lists.length cfg.zfs.tank.mirrors > 0);
         message = "Must have configured devices for vdev mirrors";
       }
     ];
