@@ -7,17 +7,27 @@
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
-  modifications = final: prev: {
-    # example = prev.example.overrideAttrs (oldAttrs: {
-    # ...
-    # });
-    age-plugin-yubikey = prev.age-plugin-yubikey.overrideAttrs (
-      _: (import ./age-plugin-yubikey { inherit prev; })
+  modifications =
+    final: prev:
+    {
+      # example = prev.example.overrideAttrs (oldAttrs: {
+      # ...
+      # });
+      age-plugin-yubikey = prev.age-plugin-yubikey.overrideAttrs (
+        _: (import ./age-plugin-yubikey { inherit prev; })
+      );
+    }
+    // (
+      if prev.stdenv.hostPlatform.isDarwin then
+        {
+          fuse-ext2 = prev.fuse-ext2.overrideAttrs (_: (import ./fuse-ext2 { inherit prev final; }));
+          ntfs3g = prev.ntfs3g.overrideAttrs (_: (import ./ntfs3g { inherit prev final; }));
+        }
+      else
+        {
+          hostapd = prev.hostapd.overrideAttrs (_: (import ./hostapd { inherit prev final; }));
+        }
     );
-    fuse-ext2 = prev.fuse-ext2.overrideAttrs (_: (import ./fuse-ext2 { inherit prev final; }));
-    ntfs3g = prev.ntfs3g.overrideAttrs (_: (import ./ntfs3g { inherit prev final; }));
-    hostapd = prev.hostapd.overrideAttrs (_: (import ./hostapd { inherit prev final; }));
-  };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'

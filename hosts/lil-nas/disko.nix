@@ -1,61 +1,26 @@
 {
-  pkgs,
   config,
-  inputs,
   ...
 }:
 {
-  imports = [ inputs.disko.nixosModules.disko ];
-
-  # Needed if doing mdadm raid1 on /boot
-  # environment.variables = {
-  #   SYSTEMD_RELAX_ESP_CHECKS = 1;
-  # };
-
   networking.hostId = "d4986fb2";
-  boot = {
-    loader = {
-      efi.canTouchEfiVariables = true;
-    };
-
-    initrd.systemd.services = {
-      "zfs-wait" = {
-        description = "Wait for ZFS key to unlock pools";
-        wantedBy = [ "initrd.target" ];
-        before = [
-          "zfs-import-rpool.service"
-          "zfs-import-tank.service"
-        ];
-        after = [ "initrd-root-device.target" ];
-
-        unitConfig.DefaultDependencies = "no";
-        serviceConfig.Type = "oneshot";
-        script = "udevadm wait /dev/disk/by-partlabel/zfs-key";
-      };
-      "zfs-rollback" = {
-        description = "Rollback root ZFS dataset to snapshot before mounting root";
-        wantedBy = [ "initrd.target" ];
-        before = [ "sysroot.mount" ];
-        after = [ "zfs-import-rpool.service" ];
-
-        path = [ pkgs.zfs ];
-        unitConfig.DefaultDependencies = "no";
-        serviceConfig.Type = "oneshot";
-        script = "zfs rollback -r rpool/local/root@blank";
-      };
-    };
-  };
-
-  fileSystems."/persist" = {
-    neededForBoot = true;
-  };
-
-  zramSwap = {
-    enable = true;
-    writebackDevice = "/dev/zvol/tank/local/swap";
-  };
-
   disko = {
+    enable = true;
+    persist.enable = true;
+    swap.enable = true;
+    zfs = {
+      enable = true;
+      tank = {
+        enable = true;
+        mirrors = [
+          [
+            config.disko.devices.disk.ssd1.device
+            config.disko.devices.disk.ssd2.device
+          ]
+        ];
+      };
+      key.enable = true;
+    };
     devices = {
       disk = {
         emmc = {
@@ -101,121 +66,6 @@
           content = {
             type = "zfs";
             pool = "tank";
-          };
-        };
-      };
-      zpool = {
-        rpool = {
-          type = "zpool";
-          rootFsOptions = {
-            encryption = "on";
-            keyformat = "passphrase";
-            keylocation = "prompt";
-            mountpoint = "none";
-            compression = "zstd";
-            acltype = "posixacl";
-            xattr = "sa";
-            "com.sun:auto-snapshot" = "false";
-          };
-          datasets = {
-            "local/root" = {
-              type = "zfs_fs";
-              mountpoint = "/";
-              postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^rpool/local/root@blank$' || zfs snapshot rpool/local/root@blank";
-            };
-          };
-        };
-        tank = {
-          type = "zpool";
-          mode = {
-            topology = {
-              type = "topology";
-              vdev = [
-                {
-                  mode = "mirror";
-                  members = [
-                    config.disko.devices.disk.ssd1.device
-                    config.disko.devices.disk.ssd2.device
-                  ];
-                }
-              ];
-            };
-          };
-          rootFsOptions = {
-            encryption = "on";
-            keyformat = "passphrase";
-            keylocation = "prompt";
-            mountpoint = "none";
-            compression = "zstd";
-            acltype = "posixacl";
-            xattr = "sa";
-            "com.sun:auto-snapshot" = "true";
-          };
-          options.ashift = "12";
-          datasets = {
-            "local/nix" = {
-              type = "zfs_fs";
-              mountpoint = "/nix";
-              options = {
-                "com.sun:auto-snapshot" = "false";
-              };
-            };
-            "local/jellyfin" = {
-              type = "zfs_fs";
-              mountpoint = "/var/cache/jellyfin";
-              options = {
-                "com.sun:auto-snapshot" = "false";
-                atime = "off";
-                sync = "disabled";
-                recordsize = "1M";
-                primarycache = "metadata";
-                secondarycache = "none";
-              };
-            };
-            "safe/home" = {
-              type = "zfs_fs";
-              mountpoint = "/home";
-            };
-            "safe/persist" = {
-              type = "zfs_fs";
-              mountpoint = "/persist";
-            };
-            "safe/jellyfin" = {
-              type = "zfs_fs";
-              mountpoint = "/srv/jellyfin";
-              options = {
-                recordsize = "1M";
-              };
-            };
-            "safe/postgresql" = {
-              type = "zfs_fs";
-              mountpoint = "/var/lib/postgresql";
-              options = {
-                redundant_metadata = "most";
-                recordsize = "32k";
-                logbias = "throughput";
-              };
-            };
-            "safe/nextcloud" = {
-              type = "zfs_fs";
-              mountpoint = "/var/lib/nextcloud";
-              options = {
-                recordsize = "1M";
-              };
-            };
-            "local/swap" = {
-              type = "zfs_volume";
-              size = "4G";
-              options = {
-                volblocksize = "4096";
-                compression = "zle";
-                logbias = "throughput";
-                sync = "always";
-                primarycache = "metadata";
-                secondarycache = "none";
-                "com.sun:auto-snapshot" = "false";
-              };
-            };
           };
         };
       };
