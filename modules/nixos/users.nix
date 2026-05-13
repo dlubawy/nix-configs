@@ -169,7 +169,7 @@ in
                 value.hashedPasswordFile
             );
 
-            openssh.authorizedKeys.keys = [ ] ++ (optionals (value.sshKey != null) [ value.sshKey ]);
+            openssh.authorizedKeys.keys = [ ] ++ (optionals (value.sshKey != null) [ value.sshKey.key ]);
           };
       }) nixConfigsUsers
     );
