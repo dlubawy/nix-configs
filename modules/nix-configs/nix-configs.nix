@@ -70,13 +70,10 @@ let
         };
         sshKey = mkOption {
           type = types.nullOr (
-            types.either (types.submodule sshKeyOpts) (
-              types.coercedTo types.str (s: {
-                type = "ssh";
-                key = s;
-                _algorithm = keyAlgorithm s;
-              }) (types.attrsOf types.str)
-            )
+            types.coercedTo types.str (s: {
+              type = "ssh";
+              key = s;
+            }) (types.submodule sshKeyOpts)
           );
           default = null;
           description = "SSH public key";
