@@ -29,9 +29,11 @@ in
         username = user.name;
         homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${user.name}";
 
-        file.".ssh/id_yubikey.pub" = lib.mkIf (user.sshKey != null) {
-          enable = true;
-          text = user.sshKey;
+        file = lib.mkIf (user.sshKey != null) {
+          ".ssh/${user.sshKey.type}_${user.sshKey._algorithm}.pub" = {
+            enable = true;
+            text = user.sshKey.key;
+          };
         };
       };
   };
