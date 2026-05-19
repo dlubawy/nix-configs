@@ -31,7 +31,11 @@ in
 
         file = lib.mkIf (user.sshKey != null) {
           ".ssh/${user.sshKey.type}_${user.sshKey._algorithm}.pub" = {
-            enable = true;
+            enable = user.sshKey.type == "ssh";
+            text = user.sshKey.key;
+          };
+          ".ssh/yubikey_id.pub" = {
+            enable = user.sshKey.type == "yubikey";
             text = user.sshKey.key;
           };
         };
