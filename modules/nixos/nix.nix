@@ -1,4 +1,12 @@
-{ outputs, vars, ... }:
+{
+  lib,
+  outputs,
+  vars,
+  ...
+}:
+let
+  inherit (lib) mkIf;
+in
 {
   nixpkgs = {
     overlays = builtins.attrValues outputs.overlays;
@@ -14,8 +22,8 @@
     optimise.automatic = true;
     settings = {
       experimental-features = "nix-command flakes";
-      substituters = vars.nixConfig.extra-substituters;
-      trusted-public-keys = vars.nixConfig.extra-trusted-public-keys;
+      substituters = mkIf (builtins.hasAttr "nixConfig" vars) vars.nixConfig.extra-substituters;
+      trusted-public-keys = mkIf (builtins.hasAttr "nixConfig" vars) vars.nixConfig.extra-trusted-public-keys;
     };
   };
 }

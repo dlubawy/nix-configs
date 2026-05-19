@@ -48,7 +48,7 @@ in
 
     environment = {
       systemPackages = builtins.attrValues { inherit (pkgs) sbctl; };
-      shellAliases = {
+      shellAliases = mkIf (builtins.hasAttr "flake" vars) {
         "${systemName}" = "sudo nixos-rebuild switch --flake ${vars.flake}#${systemName}";
       };
     };
@@ -91,7 +91,7 @@ in
     systemd.network.enable = lib.mkDefault true;
 
     system = {
-      autoUpgrade = {
+      autoUpgrade = mkIf (builtins.hasAttr "flake" vars) {
         enable = lib.mkDefault true;
         flake = lib.mkDefault "${vars.flake}#${config.networking.hostName}";
         dates = lib.mkDefault "weekly";
