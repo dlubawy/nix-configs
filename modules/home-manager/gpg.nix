@@ -6,6 +6,9 @@
 }:
 let
   enableGUI = config.gui.enable;
+  hostPinentryPkg = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-qt;
+  hostPinentry = if pkgs.stdenv.hostPlatform.isDarwin then "pinentry-mac" else "pinentry-qt";
+  inherit (config.programs.gpg) homedir;
 in
 {
   config = {
@@ -89,60 +92,24 @@ in
       let
         inherit (pkgs)
           pinentry-tty
-          pinentry_mac
-          pinentry-qt
-          stdenv
           ;
       in
-      [ pinentry-tty ]
-      ++ (lib.optionals (enableGUI && stdenv.isDarwin) [ pinentry_mac ])
-      ++ (lib.optionals (enableGUI && !stdenv.isDarwin) [ pinentry-qt ]);
-    home.file.".gnupg/gpg-agent.conf" = {
-      enable = true;
+      [ pinentry-tty ] ++ (lib.optionals (enableGUI) [ hostPinentryPkg ]);
+
+    home.file."${homedir}/gpg-agent.conf" = {
       onChange = "${pkgs.gnupg}/bin/gpgconf --kill gpg-agent";
-      text = ''
-        # https://github.com/drduh/config/blob/master/gpg-agent.conf
-        # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
-        ${
-          if enableGUI then
-            (
-              if pkgs.stdenv.isDarwin then
-                "pinentry-program ${pkgs.pinentry_mac}/bin/pinentry-mac"
-              else
-                "pinentry-program ${pkgs.pinentry-qt}/bin/pinentry-qt"
-            )
-          else
-            "pinentry-program ${pkgs.pinentry-tty}/bin/pinentry-tty"
-        }
-        enable-ssh-support
-        ttyname $GPG_TTY
-        default-cache-ttl 60
-        max-cache-ttl 120
-      '';
     };
 
-    launchd.agents = lib.mkIf (pkgs.stdenv.isDarwin) {
-      gpg-agent = {
-        enable = true;
-        config = {
-          RunAtLoad = true;
-          KeepAlive = true;
-          ProgramArguments = [
-            "${pkgs.gnupg}/bin/gpg-connect-agent"
-            "/bye"
-          ];
-        };
-      };
-      gpg-agent-symlink = {
-        enable = true;
-        config = {
-          ProgramArguments = [
-            "/bin/sh"
-            "-c"
-            "/bin/ln -sf $HOME/.gnupg/S.gpg-agent.ssh $SSH_AUTH_SOCK"
-          ];
-          RunAtLoad = true;
-        };
+    services.gpg-agent = {
+      enable = true;
+      enableSshSupport = true;
+      enableZshIntegration = true;
+      extraConfig = lib.strings.concatLines [ "ttyname $GPG_TTY" ];
+      defaultCacheTtl = 60;
+      maxCacheTtl = 120;
+      pinentry = {
+        package = if enableGUI then hostPinentryPkg else pkgs.pinentry-tty;
+        program = if enableGUI then hostPinentry else "pinentry-tty";
       };
     };
   };

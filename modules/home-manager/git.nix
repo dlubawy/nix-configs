@@ -1,14 +1,15 @@
 { lib, config, ... }:
 let
+  inherit (lib) mkIf;
   user = builtins.head (lib.attrValues config.nix-configs.users);
 in
 {
   programs.git = {
     enable = true;
     settings = {
-      user = {
-        email = if user.email == "" then null else user.email;
-        name = if user.fullName == "" then null else user.fullName;
+      user = mkIf (user.email != "" && user.fullName != "") {
+        email = user.email;
+        name = user.fullName;
       };
       extraConfig = {
         init = {

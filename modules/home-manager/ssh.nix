@@ -5,11 +5,20 @@
 }:
 let
   username = config.home.username;
-  sshKeys = lib.concatMap (file: [ "~/${file.target}" ]) (
-    lib.attrValues (
-      lib.filterAttrs (name: _: (lib.hasPrefix ".ssh" name && lib.hasSuffix ".pub" name)) config.home.file
-    )
-  );
+  sshKeys =
+    lib.concatMap
+      (
+        file:
+        if lib.hasInfix "yubikey" file.target then
+          [ "~/${file.target}" ]
+        else
+          [ "~/${lib.strings.removeSuffix ".pub" file.target}" ]
+      )
+      (
+        lib.attrValues (
+          lib.filterAttrs (name: _: (lib.hasPrefix ".ssh" name && lib.hasSuffix ".pub" name)) config.home.file
+        )
+      );
 in
 {
   programs.ssh = {

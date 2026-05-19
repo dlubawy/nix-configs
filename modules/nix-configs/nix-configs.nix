@@ -5,8 +5,37 @@ let
     mkMerge
     mkOption
     stringLength
+    strings
     types
     ;
+  keyAlgorithm = sshKey: builtins.elemAt (strings.split " " (strings.removePrefix "ssh-" sshKey)) 0;
+  sshKeyOpts =
+    { config, ... }:
+    {
+      options = {
+        type = mkOption {
+          type = types.enum [
+            "ssh"
+            "yubikey"
+          ];
+          default = "ssh";
+          description = "Type of SSH public key";
+        };
+        key = mkOption {
+          type = types.str;
+          description = "Public key of SSH key";
+        };
+        _algorithm = mkOption {
+          type = types.str;
+          description = "Algorithm of the key";
+          internal = true;
+          visible = false;
+        };
+      };
+      config = mkMerge [
+        { _algorithm = keyAlgorithm config.key; }
+      ];
+    };
   userOpts =
     { name, config, ... }:
     {
@@ -34,8 +63,20 @@ let
           default = "";
           description = "User's email address";
         };
+        isAdmin = mkOption {
+          type = types.bool;
+          default = false;
+          description = "User is an admin";
+        };
         sshKey = mkOption {
-          type = types.nullOr types.str;
+          type = types.nullOr (
+            types.either (types.submodule sshKeyOpts) (
+              types.coercedTo types.str (s: {
+                type = "ssh";
+                key = s;
+              }) (types.submodule sshKeyOpts)
+            )
+          );
           default = null;
           description = "SSH public key";
         };
