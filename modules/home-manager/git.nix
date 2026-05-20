@@ -11,10 +11,8 @@ in
         email = user.email;
         name = user.fullName;
       };
-      extraConfig = {
-        init = {
-          defaultBranch = "main";
-        };
+      init = {
+        defaultBranch = "main";
       };
     };
     signing = lib.mkIf (user.gpgKey != null) {
