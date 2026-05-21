@@ -10,6 +10,8 @@
 let
   inherit (lib)
     mkOption
+    mkMerge
+    mkIf
     types
     ;
 in
@@ -70,12 +72,16 @@ in
 
       environment = {
         shells = builtins.attrValues { inherit (pkgs) zsh; };
-        shellAliases = {
-          sudoedit = "sudo -Hu laplace sudo -e ";
-          "${systemName}" =
-            "sudo -Hu ${systemName} sudo darwin-rebuild switch --flake ${vars.flake}#${systemName}";
-          nixos-rebuild = "${pkgs.nixos-rebuild-ng}/bin/nixos-rebuild-ng";
-        };
+        shellAliases = mkMerge [
+          {
+            sudoedit = "sudo -Hu laplace sudo -e ";
+            nixos-rebuild = "${pkgs.nixos-rebuild-ng}/bin/nixos-rebuild-ng";
+          }
+          (mkIf (builtins.hasAttr "flake" vars) {
+            "${systemName}" =
+              "sudo -Hu ${systemName} sudo darwin-rebuild switch --flake ${vars.flake}#${systemName}";
+          })
+        ];
         variables = {
           EDITOR = "nvim";
           VISUAL = "nvim";
@@ -135,8 +141,8 @@ in
         optimise.automatic = true;
         settings = {
           experimental-features = "nix-command flakes";
-          substituters = vars.nixConfig.extra-substituters;
-          trusted-public-keys = vars.nixConfig.extra-trusted-public-keys;
+          substituters = mkIf (builtins.hasAttr "nixConfig" vars) vars.nixConfig.extra-substituters;
+          trusted-public-keys = mkIf (builtins.hasAttr "nixConfig" vars) vars.nixConfig.extra-trusted-public-keys;
           trusted-users = [
             "root"
             "@admin"
