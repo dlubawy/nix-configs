@@ -14,21 +14,23 @@ rec {
 
   inputs = {
     # Different nixpkgs sources
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
     # System modules
     darwin = {
-      url = "github:dlubawy/nix-darwin/develop-25.11";
+      url = "github:dlubawy/nix-darwin/develop-26.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/release-25.11";
+      # FIXME: Swap when upstream is updated
+      # url = "github:nix-community/NixOS-WSL/release-26.05";
+      url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-sbc = {
@@ -38,7 +40,7 @@ rec {
 
     # Supporting modules
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.11";
+      url = "github:nix-community/nixvim/nixos-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
@@ -46,11 +48,11 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     git-hooks = {
-      url = "github:cachix/git-hooks.nix/f799ae951fde0627157f40aec28dec27b22076d0";
+      url = "github:cachix/git-hooks.nix/3cfd774b0a530725a077e17354fbdb87ea1c4aad";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-topology = {
-      url = "github:oddlama/nix-topology/f49121cbbf4a86c560638ade406d99ee58deb7aa";
+      url = "github:oddlama/nix-topology/ca0a602f650306d00d6f3e3c76d0f4c48a5c5adc";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
@@ -58,7 +60,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.3";
+      url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     preservation = {
@@ -110,8 +112,8 @@ rec {
       forAllSystems = forSystemList systems;
 
       vars = {
-        darwinStateVersion = 6;
-        stateVersion = "25.11";
+        darwinStateVersion = 7;
+        stateVersion = "26.05";
         flake = "github:dlubawy/nix-configs/main";
         admin = (import ./users/drew.nix).nix-configs.users.drew;
         inherit nixConfig;
@@ -170,7 +172,7 @@ rec {
     in
     {
       packages = forAllSystems ({ pkgs }: (import ./pkgs pkgs.stdenv.hostPlatform.system) pkgs);
-      formatter = forAllSystems ({ pkgs }: pkgs.nixfmt-rfc-style);
+      formatter = forAllSystems ({ pkgs }: pkgs.nixfmt);
 
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
@@ -261,7 +263,7 @@ rec {
                 enable = true;
                 name = "🔒 Security · Detect hardcoded secrets";
               };
-              nixfmt-rfc-style = {
+              nixfmt = {
                 enable = true;
                 name = "🔍 Code Quality · ❄️ Nix · Format";
                 after = [ "trufflehog" ];
@@ -273,12 +275,12 @@ rec {
                   "--check-supported"
                   "false"
                 ];
-                after = [ "nixfmt-rfc-style" ];
+                after = [ "nixfmt" ];
               };
               check-yaml = {
                 enable = true;
                 name = "✅ Data & Config Validation · YAML · Lint";
-                after = [ "nixfmt-rfc-style" ];
+                after = [ "nixfmt" ];
               };
               mdformat = {
                 enable = true;
@@ -418,7 +420,7 @@ rec {
                 inherit (pkgs)
                   just
                   nil
-                  nixfmt-rfc-style
+                  nixfmt
                   nixos-rebuild-ng
                   ;
               });
