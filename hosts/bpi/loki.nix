@@ -41,40 +41,35 @@
       };
     };
 
-    promtail = {
-      enable = true;
-      configuration = {
-        server = {
-          http_listen_port = 3003;
-          grpc_listen_port = 0;
-        };
-        positions = {
-          filename = "/tmp/positions.yaml";
-        };
-        clients = [
-          {
-            url = "http://${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push";
-          }
-        ];
-        scrape_configs = [
-          {
-            job_name = "journal";
-            journal = {
-              max_age = "12h";
-              labels = {
-                job = "systemd-journal";
-                host = "bpi";
-              };
-            };
-            relabel_configs = [
-              {
-                source_labels = [ "__journal__systemd_unit" ];
-                target_label = "unit";
-              }
-            ];
-          }
-        ];
-      };
-    };
+    alloy.enable = true;
   };
+
+  environment.etc."alloy/config.alloy".text = ''
+    discovery.relabel "journal" {
+    	targets = []
+
+    	rule {
+    		source_labels = ["__journal__systemd_unit"]
+    		target_label  = "unit"
+    	}
+    }
+
+    loki.source.journal "journal" {
+    	max_age       = "12h0m0s"
+    	relabel_rules = discovery.relabel.journal.rules
+    	forward_to    = [loki.write.default.receiver]
+    	labels        = {
+    		host = "bpi",
+    		job  = "systemd-journal",
+    	}
+    }
+
+    loki.write "default" {
+    	endpoint {
+    		url = "http://${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push"
+    	}
+    	external_labels = {}
+    }
+
+  '';
 }
