@@ -15,6 +15,7 @@
         enable = true;
         defaultEditor = true;
         vimdiffAlias = true;
+        nixpkgs.source = inputs.nixpkgs;
       }
     ];
   };

@@ -109,6 +109,7 @@ in
       programs = {
         nixvim = {
           enable = true;
+          nixpkgs.source = inputs.nixpkgs;
         };
         zsh = {
           enable = true;

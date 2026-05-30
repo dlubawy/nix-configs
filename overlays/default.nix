@@ -16,6 +16,14 @@
       age-plugin-yubikey = prev.age-plugin-yubikey.overrideAttrs (
         _: (import ./age-plugin-yubikey { inherit prev; })
       );
+
+      vimPlugins = prev.vimPlugins // {
+        vim-table-mode = prev.vimPlugins.vim-table-mode.overrideAttrs (oldAttrs: {
+          meta = oldAttrs.meta // {
+            license = prev.lib.licenses.mit;
+          };
+        });
+      };
     }
     // (
       if prev.stdenv.hostPlatform.isDarwin then
