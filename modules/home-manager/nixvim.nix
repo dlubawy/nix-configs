@@ -15,7 +15,8 @@
         enable = true;
         defaultEditor = true;
         vimdiffAlias = true;
-        nixpkgs.source = inputs.nixpkgs;
+        nixpkgs.source =
+          if pkgs.stdenv.hostPlatform.isDarwin then inputs.nixpkgs-darwin else inputs.nixpkgs;
       }
     ];
   };
