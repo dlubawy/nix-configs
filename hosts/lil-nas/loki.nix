@@ -59,7 +59,7 @@
     	relabel_rules = discovery.relabel.journal.rules
     	forward_to    = [loki.write.default.receiver]
     	labels        = {
-    		host = "bpi",
+    		host = "${config.networking.hostName}",
     		job  = "systemd-journal",
     	}
     }
