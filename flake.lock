@@ -351,17 +351,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1740327925,
-        "narHash": "sha256-VfCzgPP9OM4As8O6eVcrD9yHKZh4I3jb1h3X9yIglKQ=",
+        "lastModified": 1777522506,
+        "narHash": "sha256-wrz2tlc2k9aT28i3W0bIrm1cW8CJ0G0egSytmdgNu0g=",
         "owner": "nakato",
         "repo": "nixos-sbc",
-        "rev": "114b2e495a5a59b3d077e73a0a60c6945c5cf32e",
+        "rev": "e7a298859841bde2a572a12227a5778ad1d9f771",
         "type": "github"
       },
       "original": {
         "owner": "nakato",
         "repo": "nixos-sbc",
-        "rev": "114b2e495a5a59b3d077e73a0a60c6945c5cf32e",
+        "rev": "e7a298859841bde2a572a12227a5778ad1d9f771",
         "type": "github"
       }
     },

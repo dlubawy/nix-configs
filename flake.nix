@@ -34,7 +34,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-sbc = {
-      url = "github:nakato/nixos-sbc/114b2e495a5a59b3d077e73a0a60c6945c5cf32e";
+      url = "github:nakato/nixos-sbc/e7a298859841bde2a572a12227a5778ad1d9f771";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
