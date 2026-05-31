@@ -1,11 +1,7 @@
 {
   pkgs,
-  lib,
   ...
 }:
-let
-  inherit (lib) strings;
-in
 {
   config = {
     systemd = {
@@ -38,25 +34,7 @@ in
     };
     services = {
       desktopManager.plasma6.enable = true;
-      displayManager.sddm = {
-        enable = true;
-        wayland = {
-          enable = true;
-          compositor = "kwin";
-        };
-        settings = {
-          Wayland = {
-            CompositorCommand = strings.concatStringsSep " " [
-              "${lib.getBin pkgs.kdePackages.kwin}/bin/kwin_wayland"
-              "--no-global-shortcuts"
-              "--no-kactivities"
-              "--no-lockscreen"
-              "--locale1"
-              "--inputmethod maliit-keyboard"
-            ];
-          };
-        };
-      };
+      displayManager.plasma-login-manager.enable = true;
       flatpak.enable = true;
     };
   };
