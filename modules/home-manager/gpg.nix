@@ -6,8 +6,16 @@
 }:
 let
   enableGUI = config.gui.enable;
-  hostPinentryPkg = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-qt;
-  hostPinentry = if pkgs.stdenv.hostPlatform.isDarwin then "pinentry-mac" else "pinentry-qt";
+  hostPinentryPkg =
+    if enableGUI then
+      (if pkgs.stdenv.hostPlatform.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-qt)
+    else
+      pkgs.pinentry-tty;
+  hostPinentry =
+    if enableGUI then
+      (if pkgs.stdenv.hostPlatform.isDarwin then "pinentry-mac" else "pinentry-qt")
+    else
+      "pinentry-tty";
   inherit (config.programs.gpg) homedir;
 in
 {
@@ -88,13 +96,7 @@ in
       };
     };
 
-    home.packages =
-      let
-        inherit (pkgs)
-          pinentry-tty
-          ;
-      in
-      [ pinentry-tty ] ++ (lib.optionals (enableGUI) [ hostPinentryPkg ]);
+    home.packages = [ hostPinentryPkg ];
 
     home.file."${homedir}/gpg-agent.conf" = {
       onChange = "${pkgs.gnupg}/bin/gpgconf --kill gpg-agent";
@@ -108,8 +110,8 @@ in
       defaultCacheTtl = 60;
       maxCacheTtl = 120;
       pinentry = {
-        package = if enableGUI then hostPinentryPkg else pkgs.pinentry-tty;
-        program = if enableGUI then hostPinentry else "pinentry-tty";
+        package = hostPinentryPkg;
+        program = hostPinentry;
       };
     };
   };
