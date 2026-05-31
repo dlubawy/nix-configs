@@ -75,7 +75,6 @@ in
         shellAliases = mkMerge [
           {
             sudoedit = "sudo -Hu laplace sudo -e ";
-            nixos-rebuild = "${pkgs.nixos-rebuild-ng}/bin/nixos-rebuild-ng";
           }
           (mkIf (builtins.hasAttr "flake" vars) {
             "${systemName}" =

@@ -183,14 +183,7 @@ nixos option system:
     #!/usr/bin/env bash
     NIXOS_REBUILD=""
     CMD=""
-    case "{{ HOST_PLATFORM }}" in
-        *-darwin)
-            NIXOS_REBUILD="nixos-rebuild-ng"
-        ;;
-        *)
-            NIXOS_REBUILD="nixos-rebuild"
-        ;;
-    esac
+    NIXOS_REBUILD="nixos-rebuild"
     case "{{ option }}" in
         build-vm)
             $NIXOS_REBUILD {{ option }} --flake {{ GIT_REPO }}#{{ system }} && (QEMU_KERNEL_PARAMS=console=ttyS0 {{ GIT_REPO }}/result/bin/run-nixos-vm -nographic; reset)
