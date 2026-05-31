@@ -1,7 +1,6 @@
 {
-  config,
+  pkgs,
   lib,
-  options,
   inputs,
   ...
 }:
@@ -12,10 +11,7 @@ let
     mkOption
     mkDefault
     ;
-  topologyModule = (import inputs.nix-topology.nixosModules.default { inherit config lib options; });
-  topologyLib = builtins.head (
-    builtins.filter (x: builtins.hasAttr "lib" x) topologyModule.config.contents
-  );
+  topologyModule = (import inputs.nix-topology.sourceInfo.outPath { inherit pkgs; });
 in
 {
   options = {
@@ -29,7 +25,7 @@ in
   };
 
   config = {
-    lib.topology = topologyLib.lib.topology;
+    lib.topology = topologyModule.config.lib.topology;
     topology.self = mkDefault { };
   };
 }

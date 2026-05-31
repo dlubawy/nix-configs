@@ -13,6 +13,20 @@
     ./plugins
   ];
 
+  nixpkgs = {
+    overlays = [
+      (_: prev: {
+        vimPlugins = prev.vimPlugins // {
+          vim-table-mode = prev.vimPlugins.vim-table-mode.overrideAttrs (oldAttrs: {
+            meta = oldAttrs.meta // {
+              license = prev.lib.licenses.mit;
+            };
+          });
+        };
+      })
+    ];
+  };
+
   viAlias = true;
   vimAlias = true;
   luaLoader.enable = true;
@@ -81,12 +95,12 @@
         fzf
         gawk
         gnused
+        prettier
         ripgrep
         stylua
         ;
     })
     ++ (builtins.attrValues { inherit (pkgs.python313Packages) pylatexenc; })
-    ++ (builtins.attrValues { inherit (pkgs.nodePackages) prettier; })
     ++ (lib.optionals (pkgs.stdenv.isDarwin) [
       (pkgs.writeShellScriptBin "gsed" "exec ${pkgs.gnused}/bin/sed \"$@\"")
     ]);
@@ -172,10 +186,10 @@
       enable = true;
       settings = {
         indent.enable = true;
-        highlight = {
-          enable = true;
-          disable = [ "csv" ];
-        };
+      };
+      highlight = {
+        enable = true;
+        disable = [ "csv" ];
       };
       grammarPackages = config.plugins.treesitter.package.passthru.allGrammars ++ [
         pkgs.tree-sitter-grammars.tree-sitter-org-nvim

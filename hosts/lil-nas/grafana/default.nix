@@ -28,6 +28,11 @@ in
 {
   age = {
     secrets = {
+      grafana = {
+        file = ../../../secrets/grafana.age;
+        owner = "grafana";
+        group = "grafana";
+      };
       grafana-contact-points = {
         file = ../../../secrets/grafana-contact-points.age;
         owner = "grafana";
@@ -41,6 +46,7 @@ in
     openFirewall = true;
     settings = {
       analytics.reporting_enabled = false;
+      security.secret_key = config.age.secrets.grafana.path;
       server = {
         http_addr = "0.0.0.0";
         domain = "${homeDomain}";

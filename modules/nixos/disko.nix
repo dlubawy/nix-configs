@@ -78,6 +78,9 @@ in
     };
 
     boot = {
+      zfs = mkIf cfg.zfs.enable {
+        forceImportRoot = false;
+      };
       loader = {
         efi.canTouchEfiVariables = true;
       };

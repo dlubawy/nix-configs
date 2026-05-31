@@ -25,6 +25,7 @@ in
     systems.bpi
     systems.lil-nas
   ];
+  "grafana.age" = mkSecret [ systems.lil-nas ];
   "grafana-contact-points.age" = mkSecret [ systems.lil-nas ];
   "cloudflare-dns-token.age" = mkSecret [
     systems.bpi
