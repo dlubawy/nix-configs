@@ -35,6 +35,7 @@ in
       );
       useUserPackages = true;
       useGlobalPkgs = true;
+      backupFileExtension = "bak";
     };
   };
 }
