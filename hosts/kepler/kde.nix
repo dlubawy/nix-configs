@@ -4,6 +4,8 @@
 }:
 {
   config = {
+    # Fonts file needs overwrite and cannot set specifically
+    home-manager.overwriteBackup = true;
     systemd = {
       network.wait-online.enable = false;
     };
@@ -15,7 +17,6 @@
             catppuccin-gtk
             catppuccin-kde
             krita
-            maliit-keyboard
             nextcloud-client
             papirus-icon-theme
             vlc
@@ -28,6 +29,7 @@
             kamoso
             kcalc
             kdenlive
+            plasma-keyboard
             ;
         }
       );
