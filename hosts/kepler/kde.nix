@@ -1,24 +1,15 @@
 {
   pkgs,
   lib,
-  config,
   ...
 }:
 let
-  inherit (lib) strings lists;
-  userbornCfg = lists.findFirst (
-    x: strings.hasSuffix ".json" x
-  ) "" config.systemd.services.userborn.restartTriggers;
+  inherit (lib) strings;
 in
 {
   config = {
     systemd = {
       network.wait-online.enable = false;
-      services.userborn.environment = {
-        # Allow KDE to manage non-Nix users
-        USERBORN_MUTABLE_USERS = "true";
-        USERBORN_PREVIOUS_CONFIG = userbornCfg;
-      };
     };
     environment = {
       plasma6.excludePackages = (builtins.attrValues { inherit (pkgs.kdePackages) konsole; });
@@ -67,7 +58,6 @@ in
         };
       };
       flatpak.enable = true;
-      userborn.package = pkgs.unstable.userborn;
     };
   };
 }
