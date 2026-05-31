@@ -144,14 +144,11 @@ rec {
         };
 
       nixosConfigurations = {
-        # TODO: move Dell laptop from Arch to NixOS
-        # kepler = nixpkgs.lib.nixosSystem {
-        #   system = "x86_64-linux";
-        #   specialArgs = {
-        #     inherit inputs outputs vars;
-        #   };
-        #   modules = [ ./hosts/kepler ];
-        # };
+        # Dell XPS 15
+        kepler = mkSystem {
+          name = "kepler";
+          system = "x86_64-linux";
+        };
         # WSL
         syringa = mkSystem {
           name = "syringa";
@@ -162,7 +159,6 @@ rec {
           name = "bpi";
           system = "aarch64-linux";
         };
-
         # GMTtec G9
         lil-nas = mkSystem {
           name = "lil-nas";

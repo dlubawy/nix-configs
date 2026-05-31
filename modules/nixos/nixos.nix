@@ -18,6 +18,7 @@ in
 {
   imports = [
     ./disko.nix
+    ./hyprland.nix
     ./nix.nix
     ./preservation.nix
     ./tailscale.nix
