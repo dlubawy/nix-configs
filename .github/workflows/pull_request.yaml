@@ -13,6 +13,7 @@ jobs:
   detect-changes:
     outputs:
       os: ${{ steps.changes.outputs.changes }}
+      nix-changes: ${{ steps.changes.outputs.macos-15 == 'true' || steps.changes.outputs.ubuntu-latest == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
@@ -44,7 +45,7 @@ jobs:
     needs: detect-changes
     strategy:
       matrix:
-        os: ${{ fromJSON(need.detect-changes.outputs.os) }}
+        os: ${{ fromJSON(needs.detect-changes.outputs.os) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
