@@ -43,6 +43,7 @@ jobs:
               - "modules/nixos/**.nix"
   check:
     needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.nix-changes == 'true' }}
     strategy:
       matrix:
         os: ${{ fromJSON(needs.detect-changes.outputs.os) }}
