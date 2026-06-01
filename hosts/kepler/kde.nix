@@ -1,13 +1,11 @@
 {
   pkgs,
-  lib,
   ...
 }:
-let
-  inherit (lib) strings;
-in
 {
   config = {
+    # Fonts file needs overwrite and cannot set specifically
+    home-manager.overwriteBackup = true;
     systemd = {
       network.wait-online.enable = false;
     };
@@ -19,7 +17,6 @@ in
             catppuccin-gtk
             catppuccin-kde
             krita
-            maliit-keyboard
             nextcloud-client
             papirus-icon-theme
             vlc
@@ -32,31 +29,14 @@ in
             kamoso
             kcalc
             kdenlive
+            plasma-keyboard
             ;
         }
       );
     };
     services = {
       desktopManager.plasma6.enable = true;
-      displayManager.sddm = {
-        enable = true;
-        wayland = {
-          enable = true;
-          compositor = "kwin";
-        };
-        settings = {
-          Wayland = {
-            CompositorCommand = strings.concatStringsSep " " [
-              "${lib.getBin pkgs.kdePackages.kwin}/bin/kwin_wayland"
-              "--no-global-shortcuts"
-              "--no-kactivities"
-              "--no-lockscreen"
-              "--locale1"
-              "--inputmethod maliit-keyboard"
-            ];
-          };
-        };
-      };
+      displayManager.plasma-login-manager.enable = true;
       flatpak.enable = true;
     };
   };
