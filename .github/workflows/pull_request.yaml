@@ -13,7 +13,7 @@ jobs:
   detect-changes:
     outputs:
       os: ${{ steps.changes.outputs.changes }}
-      nix-changes: ${{ steps.changes.outputs.macos-15 == 'true' || steps.changes.outputs.ubuntu-latest == 'true' }}
+      nix-changes: ${{ steps.changes.outputs['macos-15'] == 'true' || steps.changes.outputs['ubuntu-latest'] == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
