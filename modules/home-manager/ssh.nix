@@ -55,7 +55,7 @@ in
         IdentitiesOnly = true;
         IdentityFile = [ ] ++ sshKeys;
       };
-      "Host *" = {
+      "*" = {
         AddressFamily = "inet";
         VisualHostKey = "yes";
         PasswordAuthentication = "no";
