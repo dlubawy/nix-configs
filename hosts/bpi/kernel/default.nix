@@ -143,7 +143,7 @@ let
           DEFAULT_MMAP_MIN_ADDR = lib.mkForce (freeform "4096");
           DEFAULT_NET_SCH = freeform "fq_codel";
           # DEFAULT_SECURITY = freeform "";
-          DEFAULT_SECURITY_DAC = yes;
+          # DEFAULT_SECURITY_DAC = yes;
           DEFAULT_TCP_CONG = freeform "cubic";
           DEFLIST = freeform "/lib/modules/$UNAME_RELEASE/.config";
           DEVPORT = yes;
@@ -680,7 +680,7 @@ let
           CONFIGFS_FS = yes;
           CONSOLE_LOGLEVEL_DEFAULT = freeform "15";
           CPU_FREQ = yes;
-          CPU_FREQ_DEFAULT_GOV_USERSPACE = yes;
+          # CPU_FREQ_DEFAULT_GOV_USERSPACE = yes;
           CPU_FREQ_GOV_ATTR_SET = yes;
           CPU_FREQ_GOV_COMMON = yes;
           CPU_FREQ_GOV_CONSERVATIVE = yes;
@@ -870,7 +870,7 @@ let
           NET_VENDOR_MEDIATEK = yes;
           NLS = yes;
           NO_HZ_COMMON = yes;
-          NO_HZ_IDLE = yes;
+          # NO_HZ_IDLE = yes;
           NR_CPUS = lib.mkForce (freeform "4");
           NVMEM = yes;
           NVMEM_SYSFS = yes;
