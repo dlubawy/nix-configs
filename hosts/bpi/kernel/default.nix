@@ -437,6 +437,7 @@ let
           PPP_FILTER = yes;
           PPP_MULTILINK = yes;
           PREEMPT_NONE = yes;
+          PREEMPT_VOLUNTARY = lib.mkForce no;
           PREVENT_FIRMWARE_BUILD = yes;
           PRINTK = yes;
           PRINTK_NMI = yes;
