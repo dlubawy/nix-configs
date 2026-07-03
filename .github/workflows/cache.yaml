@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "**.nix"
-      - "**.age"
+      - "**/*.nix"
+      - "**/*.age"
       - "flake.lock"
 
 concurrency:
