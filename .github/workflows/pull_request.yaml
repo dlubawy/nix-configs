@@ -16,7 +16,7 @@ jobs:
       nix-changes: ${{ steps.changes.outputs['macos-15'] == 'true' || steps.changes.outputs['ubuntu-latest'] == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d
+      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706
         id: changes
         with:
           filters: |
@@ -49,7 +49,7 @@ jobs:
         os: ${{ fromJSON(needs.detect-changes.outputs.os) }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25
       - uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71
         with:
