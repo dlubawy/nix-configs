@@ -24,6 +24,25 @@
           };
         });
       };
+
+      qtpass = prev.qtpass.overrideAttrs (_: {
+        qtWrapperArgs = [
+          "--run SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh"
+          "--set-default SSH_AUTH_SOCK SSH_AUTH_SOCK"
+          "--suffix PATH : ${
+            prev.lib.makeBinPath (
+              builtins.attrValues {
+                inherit (prev)
+                  git
+                  gnupg
+                  pass
+                  pwgen
+                  ;
+              }
+            )
+          }"
+        ];
+      });
     }
     // (
       if prev.stdenv.hostPlatform.isDarwin then
