@@ -17,7 +17,7 @@
     }
     {
       key = "<C-j>";
-      action = "<cmd>lua vim.diagnostic.goto_next()<CR>";
+      action = "<cmd>lua vim.diagnostic.jump({count = 1})<CR>";
       mode = "n";
       options = {
         silent = true;
@@ -26,7 +26,7 @@
     }
     {
       key = "<C-k>";
-      action = "<cmd>lua vim.diagnostic.goto_prev()<CR>";
+      action = "<cmd>lua vim.diagnostic.jump({count = -1})<CR>";
       mode = "n";
       options = {
         silent = true;
