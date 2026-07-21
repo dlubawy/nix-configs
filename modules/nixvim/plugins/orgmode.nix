@@ -281,8 +281,8 @@ in
         src = fetchFromGitHub {
           owner = "nvim-orgmode";
           repo = "org-bullets.nvim";
-          rev = "21437cfa99c70f2c18977bffd423f912a7b832ea";
-          hash = "sha256-/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0=";
+          rev = "503fe053550879cc202086a40454e46a87c41ddb";
+          hash = "sha256-Tgeqr/Zd1hJXXaln4XWGS5aZqypnpfNxgO/+pQVk7jg=";
         };
         buildInputs = [ vimPlugins.orgmode ];
       })
@@ -291,8 +291,8 @@ in
         src = fetchFromGitHub {
           owner = "nvim-orgmode";
           repo = "telescope-orgmode.nvim";
-          rev = "1.3.3";
-          hash = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE=";
+          rev = "1.5.0";
+          hash = "sha256-UaK+ct04Y4lNEZ93NzCkgzQYbpAeTnpbGEZ8wZiAxtM=";
         };
         buildInputs = [
           vimPlugins.orgmode
