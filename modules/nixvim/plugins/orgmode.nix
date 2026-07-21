@@ -291,8 +291,8 @@ in
         src = fetchFromGitHub {
           owner = "nvim-orgmode";
           repo = "telescope-orgmode.nvim";
-          rev = "1.3.3";
-          hash = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE=";
+          rev = "1.5.0";
+          hash = "sha256-UaK+ct04Y4lNEZ93NzCkgzQYbpAeTnpbGEZ8wZiAxtM=";
         };
         buildInputs = [
           vimPlugins.orgmode
