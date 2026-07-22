@@ -9,47 +9,55 @@ let
   inherit (lib) mkForce;
   inherit (config.lib.topology) mkConnectionRev mkConnection;
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
-  inherit (topology.lib.helpers) getHomeDomain;
-  homeDomain = (getHomeDomain "bpi" "nginx");
-  cloudDomain = config.cloudDomain;
+  inherit (topology.lib.helpers) getDomain;
+  homeDomain = (getDomain "bpi" "adguardhome");
+  homeAssistantDomain = config.homeAssistantDomain;
+  address = "192.168.10.10";
 in
 {
-  topology = {
-    enable = true;
-    self = {
-      hardware.info = "GMKtec G9";
-      interfaces = {
-        enp5s0 = {
-          addresses = [ "192.168.10.10" ];
-          mac = "e0:51:d8:1d:ba:d6";
-          physicalConnections = [
-            (mkConnectionRev "bpi" "sfp2")
-          ];
-        };
-        tailscale0 = {
-          addresses = [ "dhcp" ];
-          virtual = true;
-          physicalConnections = [ (mkConnection "tailscale" "lan") ];
-        };
-      };
-      services = {
-        nginx.info = "${cloudDomain}";
-        jellyfin.info = "${homeDomain}/jellyfin";
-        grafana.info = mkForce "${homeDomain}/grafana";
-        collabora-online = {
-          info = config.collaboraDomain;
-          icon = "services.collabora-online";
-          name = "Collabora Online";
-        };
-        loki = {
-          hidden = true;
-          details = {
-            listen = {
-              text = "${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
-            };
+  config = {
+    topology = {
+      enable = true;
+      self = {
+        hardware.info = "GMKtec G9";
+        interfaces = {
+          enp5s0 = {
+            addresses = [ address ];
+            mac = "e0:51:d8:1d:ba:d6";
+            physicalConnections = [
+              (mkConnectionRev "bpi" "sfp2")
+            ];
+          };
+          tailscale0 = {
+            addresses = [ "dhcp" ];
+            virtual = true;
+            physicalConnections = [ (mkConnection "tailscale" "lan") ];
           };
         };
-        prometheus.hidden = true;
+        services = {
+          jellyfin.info = "https://${homeDomain}/jellyfin";
+          homeAssistant = {
+            info = "https://${homeAssistantDomain}";
+            icon = "services.home-assistant";
+            name = "Home Assistant";
+            details.listen.text = "${address}:8123";
+          };
+          grafana.info = mkForce "https://${homeDomain}/grafana";
+          collabora-online = {
+            info = "https://${config.collaboraDomain}";
+            icon = "services.collabora-online";
+            name = "Collabora Online";
+          };
+          loki = {
+            hidden = true;
+            details = {
+              listen = {
+                text = "${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}";
+              };
+            };
+          };
+          prometheus.hidden = true;
+        };
       };
     };
   };

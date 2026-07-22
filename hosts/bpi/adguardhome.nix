@@ -14,6 +14,9 @@ let
   collaboraDomain = (
     lib.strings.removePrefix "https://" topology.nodes.lil-nas.services.collabora-online.info
   );
+  homeAssistantDomain = (
+    lib.strings.removePrefix "https://" topology.nodes.lil-nas.services.homeAssistant.info
+  );
 in
 {
   age = {
@@ -342,6 +345,11 @@ in
           }
           {
             domain = "${collaboraDomain}";
+            answer = lil-nas;
+            enabled = true;
+          }
+          {
+            domain = "${homeAssistantDomain}";
             answer = lil-nas;
             enabled = true;
           }

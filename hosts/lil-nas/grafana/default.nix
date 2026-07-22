@@ -7,12 +7,12 @@
 let
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
   inherit (topology.lib.helpers)
-    getHomeDomain
+    getDomain
     getAddress
     getLokiPort
     getPrometheusPort
     ;
-  homeDomain = (getHomeDomain "bpi" "nginx");
+  homeDomain = (getDomain "bpi" "adguardhome");
 
   bpi = {
     address = (getAddress "bpi" "vl-lan");
