@@ -5,14 +5,19 @@
   src = prev.fetchFromGitHub {
     owner = "dlubawy";
     repo = "age-plugin-yubikey";
-    rev = "combined_encryption";
-    sha256 = "sha256-jSbAWNazFaU9rFbKYKn2JF7QcQF1Utla21Y3oV0qU8Y=";
+    rev = "feat/tagpq";
+    hash = "sha256-W6HnXHFEie33x2o7v/BnhvrB4n5o9vtmDXC/lXX3Abg=";
   };
   cargoHash = "";
   cargoDeps = prev.rustPlatform.importCargoLock {
     lockFile = ./Cargo.lock;
     outputHashes = {
-      "yubikey-0.8.0" = "sha256-lfoydzwC796raU61ieGiTYKtG4xMENQk5OWxQQyAJg8=";
+      "age-core-0.11.0" = "sha256-8ofjDAXt5+LY+okaclSbZuS/nncqFl3pEYgVvN3syCY=";
     };
   };
+  fixupPhase = ''
+    runHook preFixup
+    cp $out/bin/age-plugin-yubikey $out/bin/age-plugin-tagpq
+    runHook postFixup
+  '';
 }
