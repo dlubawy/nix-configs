@@ -17,6 +17,7 @@ let
 in
 {
   imports = [
+    ./agenix.nix
     ./disko.nix
     ./hyprland.nix
     ./nix.nix

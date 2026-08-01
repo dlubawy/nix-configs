@@ -104,7 +104,11 @@ rec {
             pkgs = import systemPkgs {
               inherit system;
               config.allowUnfree = true;
-              overlays = [ nix-topology.overlays.default ];
+              overlays = [
+                nix-topology.overlays.default
+                # Overlay ageBin for agenix with the custom tagged X-Wing version
+                (final: prev: { age = prev.age.overrideAttrs (_: import ./overlays/age { inherit prev; }); })
+              ];
             };
           }
         );
@@ -376,7 +380,7 @@ rec {
               inherit shellHook;
               buildInputs = (builtins.attrValues { inherit (pkgs) prek; }) ++ enabledPackages;
               packages = [
-                agenix.packages.${stdenv.hostPlatform.system}.default
+                (agenix.packages.${stdenv.hostPlatform.system}.default.override { ageBin = "${pkgs.age}/bin/age"; })
                 (writeShellApplication {
                   name = "sync-flake-inputs";
                   runtimeInputs = builtins.attrValues {
