@@ -18,7 +18,13 @@ jobs:
     name: Cache 📝
     strategy:
       matrix:
+        image:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - macos-latest
+        buildDevShell: true
         include:
+          - derivation: null
           - image: ubuntu-24.04-arm
             derivation: ".#nixosConfigurations.bpi.config.system.build.toplevel"
     runs-on: ${{ matrix.image }}
@@ -32,4 +38,8 @@ jobs:
           extraPullNames: nix-community
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Build derivation
+        if: ${{ matrix.derivation != null }}
         run: nix build ${{ matrix.derivation }}
+      - name: Build development shell
+        if: ${{ matrix.buildDevShell }}
+        run: nix develop . -c true
