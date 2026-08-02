@@ -7,7 +7,10 @@
       enable = true;
       bootstrap = {
         enable = false;
-        tag = "server";
+        tags = [
+          "server"
+          "nas"
+        ];
       };
       ssh.enable = true;
     };

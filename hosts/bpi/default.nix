@@ -129,7 +129,7 @@ in
         enable = true;
         bootstrap = {
           enable = false;
-          tag = "router";
+          tags = [ "router" ];
         };
         ssh.enable = true;
         disableTaildrop = true;
