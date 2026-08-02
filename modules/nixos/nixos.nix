@@ -12,6 +12,8 @@ let
     mkDefault
     mkIf
     mkMerge
+    mkOption
+    types
     ;
   systemName = config.networking.hostName;
 in
@@ -35,6 +37,24 @@ in
       Enables secure boot using lanzaboote (enable after `sudo sbctl create-keys`)
       Additional docs: https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md
     '';
+    build-vm = {
+      enable = mkEnableOption "Enable build-vm configuration";
+      system = mkOption {
+        type = types.str;
+        description = "Host system for `nixos-rebuild build-vm`";
+        default = pkgs.stdenv.buildPlatform.system;
+      };
+      cores = mkOption {
+        type = types.int;
+        description = "CPU core count for VM";
+        default = 2;
+      };
+      memorySize = mkOption {
+        type = types.int;
+        description = "Memory in MiB for VM";
+        default = 4096;
+      };
+    };
   };
 
   config = {
@@ -105,6 +125,22 @@ in
       };
       etc.overlay.enable = true;
       stateVersion = "${vars.stateVersion}";
+    };
+
+    virtualisation = mkIf config.build-vm.enable {
+      vmVariantWithDisko = mkIf config.disko.enable {
+        virtualisation = {
+          host.pkgs = import pkgs.path { system = config.build-vm.system; };
+        };
+      };
+
+      vmVariant = {
+        virtualisation = {
+          host.pkgs = import pkgs.path { system = config.build-vm.system; };
+          memorySize = config.build-vm.memorySize;
+          cores = config.build-vm.cores;
+        };
+      };
     };
   };
 }

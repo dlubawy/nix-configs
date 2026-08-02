@@ -23,18 +23,8 @@
     hostName = "kepler";
   };
 
-  virtualisation = {
-    vmVariantWithDisko = {
-      virtualisation = {
-        host.pkgs = import pkgs.path { system = "aarch64-darwin"; };
-      };
-    };
-    vmVariant = {
-      virtualisation = {
-        host.pkgs = import pkgs.path { system = "aarch64-darwin"; };
-        memorySize = 4096;
-        cores = 2;
-      };
-    };
+  build-vm = {
+    enable = true;
+    system = "aarch64-darwin";
   };
 }
