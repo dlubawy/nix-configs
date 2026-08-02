@@ -2,12 +2,21 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }:
 let
+  inherit (lib) strings optionals;
   cfg = config.agenix;
+  hasPersist =
+    (builtins.hasAttr "/persist" config.fileSystems && config.fileSystems."/persist".enable)
+    || config.disko.persist.enable;
 in
 {
+  imports = [
+    inputs.agenix.nixosModules.default
+  ];
+
   options = {
     agenix = {
       hostKeys = lib.mkOption {
@@ -55,6 +64,13 @@ in
         message = "Host key type can only be one of 'x25519' or 'pq'";
       }
     ];
+    age.identityPaths = (
+      optionals cfg.generateHostKeys (
+        builtins.map (
+          k: if hasPersist then strings.replaceString "/etc" "/persist/.rw-etc/upper" k.path else k.path
+        ) cfg.hostKeys
+      )
+    );
     systemd.services.agenix-keygen = {
       description = "agenix host keys generation";
       wantedBy = [ "multi-user.target" ];
