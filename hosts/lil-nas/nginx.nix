@@ -10,7 +10,6 @@ let
   inherit (topology.lib.helpers) getAddress;
   cloudDomain = config.cloudDomain;
   collaboraDomain = config.collaboraDomain;
-  homeAssistantDomain = config.homeAssistantDomain;
 in
 {
   age.secrets = {
@@ -67,24 +66,6 @@ in
         };
       };
     };
-    "${homeAssistantDomain}" = {
-      forceSSL = true;
-      useACMEHost = "${homeAssistantDomain}";
-      listenAddresses = [ (getAddress "lil-nas" "enp5s0") ];
-      extraConfig = ''
-        proxy_buffering off;
-      '';
-      locations = {
-        "/" = {
-          proxyPass = "http://[::1]:8123/";
-          proxyWebsockets = true;
-          extraConfig = ''
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-          '';
-        };
-      };
-    };
   };
 
   security = {
@@ -102,12 +83,6 @@ in
           };
         };
         "${collaboraDomain}" = {
-          dnsProvider = "cloudflare";
-          credentialFiles = {
-            CLOUDFLARE_DNS_API_TOKEN_FILE = config.age.secrets.cloudflare-dns-token.path;
-          };
-        };
-        "${homeAssistantDomain}" = {
           dnsProvider = "cloudflare";
           credentialFiles = {
             CLOUDFLARE_DNS_API_TOKEN_FILE = config.age.secrets.cloudflare-dns-token.path;

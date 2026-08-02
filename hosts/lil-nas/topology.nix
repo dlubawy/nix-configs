@@ -11,7 +11,6 @@ let
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
   inherit (topology.lib.helpers) getDomain;
   homeDomain = (getDomain "bpi" "adguardhome");
-  homeAssistantDomain = config.homeAssistantDomain;
   address = "192.168.10.10";
 in
 {
@@ -36,12 +35,6 @@ in
         };
         services = {
           jellyfin.info = "https://${homeDomain}/jellyfin";
-          homeAssistant = {
-            info = "https://${homeAssistantDomain}";
-            icon = "services.home-assistant";
-            name = "Home Assistant";
-            details.listen.text = "${address}:8123";
-          };
           grafana.info = mkForce "https://${homeDomain}/grafana";
           collabora-online = {
             info = "https://${config.collaboraDomain}";

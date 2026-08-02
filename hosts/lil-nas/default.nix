@@ -12,7 +12,6 @@ in
     ./disko.nix
     ./grafana
     ./hardware.nix
-    ./home-assistant.nix
     ./jellyfin.nix
     ./loki.nix
     ./nextcloud.nix
@@ -33,11 +32,6 @@ in
       type = lib.types.str;
       description = "Domain name for the Collabora ACME cert";
       default = "collabora.andrewlubawy.com";
-    };
-    homeAssistantDomain = lib.mkOption {
-      type = lib.types.str;
-      description = "Domain name for the Home Assistant cert";
-      default = "assistant.andrewlubawy.com";
     };
   };
 

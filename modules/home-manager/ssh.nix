@@ -55,6 +55,14 @@ in
         IdentitiesOnly = true;
         IdentityFile = [ ] ++ sshKeys;
       };
+      "Host pi" = {
+        HostName = "pi";
+        Port = 22;
+        User = "${username}";
+        ControlMaster = "no";
+        IdentitiesOnly = true;
+        IdentityFile = [ ] ++ sshKeys;
+      };
       "*" = {
         AddressFamily = "inet";
         VisualHostKey = "yes";
