@@ -17,13 +17,13 @@ let
 in
 {
   imports = [
+    ./agenix.nix
     ./disko.nix
     ./hyprland.nix
     ./nix.nix
     ./preservation.nix
     ./tailscale.nix
     ./users.nix
-    inputs.agenix.nixosModules.default
     inputs.lanzaboote.nixosModules.lanzaboote
     inputs.nix-topology.nixosModules.default
     inputs.nixvim.nixosModules.nixvim

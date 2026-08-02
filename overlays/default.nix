@@ -13,6 +13,8 @@
       # example = prev.example.overrideAttrs (oldAttrs: {
       # ...
       # });
+      age = prev.age.overrideAttrs (_: (import ./age { inherit prev; }));
+
       age-plugin-yubikey = prev.age-plugin-yubikey.overrideAttrs (
         _: (import ./age-plugin-yubikey { inherit prev; })
       );
