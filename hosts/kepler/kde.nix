@@ -6,9 +6,6 @@
   config = {
     # Fonts file needs overwrite and cannot set specifically
     home-manager.overwriteBackup = true;
-    systemd = {
-      network.wait-online.enable = false;
-    };
     environment = {
       plasma6.excludePackages = (builtins.attrValues { inherit (pkgs.kdePackages) konsole; });
       systemPackages = (

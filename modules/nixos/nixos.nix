@@ -105,12 +105,17 @@ in
     };
 
     networking = {
-      networkmanager.enable = true;
+      networkmanager.enable = lib.mkDefault true;
       nftables.enable = lib.mkDefault true;
       useNetworkd = lib.mkDefault true;
     };
 
-    systemd.network.enable = lib.mkDefault true;
+    systemd = {
+      network = {
+        enable = lib.mkDefault true;
+        wait-online.enable = (config.systemd.network.enable && !config.networking.networkmanager.enable);
+      };
+    };
 
     system = {
       autoUpgrade = mkIf (builtins.hasAttr "flake" vars) {

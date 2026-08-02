@@ -40,7 +40,7 @@ in
     };
     networking = {
       hostName = "pi";
-      networkmanager.enable = true;
+      networkmanager.enable = false;
     };
 
     home-manager.gui.enable = false;
