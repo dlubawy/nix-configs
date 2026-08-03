@@ -1,5 +1,8 @@
 { config, ... }:
 {
+  networking.firewall.allowedTCPPorts = [
+    config.services.loki.configuration.server.http_listen_port
+  ];
   services = {
     loki = {
       enable = true;

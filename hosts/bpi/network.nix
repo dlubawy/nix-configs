@@ -22,8 +22,6 @@ let
   pi = (getInterface "pi" "enu1u1");
   soundbar = (getInterface "soundbar" "wifi");
   somfy = (getInterface "somfy" "wifi");
-  prometheusPort = (builtins.toString config.services.prometheus.port);
-  lokiPort = (builtins.toString config.services.loki.configuration.server.http_listen_port);
 in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
@@ -44,8 +42,6 @@ in
         ################################################################
         # Accept
         ################################################################
-        # vl-dmz
-        ''ip saddr { ${lil-nas.address} } tcp dport { ${prometheusPort}, ${lokiPort} } accept comment "Allow grafana on NAS to access local prometheus and loki ports"''
       ];
       extraForwardRules = lib.strings.concatLines [
         ################################################################

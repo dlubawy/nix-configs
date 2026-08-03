@@ -78,35 +78,23 @@ in
         }
       ];
 
-      datasources.settings.datasources = [
-        {
-          name = "lil-nas Prometheus";
-          type = "prometheus";
-          url = "http://${lil-nas.address}:${lil-nas.prometheusPort}";
-          uid = "69b599c1-95e0-454b-b31b-e3ff78c40fdd";
-        }
-        {
-          name = "lil-nas Loki";
-          type = "loki";
-          url = "http://${lil-nas.address}:${lil-nas.lokiPort}";
-          uid = "73693469-0eab-4c69-a6d5-9b3fb6c9d929";
-        }
-        {
-          name = "bpi Prometheus";
-          type = "prometheus";
-          url = "http://${bpi.address}:${bpi.prometheusPort}";
-          uid = "PBFA97CFB590B2093";
-        }
-        {
-          name = "bpi Loki";
-          type = "loki";
-          url = "http://${bpi.address}:${bpi.lokiPort}";
-          uid = "FECRLA1BDO9OGF";
-          jsonData = {
-            manageAlerts = false;
-          };
-        }
-      ];
+      datasources.settings = {
+        prune = false;
+        datasources = [
+          {
+            name = "lil-nas Prometheus";
+            type = "prometheus";
+            url = "http://${lil-nas.address}:${lil-nas.prometheusPort}";
+            uid = "69b599c1-95e0-454b-b31b-e3ff78c40fdd";
+          }
+          {
+            name = "lil-nas Loki";
+            type = "loki";
+            url = "http://${lil-nas.address}:${lil-nas.lokiPort}";
+            uid = "73693469-0eab-4c69-a6d5-9b3fb6c9d929";
+          }
+        ];
+      };
     };
   };
   environment.etc = {

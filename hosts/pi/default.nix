@@ -15,7 +15,9 @@ in
     inputs.nixos-hardware.nixosModules.raspberry-pi-3
     inputs.agenix.nixosModules.default
     ../../users/drew.nix
+    ./alloy.nix
     ./home-assistant.nix
+    ./prometheus.nix
     ./topology.nix
   ];
 

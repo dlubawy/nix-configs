@@ -16,8 +16,15 @@ in
     group = config.services.prometheus.exporters.nextcloud.group;
   };
 
+  networking.firewall.allowedTCPPorts = [
+    config.services.prometheus.port
+  ];
+
   services.prometheus = {
     enable = true;
+    extraFlags = [
+      "--web.enable-remote-write-receiver"
+    ];
     listenAddress = (getAddress "lil-nas" "enp5s0");
     exporters = {
       node = {
