@@ -79,7 +79,7 @@ in
       ];
 
       datasources.settings = {
-        prune = false;
+        prune = true;
         datasources = [
           {
             name = "lil-nas Prometheus";
