@@ -32,7 +32,7 @@ in
             (
               if (helpers.hasService node service) then
                 (builtins.head (
-                  strings.match "http[s]*://([a-zA-Z.]+)/.*" config.nodes.${node}.services.${service}.info
+                  strings.match "http[s]*://([a-zA-Z.]+)/{0,1}.*" config.nodes.${node}.services.${service}.info
                 ))
               else
                 ""
