@@ -201,7 +201,7 @@ in
           icon = "interfaces.macvlan";
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".99" x)
-            (x: lib.strings.hasPrefix "lan" x)
+            (x: (lib.strings.hasPrefix "lan" x) && x != "lan1")
           ];
         };
         vl-dmz = {
@@ -209,7 +209,7 @@ in
           icon = "interfaces.macvlan";
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".10" x)
-            (x: x == "sfp2")
+            (x: x == "sfp2" || x == "lan1")
           ];
         };
         vl-user = {
