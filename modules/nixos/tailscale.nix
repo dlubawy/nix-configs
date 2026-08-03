@@ -24,6 +24,7 @@ in
           tags = mkOption {
             description = "Tag to apply to node";
             type = types.listOf types.str;
+            default = [ ];
           };
         };
         ssh.enable = mkEnableOption "Enable Tailscale SSH";
