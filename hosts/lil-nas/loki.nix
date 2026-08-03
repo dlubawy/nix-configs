@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp5s0.allowedTCPPorts = [
     config.services.loki.configuration.server.http_listen_port
   ];
   services = {

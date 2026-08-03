@@ -16,7 +16,7 @@ in
     group = config.services.prometheus.exporters.nextcloud.group;
   };
 
-  networking.firewall.allowedTCPPorts = [
+  networking.firewall.interfaces.enp5s0.allowedTCPPorts = [
     config.services.prometheus.port
   ];
 
