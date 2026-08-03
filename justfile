@@ -185,7 +185,7 @@ nixos option system:
     NIXOS_REBUILD="nixos-rebuild"
     case "{{ option }}" in
         build-vm)
-            $NIXOS_REBUILD {{ option }} --flake {{ GIT_REPO }}#{{ system }} && (QEMU_KERNEL_PARAMS=console=ttyS0 {{ GIT_REPO }}/result/bin/run-*-vm -nographic; reset)
+            $NIXOS_REBUILD {{ option }} --flake {{ GIT_REPO }}#{{ system }} && (QEMU_KERNEL_PARAMS=console=ttyS0 {{ GIT_REPO }}/result/bin/run-{{ system }}-vm -nographic; reset)
             exit 0
         ;;
         *)
