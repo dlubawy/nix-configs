@@ -1,9 +1,9 @@
 apiVersion: 1
 
-# NOTE: This is how to delete alerts
-# deleteRules:
-#   - orgId: 1
-#     uid: eeuuzo3xlqn0ga
+# NOTE: Must keep this in order to keep old alerts deleted
+deleteRules:
+  - orgId: 1
+    uid: eeuuzo3xlqn0ga
 
 groups:
   - orgId: 1
