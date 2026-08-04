@@ -28,9 +28,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
-      # FIXME: Swap when upstream is updated
-      # url = "github:nix-community/NixOS-WSL/release-26.05";
-      url = "github:nix-community/NixOS-WSL/main";
+      url = "github:nix-community/NixOS-WSL/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-sbc = {
