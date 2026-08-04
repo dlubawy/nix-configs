@@ -19,9 +19,9 @@ let
   tv2 = (getInterface "tv" "wifi2");
   guestTV = (getInterface "guestTV" "wifi");
   lil-nas = (getInterface "lil-nas" "enp5s0");
+  pi = (getInterface "pi" "enu1u1");
   soundbar = (getInterface "soundbar" "wifi");
-  prometheusPort = (builtins.toString config.services.prometheus.port);
-  lokiPort = (builtins.toString config.services.loki.configuration.server.http_listen_port);
+  somfy = (getInterface "somfy" "wifi");
 in
 {
   boot.kernel.sysctl."net.netfilter.nf_conntrack_acct" = true;
@@ -42,8 +42,6 @@ in
         ################################################################
         # Accept
         ################################################################
-        # vl-dmz
-        ''ip saddr { ${lil-nas.address} } tcp dport { ${prometheusPort}, ${lokiPort} } accept comment "Allow grafana on NAS to access local prometheus and loki ports"''
       ];
       extraForwardRules = lib.strings.concatLines [
         ################################################################
@@ -51,6 +49,10 @@ in
         ################################################################
         # vl-lan
         ''iifname { "vl-lan" } oifname { "vl-lan", "vl-dmz", "vl-user", "vl-iot", "vl-guest" } accept comment "Allow all forwarding for management LAN"''
+        # vl-dmz
+        ''ip saddr { ${pi.address} } ip daddr { ${lil-nas.address} } tcp dport { 80, 443 } accept comment "Allow Pi to access NAS"''
+        ''ip saddr { ${pi.address} } oifname { "vl-iot" } accept comment "Allow Pi to access devices in IoT"''
+        ''ip saddr { ${pi.address} } ip protocol icmp accept comment "Allow Pi to ping other network devices"''
         # vl-user
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
         # vl-iot
@@ -247,8 +249,8 @@ in
         };
       };
       networks = {
-        "30-sfp2" = {
-          matchConfig.Name = "sfp2";
+        "30-dmz-interfaces" = {
+          matchConfig.Name = "sfp2 lan1";
           bridge = [ "br-lan" ];
           bridgeVLANs = [
             {
@@ -260,7 +262,7 @@ in
           networkConfig.ConfigureWithoutCarrier = true;
         };
         "30-lan" = {
-          matchConfig.Name = "lan*";
+          matchConfig.Name = "lan2 lan3 lan4";
           bridge = [ "br-lan" ];
           bridgeVLANs = [
             {
@@ -359,6 +361,10 @@ in
               Address = lil-nas.address;
               MACAddress = lil-nas.mac;
             }
+            {
+              Address = pi.address;
+              MACAddress = pi.mac;
+            }
           ];
         };
         "35-vl-user" = {
@@ -427,6 +433,10 @@ in
             {
               Address = soundbar.address;
               MACAddress = soundbar.mac;
+            }
+            {
+              Address = somfy.address;
+              MACAddress = somfy.mac;
             }
           ];
         };

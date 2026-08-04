@@ -128,6 +128,20 @@ in
           };
         };
       };
+      somfy = mkDevice "🪟 Somfy" {
+        interfaceGroups = [
+          [ "wifi" ]
+        ];
+        interfaces = {
+          wifi = {
+            addresses = [ "192.168.30.15" ];
+            mac = "70:4b:ca:47:f6:1c";
+            physicalConnections = [
+              (mkConnection "bpi" "wlan0.30")
+            ];
+          };
+        };
+      };
     };
 
     networks = {
@@ -165,6 +179,9 @@ in
         lan3 = { };
         lan4 = { };
 
+        br-lan.icon = "devices.switch";
+        br-wan.icon = "devices.switch";
+
         "wlan0.20" = { };
         "wlan0.30" = { };
         "wlan0.40" = { };
@@ -181,32 +198,37 @@ in
 
         vl-lan = {
           network = "lan";
+          icon = "interfaces.macvlan";
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".99" x)
-            (x: lib.strings.hasPrefix "lan" x)
+            (x: (lib.strings.hasPrefix "lan" x) && x != "lan1")
           ];
         };
         vl-dmz = {
           network = "dmz";
+          icon = "interfaces.macvlan";
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".10" x)
-            (x: x == "sfp2")
+            (x: x == "sfp2" || x == "lan1")
           ];
         };
         vl-user = {
           network = "user";
+          icon = "interfaces.macvlan";
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".20" x)
           ];
         };
         vl-iot = {
           network = "iot";
+          icon = "interfaces.macvlan";
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".30" x)
           ];
         };
         vl-guest = {
           network = "guest";
+          icon = "interfaces.macvlan";
           sharesNetworkWith = [
             (x: lib.strings.hasSuffix ".40" x)
           ];
@@ -222,8 +244,7 @@ in
           };
         };
         prometheus.hidden = true;
-        adguardhome.info = "${homeDomain}/adguard";
-        nginx.info = "${homeDomain}";
+        adguardhome.info = "https://${homeDomain}/adguard";
       };
     };
   };

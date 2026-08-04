@@ -1,4 +1,10 @@
 apiVersion: 1
+
+# NOTE: Must keep this in order to keep old alerts deleted
+deleteRules:
+  - orgId: 1
+    uid: eeuuzo3xlqn0ga
+
 groups:
   - orgId: 1
     name: 1m
@@ -68,12 +74,12 @@ groups:
             relativeTimeRange:
               from: 10800
               to: 0
-            datasourceUid: PBFA97CFB590B2093
+            datasourceUid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
             model:
               adhocFilters: []
               datasource:
                 type: prometheus
-                uid: PBFA97CFB590B2093
+                uid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
               editorMode: code
               exemplar: false
               expr: rate(nf_conntrack_nat_bytes{job=~"router_metrics",src=~"192.168.(1|10|20|30|40|50)..*"}[5m])
@@ -152,7 +158,7 @@ groups:
           receiver: Telegram
 
       - uid: c7c19e24-c1eb-4a46-aeb3-97906d022811
-        title: lil-nas SSH Failure by User and IP
+        title: SSH Failure by User and IP
         condition: threshold
         data:
           - refId: failures
@@ -166,7 +172,7 @@ groups:
                 type: loki
                 uid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
               editorMode: code
-              expr: 'count_over_time({host="lil-nas", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m]) or count by(ip, username) (count by(session_id, ip, username) (count_over_time({host="lil-nas", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [5m])) * on(session_id) group_left() count_over_time({host="lil-nas", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [5m]) > 0)'
+              expr: 'count_over_time({unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m]) or count by(ip, username) (count by(session_id, ip, username) (count_over_time({unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [5m])) * on(session_id) group_left() count_over_time({unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [5m]) > 0)'
               instant: true
               intervalMs: 1000
               maxDataPoints: 43200
@@ -231,12 +237,11 @@ groups:
         annotations:
           __dashboardUid__: OMEuTfqVk
           __panelId__: "23"
-          description: Detected unusually high SSH login failures on NAS
-          summary: High SSH login failures for NAS
+          description: Detected unusually high SSH login failures
+          summary: High SSH login failures
         isPaused: false
         notification_settings:
           receiver: Telegram
-
       - uid: eeuuzo3xlqn0ga
         title: bpi SSH Failure by User and IP
         condition: threshold
@@ -246,11 +251,11 @@ groups:
             relativeTimeRange:
               from: 172800
               to: 0
-            datasourceUid: FECRLA1BDO9OGF
+            datasourceUid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
             model:
               datasource:
                 type: loki
-                uid: FECRLA1BDO9OGF
+                uid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
               editorMode: code
               expr: 'count_over_time({host="bpi", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m]) or count by(ip, username) (count by(session_id, ip, username) (count_over_time({host="bpi", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [5m])) * on(session_id) group_left() count_over_time({host="bpi", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [5m]) > 0)'
               instant: true
@@ -331,12 +336,12 @@ groups:
             relativeTimeRange:
               from: 3600
               to: 0
-            datasourceUid: PBFA97CFB590B2093
+            datasourceUid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
             model:
               adhocFilters: []
               datasource:
                 type: prometheus
-                uid: PBFA97CFB590B2093
+                uid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
               disableTextWrap: false
               editorMode: code
               exemplar: false

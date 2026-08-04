@@ -27,10 +27,15 @@ in
           hasInterface =
             node: interface:
             ((helpers.hasNode node) && (builtins.hasAttr interface config.nodes.${node}.interfaces));
-          getHomeDomain =
-            homeNode: proxy:
+          getDomain =
+            node: service:
             (
-              if (helpers.hasService homeNode proxy) then config.nodes.${homeNode}.services.${proxy}.info else ""
+              if (helpers.hasService node service) then
+                (builtins.head (
+                  strings.match "http[s]*://([a-zA-Z.]+)/{0,1}.*" config.nodes.${node}.services.${service}.info
+                ))
+              else
+                ""
             );
           getAddress =
             node: interface:

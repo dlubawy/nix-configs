@@ -13,6 +13,7 @@ let
     types
     optionals
     ;
+  inherit (lib.strings) concatMapStringsSep;
 in
 {
   options = {
@@ -20,12 +21,21 @@ in
       tailscale = {
         bootstrap = {
           enable = mkEnableOption "Bootstrap permanent node with auth key";
-          tag = mkOption {
+          tags = mkOption {
             description = "Tag to apply to node";
-            type = types.str;
+            type = types.listOf types.str;
+            default = [ ];
           };
         };
         ssh.enable = mkEnableOption "Enable Tailscale SSH";
+        funnel = {
+          enable = mkEnableOption "Enable Tailscale funnel on node";
+          port = mkOption {
+            description = "Port to funnel to";
+            type = types.nullOr types.int;
+            default = null;
+          };
+        };
       };
 
       tsidp.bootstrap = {
@@ -43,12 +53,18 @@ in
     assertions = [
       {
         assertion =
-          config.services.tailscale.bootstrap.enable -> config.services.tailscale.bootstrap.tag != "";
-        message = "Must apply tag when bootstrapping permanent tailscale node";
+          config.services.tailscale.bootstrap.enable
+          -> (builtins.length config.services.tailscale.bootstrap.tags) > 0;
+        message = "Must set at least one tag when bootstrapping permanent tailscale node";
       }
       {
         assertion = config.services.tsidp.bootstrap.enable -> config.services.tsidp.bootstrap.tag != "";
         message = "Must apply tag when bootstrapping permanent tailscale node";
+      }
+      {
+        assertion =
+          config.services.tailscale.funnel.enable -> config.services.tailscale.funnel.port != null;
+        message = "Must specify port for funnel";
       }
     ];
 
@@ -75,12 +91,16 @@ in
         authKeyParameters = {
           ephemeral = mkDefault (!config.services.tailscale.bootstrap.enable);
         };
-        extraUpFlags = [
-          "--advertise-tags=tag:${config.services.tailscale.bootstrap.tag}"
-        ]
-        ++ (optionals config.services.tailscale.ssh.enable [
-          "--ssh"
-        ]);
+        extraUpFlags =
+          let
+            tagsOption = concatMapStringsSep "," (x: "tag:${x}") config.services.tailscale.bootstrap.tags;
+          in
+          [
+            "--advertise-tags=${tagsOption}"
+          ]
+          ++ (optionals config.services.tailscale.ssh.enable [
+            "--ssh"
+          ]);
       };
 
       tsidp.environmentFile = "/etc/tsidp";
@@ -99,6 +119,19 @@ in
               "TS_DEBUG_FIREWALL_MODE=nftables"
             ]
           );
+        };
+
+        tailscale-funnel = mkIf config.services.tailscale.funnel.enable {
+          description = "Funnels traffic to service over internet";
+          after = [
+            "tailscaled.service"
+          ];
+          wants = [ "tailscaled.service" ];
+          wantedBy = [ "multi-user.target" ];
+          path = builtins.attrValues { inherit (pkgs) tailscale; };
+          script = ''
+            tailscale funnel ${toString config.services.tailscale.funnel.port}
+          '';
         };
 
         tsidp-auth = mkIf config.services.tsidp.bootstrap.enable {

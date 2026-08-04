@@ -37,6 +37,10 @@ rec {
       url = "github:nakato/nixos-sbc/e7a298859841bde2a572a12227a5778ad1d9f771";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/2e790b0a6be8ec2b76174ac0931b8ff11919ec98";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Supporting modules
     nixvim = {
@@ -167,6 +171,11 @@ rec {
         lil-nas = mkSystem {
           name = "lil-nas";
           system = "x86_64-linux";
+        };
+        # Raspberry Pi 3
+        pi = mkSystem {
+          name = "pi";
+          system = "aarch64-linux";
         };
       };
     in

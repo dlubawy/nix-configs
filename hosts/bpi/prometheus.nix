@@ -1,4 +1,15 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  outputs,
+  ...
+}:
+let
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  inherit (topology.lib.helpers) getAddress getPrometheusPort;
+  lil-nas = (getAddress "lil-nas" "enp5s0");
+  prometheusPort = (getPrometheusPort "lil-nas");
+in
 {
   systemd = {
     timers = {
@@ -78,7 +89,11 @@
   };
   services.prometheus = {
     enable = true;
-    listenAddress = "192.168.1.1";
+    enableAgentMode = true;
+    remoteWrite = [
+      { url = "http://${lil-nas}:${prometheusPort}/api/v1/write"; }
+    ];
+    listenAddress = "127.0.0.1";
     exporters = {
       node = {
         enable = true;
@@ -98,16 +113,6 @@
           {
             targets = [
               "${toString config.services.prometheus.exporters.node.listenAddress}:${toString config.services.prometheus.exporters.node.port}"
-            ];
-          }
-        ];
-      }
-      {
-        job_name = "loki_metrics";
-        static_configs = [
-          {
-            targets = [
-              "${toString config.services.loki.configuration.common.ring.instance_addr}:${toString config.services.loki.configuration.server.http_listen_port}"
             ];
           }
         ];

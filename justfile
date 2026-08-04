@@ -65,7 +65,7 @@ build option system:
 test system:
     #!/usr/bin/env bash
     SYSTEM="{{ system }}"
-    read -r HAS_DISKO_VM < <(nix eval '.#nixosConfigurations.'"$SYSTEM"'.config.system.build' --apply 'builtins.hasAttr "vmWithDisko"')
+    read -r HAS_DISKO_VM < <(nix eval '.#nixosConfigurations.'"$SYSTEM"'.config.disko.enable')
     if [[ "$HAS_DISKO_VM" == "true" ]]; then
         nix run -L '.#nixosConfigurations.'"$SYSTEM"'.config.system.build.vmWithDisko'
     else
@@ -181,12 +181,11 @@ image system:
 # Build and deploy NixOS systems
 nixos option system:
     #!/usr/bin/env bash
-    NIXOS_REBUILD=""
     CMD=""
     NIXOS_REBUILD="nixos-rebuild"
     case "{{ option }}" in
         build-vm)
-            $NIXOS_REBUILD {{ option }} --flake {{ GIT_REPO }}#{{ system }} && (QEMU_KERNEL_PARAMS=console=ttyS0 {{ GIT_REPO }}/result/bin/run-nixos-vm -nographic; reset)
+            $NIXOS_REBUILD {{ option }} --flake {{ GIT_REPO }}#{{ system }} && (QEMU_KERNEL_PARAMS=console=ttyS0 {{ GIT_REPO }}/result/bin/run-{{ system }}-vm -nographic; reset)
             exit 0
         ;;
         *)

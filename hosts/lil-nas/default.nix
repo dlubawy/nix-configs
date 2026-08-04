@@ -15,6 +15,7 @@ in
     ./jellyfin.nix
     ./loki.nix
     ./nextcloud.nix
+    ./nginx.nix
     ./prometheus.nix
     ./tailscale.nix
     ./topology.nix

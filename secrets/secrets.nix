@@ -24,13 +24,21 @@ in
   "tailscale.age" = mkSecret [
     systems.bpi
     systems.lil-nas
+    systems.pi
   ];
   "grafana.age" = mkSecret [ systems.lil-nas ];
   "grafana-contact-points.age" = mkSecret [ systems.lil-nas ];
+  "cloudflare-tunnel-cert.age" = mkSecret [
+    systems.pi
+  ];
+  "cloudflare-tunnel-credentials.age" = mkSecret [
+    systems.pi
+  ];
   "cloudflare-dns-token.age" = mkSecret [
     systems.bpi
     systems.lil-nas
   ];
+  "home-assistant-key.age" = mkSecret [ systems.pi ];
   "nextcloud.age" = mkSecret [ systems.lil-nas ];
   "nextcloud-exporter.age" = mkSecret [ systems.lil-nas ];
   "nextcloud-whiteboard.age" = mkSecret [ systems.lil-nas ];
