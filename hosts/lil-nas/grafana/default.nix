@@ -14,11 +14,6 @@ let
     ;
   homeDomain = (getDomain "bpi" "adguardhome");
 
-  bpi = {
-    address = (getAddress "bpi" "vl-lan");
-    prometheusPort = (getPrometheusPort "bpi");
-    lokiPort = (getLokiPort "bpi");
-  };
   lil-nas = {
     address = (getAddress "lil-nas" "enp5s0");
     prometheusPort = (getPrometheusPort "lil-nas");

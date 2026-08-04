@@ -1,9 +1,9 @@
 apiVersion: 1
 
 # NOTE: Must keep this in order to keep old alerts deleted
-deleteRules:
-  - orgId: 1
-    uid: eeuuzo3xlqn0ga
+# deleteRules:
+#   - orgId: 1
+#     uid: eeuuzo3xlqn0ga
 
 groups:
   - orgId: 1
@@ -57,15 +57,20 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
+        dashboardUid: -AweIwvnk
+        panelId: 95
         noDataState: NoData
         execErrState: Error
         for: 1m
         annotations:
+          __dashboardUid__: -AweIwvnk
+          __panelId__: "95"
           summary: ZFS health check failed
         labels: {}
         isPaused: false
         notification_settings:
           receiver: Telegram
+
       - uid: aeuuzc1rol4w0b
         title: Server src NAT Traffic
         condition: threshold
@@ -242,91 +247,6 @@ groups:
         isPaused: false
         notification_settings:
           receiver: Telegram
-      - uid: eeuuzo3xlqn0ga
-        title: bpi SSH Failure by User and IP
-        condition: threshold
-        data:
-          - refId: failures
-            queryType: range
-            relativeTimeRange:
-              from: 172800
-              to: 0
-            datasourceUid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
-            model:
-              datasource:
-                type: loki
-                uid: 73693469-0eab-4c69-a6d5-9b3fb6c9d929
-              editorMode: code
-              expr: 'count_over_time({host="bpi", unit=~"sshd.service"} |~"Invalid|Failed .* user|Connection closed by authenticating user" [5m]) or count by(ip, username) (count by(session_id, ip, username) (count_over_time({host="bpi", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+): handling conn: (?P<ip>[0-9.]+):[0-9]+->(?P<username>[a-z]+).*` |~ `ssh-conn.*handling conn:.*` [5m])) * on(session_id) group_left() count_over_time({host="bpi", unit="tailscaled.service"} | regexp `^ssh-conn-(?P<session_id>[a-zA-Z0-9-]+):.*` |~ `.*result: rejected` [5m]) > 0)'
-              instant: true
-              intervalMs: 1000
-              maxDataPoints: 43200
-              queryType: range
-              range: false
-              refId: failures
-          - refId: reduce
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params: []
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - D
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: failures
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: reduce
-              type: reduce
-          - refId: threshold
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 10
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - E
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: reduce
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: threshold
-              type: threshold
-        dashboardUid: OMEuTfqVk
-        panelId: 23
-        noDataState: OK
-        execErrState: Error
-        for: 1m
-        annotations:
-          __dashboardUid__: OMEuTfqVk
-          __panelId__: "23"
-          description: Detected unusually high SSH login failures on bpi
-          summary: High SSH login failures for bpi
-        isPaused: false
-        notification_settings:
-          receiver: Telegram
 
       - uid: ced46ynzr9ywwf
         title: New DHCP lease
@@ -394,6 +314,71 @@ groups:
           __dashboardUid__: bdy36esut6wowf
           __panelId__: "1"
           summary: A new DHCP lease was detected.
+        isPaused: false
+        notification_settings:
+          receiver: Telegram
+
+      - uid: afu6thrpbdm2oe
+        title: High ZFS storage usage
+        condition: High storage usage
+        data:
+          - refId: Storage usage percentage
+            relativeTimeRange:
+              from: 21600
+              to: 0
+            datasourceUid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
+            model:
+              datasource:
+                type: prometheus
+                uid: 69b599c1-95e0-454b-b31b-e3ff78c40fdd
+              editorMode: code
+              exemplar: false
+              expr: zfs_dataset_used_bytes{job="nas_metrics", name=~"(rpool|tank)"} / on(pool) zfs_pool_size_bytes{job="nas_metrics", pool=~"(rpool|tank)"}
+              format: table
+              instant: true
+              interval: ""
+              intervalMs: 30000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: Storage usage percentage
+          - refId: High storage usage
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.75
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: Storage usage percentage
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: High storage usage
+              type: threshold
+        dashboardUid: -AweIwvnk
+        panelId: 95
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: -AweIwvnk
+          __panelId__: "95"
+          description: ZFS storage use over 75% of pool capacity.
+          summary: High ZFS storage usage detected.
+        labels: {}
         isPaused: false
         notification_settings:
           receiver: Telegram
