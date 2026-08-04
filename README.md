@@ -10,10 +10,10 @@ My personal Nix configurations for managing multiple systems using [NixOS](https
 
 This configuration manages:
 
-- **NixOS systems**: Router (Banana Pi), NAS server (GMKtec G9), WSL
+- **NixOS systems**: Router (Banana Pi), NAS server (GMKtec G9), desktop workstation (Dell XPS 15), Raspberry Pi 3, WSL
 - **macOS systems**: Development workstation (MacBook Pro M1)
 - **User environments**: Dotfiles and applications via Home Manager
-- **Network services**: Nextcloud, Jellyfin, Grafana, Prometheus, Loki
+- **Network services**: Home Assistant, Nextcloud, Jellyfin, Grafana, Prometheus, Loki
 - **Network infrastructure**: Router with VLANs, firewall, and monitoring
 
 ## Getting Started
@@ -38,8 +38,10 @@ These configurations make use of personal preferences. I have forked some tools 
 ## Hosts
 
 - Banana Pi BPI-R3: [`bpi`](./hosts/bpi/README.md) - Router and network infrastructure
+- Dell XPS 15: [`kepler`](./hosts/kepler/README.md) - Linux workstation
 - GMKtec G9: [`lil-nas`](./hosts/lil-nas/README.md) - NAS server with Nextcloud, Jellyfin, and monitoring
 - MacBook Pro M1: [`laplace`](./hosts/laplace/README.md) - macOS development workstation
+- Raspberry Pi 3 Model B+: [`pi`](./hosts/pi/README.md) - Home Assistant and edge monitoring node
 - WSL: [`syringa`](./hosts/syringa/README.md) - Windows Subsystem for Linux
 
 Hosts import reusable system configuration modules based on the type of system being configured:
