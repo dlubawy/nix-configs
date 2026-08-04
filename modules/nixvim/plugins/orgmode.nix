@@ -281,8 +281,8 @@ in
         src = fetchFromGitHub {
           owner = "nvim-orgmode";
           repo = "org-bullets.nvim";
-          rev = "21437cfa99c70f2c18977bffd423f912a7b832ea";
-          hash = "sha256-/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0=";
+          rev = "503fe053550879cc202086a40454e46a87c41ddb";
+          hash = "sha256-Tgeqr/Zd1hJXXaln4XWGS5aZqypnpfNxgO/+pQVk7jg=";
         };
         buildInputs = [ vimPlugins.orgmode ];
       })
