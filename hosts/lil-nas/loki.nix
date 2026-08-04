@@ -21,6 +21,23 @@
           path_prefix = "/tmp/loki";
         };
 
+        ruler = {
+          storage = {
+            type = "local";
+            local = {
+              directory = "${config.services.loki.dataDir}/rules";
+            };
+          };
+          rule_path = "/tmp/loki/rules";
+          alertmanager_url = "http://127.0.0.1:9093";
+          ring = {
+            kvstore = {
+              store = "inmemory";
+            };
+          };
+          enable_api = true;
+        };
+
         schema_config = {
           configs = [
             {
