@@ -17,6 +17,10 @@
             config.disko.devices.disk.ssd1.device
             config.disko.devices.disk.ssd2.device
           ]
+          [
+            config.disko.devices.disk.ssd3.device
+            config.disko.devices.disk.ssd4.device
+          ]
         ];
       };
       key.enable = true;
@@ -63,6 +67,22 @@
         ssd2 = {
           type = "disk";
           device = "/dev/disk/by-id/nvme-CT500P310SSD8_2518500D9211";
+          content = {
+            type = "zfs";
+            pool = "tank";
+          };
+        };
+        ssd3 = {
+          type = "disk";
+          device = "/dev/disk/by-id/nvme-CT2000P310SSD8_2520501B3515";
+          content = {
+            type = "zfs";
+            pool = "tank";
+          };
+        };
+        ssd4 = {
+          type = "disk";
+          device = "/dev/disk/by-id/nvme-CT2000P310SSD8_2520501B3375";
           content = {
             type = "zfs";
             pool = "tank";
