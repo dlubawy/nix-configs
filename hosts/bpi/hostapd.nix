@@ -119,6 +119,13 @@
             # Retry on failure
             Restart = "on-failure";
             RestartSec = "5s";
+
+            ProtectHome = true;
+            ProtectSystem = true;
+            NoNewPrivileges = true;
+            ProtectKernelLogs = true;
+            ProtectKernelModules = true;
+            ProtectKernelTunables = true;
           };
         };
       };

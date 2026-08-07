@@ -19,6 +19,13 @@ in
           Type = "oneshot";
           RemainAfterExit = true;
           ExecStart = "${config.services.tailscale.package}/bin/tailscale drive share jellyfin /srv/jellyfin";
+
+          ProtectHome = true;
+          ProtectSystem = true;
+          NoNewPrivileges = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
         };
       };
     };
