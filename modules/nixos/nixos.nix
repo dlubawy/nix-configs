@@ -87,6 +87,20 @@ in
       })
     ];
 
+    security = {
+      audit = mkIf config.security.auditd.enable {
+        enable = mkDefault true;
+        rules = [
+          "-a always,exit -F arch=b64 -F path=/etc/passwd -F perm=rwxa"
+          "-a always,exit -F arch=b64 -F dir=/etc/security"
+          "-a exit,always -S chmod"
+          "-a always,exit -F arch=b64 -S open,openat,openat2 -F exit=-EACCES -k access"
+          "-a always,exit -F arch=b64 -S open,openat,openat2 -F exit=-EPERM -k access"
+        ];
+      };
+      sudo.execWheelOnly = true;
+    };
+
     programs = {
       nixvim = {
         enable = true;
