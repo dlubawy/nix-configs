@@ -47,25 +47,25 @@ in
 
         # 6. Unauthorized File Access Attempts (Fails)
         (
-          if pkgs.stdenv.isAarch64 then
+          if pkgs.stdenv.hostPlatform.isAarch64 then
             "-a always,exit -F arch=aarch64 -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access"
           else
             "-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access"
         )
         (
-          if pkgs.stdenv.isAarch64 then
+          if pkgs.stdenv.hostPlatform.isAarch64 then
             "-a always,exit -F arch=arm -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access"
           else
             "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access"
         )
         (
-          if pkgs.stdenv.isAarch64 then
+          if pkgs.stdenv.hostPlatform.isAarch64 then
             "-a always,exit -F arch=aarch64 -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
           else
             "-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
         )
         (
-          if pkgs.stdenv.isAarch64 then
+          if pkgs.stdenv.hostPlatform.isAarch64 then
             "-a always,exit -F arch=arm -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
           else
             "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
