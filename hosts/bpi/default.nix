@@ -98,6 +98,7 @@ in
     };
 
     security = {
+      auditd.enable = true;
       acme = {
         acceptTerms = true;
         defaults = {
