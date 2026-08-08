@@ -81,6 +81,11 @@ in
         # 9. Protect Audit Configuration
         "-w /var/log/audit/ -p wa -k audit_log_mod"
         "-w /etc/audit/ -p wa -k audit_config_mod"
+
+        # 10. Remove extraneous audit messages
+        "-a exclude,always -F msgtype=SERVICE_START"
+        "-a exclude,always -F msgtype=SERVICE_STOP"
+        "-a exclude,always -F msgtype=BPF"
       ];
     };
   };
