@@ -30,7 +30,6 @@
     LIBVA_DRIVER_NAME = "iHD";
   };
   hardware = {
-    bluetooth.enable = true;
     cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
     graphics = {
       enable = true;

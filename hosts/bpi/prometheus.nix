@@ -52,6 +52,13 @@ in
         serviceConfig = {
           Type = "oneshot";
           User = "root";
+
+          ProtectHome = true;
+          ProtectSystem = true;
+          NoNewPrivileges = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
         };
       };
       prometheus-iwinfo = {
@@ -68,6 +75,13 @@ in
         serviceConfig = {
           Type = "oneshot";
           User = "root";
+
+          ProtectHome = true;
+          ProtectSystem = true;
+          NoNewPrivileges = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
         };
       };
       prometheus-networkctl = {
@@ -83,6 +97,13 @@ in
         serviceConfig = {
           Type = "oneshot";
           User = "root";
+
+          ProtectHome = true;
+          ProtectSystem = true;
+          NoNewPrivileges = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
         };
       };
     };

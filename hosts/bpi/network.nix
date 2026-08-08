@@ -56,8 +56,8 @@ in
         # vl-user
         ''iifname { "vl-user" } ip daddr { 192.168.30.0/24 } accept comment "Allow trusted users to access IoT"''
         # vl-iot
-        ''ip saddr { ${tv.address} } ip daddr { ${lil-nas.address} } tcp dport { 8096 } accept comment "Allow TV forward to NAS for Jellyfin"''
-        ''ip saddr { ${tv.address} } ip daddr { ${lil-nas.address} } udp dport { 7359 } accept comment "Allow TV forward to NAS for Jellyfin"''
+        ''ip saddr { ${tv.address}, ${guestTV.address} } ip daddr { ${lil-nas.address} } tcp dport { 8096 } accept comment "Allow TVs forward to NAS for Jellyfin"''
+        ''ip saddr { ${tv.address}, ${guestTV.address} } ip daddr { ${lil-nas.address} } udp dport { 7359 } accept comment "Allow TVs forward to NAS for Jellyfin"''
         ''ip saddr { ${tv.address} } ip daddr { ${gamingPC.address} } tcp dport { 27036, 27037 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${tv.address} } ip daddr { ${gamingPC.address} } udp dport { 27031, 27036 } accept comment "Allow TV forward to gaming PC for Steam Link"''
         ''ip saddr { ${tv2.address} } ip daddr { 192.168.20.0/24, 192.168.40.0/24 } tcp sport { 7000 } accept comment "Allow TV forward to user and guest for AirPlay"''

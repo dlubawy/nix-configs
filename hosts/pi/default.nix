@@ -30,6 +30,7 @@ in
   };
 
   config = {
+    security.auditd.enable = true;
     swapDevices = [
       {
         device = "/var/lib/swapfile";

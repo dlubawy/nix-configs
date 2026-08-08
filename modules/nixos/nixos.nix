@@ -20,6 +20,7 @@ in
 {
   imports = [
     ./agenix.nix
+    ./audit.nix
     ./disko.nix
     ./hyprland.nix
     ./nix.nix
@@ -86,6 +87,10 @@ in
         };
       })
     ];
+
+    security = {
+      sudo.execWheelOnly = true;
+    };
 
     programs = {
       nixvim = {

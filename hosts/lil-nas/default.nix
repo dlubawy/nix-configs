@@ -41,6 +41,8 @@ in
       networkmanager.enable = mkForce false;
     };
 
+    security.auditd.enable = true;
+
     home-manager.gui.enable = false;
     users.shadow.enable = true;
 

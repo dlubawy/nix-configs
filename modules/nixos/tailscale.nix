@@ -132,6 +132,15 @@ in
           script = ''
             tailscale funnel ${toString config.services.tailscale.funnel.port}
           '';
+
+          serviceConfig = {
+            ProtectHome = true;
+            ProtectSystem = true;
+            NoNewPrivileges = true;
+            ProtectKernelLogs = true;
+            ProtectKernelModules = true;
+            ProtectKernelTunables = true;
+          };
         };
 
         tsidp-auth = mkIf config.services.tsidp.bootstrap.enable {
