@@ -30,6 +30,9 @@ in
   };
 
   config = {
+    # NOTE: the Pi does not have enough memory to upgrade automatically
+    # TODO: Setup a push automation to update the Pi ISSUE(#293)
+    system.autoUpgrade.enable = lib.mkForce false;
     security.auditd.enable = true;
     swapDevices = [
       {
