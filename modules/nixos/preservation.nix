@@ -27,14 +27,18 @@ in
         }
       ];
 
-      users.users = {
-        "${config.services.jellyfin.user}" = mkIf config.services.jellyfin.enable {
-          home = config.services.jellyfin.dataDir;
-        };
-        prometheus = mkIf config.services.prometheus.enable {
-          home = "/var/lib/${config.services.prometheus.stateDir}";
-        };
-      };
+      users.users = mkMerge [
+        (mkIf config.services.jellyfin.enable {
+          "${config.services.jellyfin.user}" = {
+            home = config.services.jellyfin.dataDir;
+          };
+        })
+        (mkIf config.services.prometheus.enable {
+          prometheus = {
+            home = "/var/lib/${config.services.prometheus.stateDir}";
+          };
+        })
+      ];
 
       systemd.tmpfiles.settings.preservation = mkMerge [
         (lib.mapAttrs' (
