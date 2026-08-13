@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) optionals mkIf;
+  inherit (lib) optionals mkIf mkMerge;
   hasPersist =
     (builtins.hasAttr "/persist" config.fileSystems && config.fileSystems."/persist".enable)
     || config.disko.persist.enable;
@@ -27,40 +27,43 @@ in
         }
       ];
 
-      systemd.tmpfiles.settings =
-        let
-          mkOwnership = dir: user: group: {
-            "${dir}".Z = {
-              user = user;
-              group = group;
+      users.users = {
+        jellyfin = mkIf config.services.jellyfin.enable {
+          home = config.services.jellyfin.dataDir;
+        };
+        prometheus = mkIf config.services.prometheus.enable {
+          home = "/var/lib/${config.services.prometheus.stateDir}";
+        };
+      };
+
+      systemd.tmpfiles.settings.preservation = mkMerge [
+        (lib.mapAttrs' (
+          username: opts:
+          lib.nameValuePair (toString opts.home) {
+            Z = {
+              mode = opts.homeMode;
+              user = opts.name;
+              inherit (opts) group;
+            };
+          }
+        ) (lib.filterAttrs (_username: opts: opts.enable && opts.home != "/var/empty") config.users.users))
+        (mkIf config.services.jellyfin.enable {
+          "${config.services.jellyfin.cacheDir}" = {
+            Z = {
+              user = config.services.jellyfin.user;
+              group = config.services.jellyfin.group;
             };
           };
-        in
-        {
-          grafana = mkIf config.services.grafana.enable (
-            mkOwnership config.services.grafana.dataDir "grafana" "grafana"
-          );
-          jellyfin = mkIf config.services.jellyfin.enable (
-            (mkOwnership config.services.jellyfin.dataDir config.services.jellyfin.user
-              config.services.jellyfin.group
-            )
-            // (mkOwnership config.services.jellyfin.cacheDir config.services.jellyfin.user
-              config.services.jellyfin.group
-            )
-          );
-          nextcloud = mkIf config.services.nextcloud.enable (
-            mkOwnership config.services.nextcloud.datadir "nextcloud" "nextcloud"
-          );
-          postgresql = mkIf config.services.postgresql.enable (
-            mkOwnership "/var/lib/postgresql" "postgres" "postgres"
-          );
-          prometheus = mkIf config.services.prometheus.enable (
-            mkOwnership "/var/lib/${config.services.prometheus.stateDir}" "prometheus" "prometheus"
-          );
-          loki = mkIf config.services.loki.enable (
-            mkOwnership config.services.loki.dataDir config.services.loki.user config.services.loki.group
-          );
-        };
+        })
+        (mkIf config.services.postgresql.enable {
+          "/var/lib/postgresql" = {
+            Z = {
+              user = config.users.users.postgres.name;
+              group = config.users.users.postgres.group;
+            };
+          };
+        })
+      ];
 
       preservation = {
         preserveAt."/persist" = {
@@ -90,11 +93,13 @@ in
               directory = config.services.jellyfin.dataDir;
               group = config.services.jellyfin.group;
               user = config.services.jellyfin.user;
+              mode = config.users.users.jellyfin.homeMode;
             }
             {
               directory = config.services.jellyfin.cacheDir;
               group = config.services.jellyfin.group;
               user = config.services.jellyfin.user;
+              mode = config.users.users.jellyfin.homeMode;
             }
           ])
           ++ (optionals config.services.grafana.enable [
@@ -102,6 +107,7 @@ in
               directory = config.services.grafana.dataDir;
               group = "grafana";
               user = "grafana";
+              mode = config.users.users.grafana.homeMode;
             }
           ])
           ++ (optionals config.services.prometheus.enable [
@@ -109,6 +115,7 @@ in
               directory = "/var/lib/${config.services.prometheus.stateDir}";
               group = "prometheus";
               user = "prometheus";
+              mode = config.users.users.prometheus.homeMode;
             }
           ])
           ++ (optionals config.services.loki.enable [
@@ -116,6 +123,7 @@ in
               directory = config.services.loki.dataDir;
               group = config.services.loki.group;
               user = config.services.loki.user;
+              mode = config.users.users.loki.homeMode;
             }
           ]);
 
