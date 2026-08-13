@@ -28,7 +28,7 @@ in
       ];
 
       users.users = {
-        jellyfin = mkIf config.services.jellyfin.enable {
+        "${config.services.jellyfin.user}" = mkIf config.services.jellyfin.enable {
           home = config.services.jellyfin.dataDir;
         };
         prometheus = mkIf config.services.prometheus.enable {
@@ -52,6 +52,7 @@ in
             Z = {
               user = config.services.jellyfin.user;
               group = config.services.jellyfin.group;
+              mode = config.users.users."${config.services.jellyfin.user}".homeMode;
             };
           };
         })
@@ -60,6 +61,7 @@ in
             Z = {
               user = config.users.users.postgres.name;
               group = config.users.users.postgres.group;
+              mode = config.users.users.postgres.homeMode;
             };
           };
         })
@@ -93,13 +95,13 @@ in
               directory = config.services.jellyfin.dataDir;
               group = config.services.jellyfin.group;
               user = config.services.jellyfin.user;
-              mode = config.users.users.jellyfin.homeMode;
+              mode = config.users.users."${config.services.jellyfin.user}".homeMode;
             }
             {
               directory = config.services.jellyfin.cacheDir;
               group = config.services.jellyfin.group;
               user = config.services.jellyfin.user;
-              mode = config.users.users.jellyfin.homeMode;
+              mode = config.users.users."${config.services.jellyfin.user}".homeMode;
             }
           ])
           ++ (optionals config.services.grafana.enable [
@@ -123,7 +125,7 @@ in
               directory = config.services.loki.dataDir;
               group = config.services.loki.group;
               user = config.services.loki.user;
-              mode = config.users.users.loki.homeMode;
+              mode = config.users.users."${config.services.loki.user}".homeMode;
             }
           ]);
 
