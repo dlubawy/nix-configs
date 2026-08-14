@@ -554,7 +554,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |= `: session opened for` | regexp `.* session opened for user (?P<username>\\w+).*` | username !~ `(.* by | .*(uid=.*))` | __error__=`` [$__interval]))",
+                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |= `: session opened for` | regexp `.* session opened for user (?P<username>[a-zA-Z0-9._-]+).*` | username !~ `(.* by | .*(uid=.*))` | __error__=`` [$__interval]))",
                         "legendFormat": "sshd: {{ username }}",
                         "queryType": "range"
                       },
