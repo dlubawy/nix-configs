@@ -5,8 +5,8 @@
     "name": "OMEuTfqVk",
     "namespace": "default",
     "uid": "UBznVsV24O7Kf6agXBK3jL7WhzpmLqN9XEIfho6dES4X",
-    "resourceVersion": "1785740635598990",
-    "generation": 4,
+    "resourceVersion": "1786666752980992",
+    "generation": 5,
     "creationTimestamp": "2025-12-16T20:36:50Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "2"
@@ -15,11 +15,11 @@
       "grafana.app/createdBy": "provisioning:",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "my dashboards",
-      "grafana.app/sourceChecksum": "7c34560f915668d8942c20d0c2b2d2fe",
+      "grafana.app/sourceChecksum": "25ab7e1cf514017952510cdf92f7d77f",
       "grafana.app/sourcePath": "/etc/grafana/dashboards/ssh.json",
       "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
-      "grafana.app/updatedTimestamp": "2026-08-03T07:03:55Z",
+      "grafana.app/updatedTimestamp": "2026-08-14T00:19:12Z",
       "grafana.app/folder": ""
     }
   },
@@ -554,8 +554,8 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |=\": session opened for\" | pattern `<_> session opened for user <username>(` | username !~\".* by \" | __error__=\"\" [$__interval]))",
-                        "legendFormat": "{{ username }}",
+                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |= `: session opened for` | regexp `.* session opened for user (?P<username>\\w+).*` | username !~ `(.* by | .*(uid=.*))` | __error__=`` [$__interval]))",
+                        "legendFormat": "sshd: {{ username }}",
                         "queryType": "range"
                       },
                       "version": "v0"
@@ -576,35 +576,13 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |=\": session opened for\" | pattern `<_> session opened for user <username> <_>` | username !~\".*(uid=.*)\" | __error__=\"\" [$__interval]))",
-                        "legendFormat": "{{ username }}",
+                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | pattern `ssh-session(sess-<_>): access granted to <_> as ssh-user \"<username>\"` | __error__=\"\" [$__interval]))",
+                        "legendFormat": "tailscale: {{ username }}",
                         "queryType": "range"
                       },
                       "version": "v0"
                     },
                     "refId": "B"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "73693469-0eab-4c69-a6d5-9b3fb6c9d929"
-                      },
-                      "group": "loki",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "direction": "backward",
-                        "editorMode": "code",
-                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | pattern `ssh-session(sess-<_>): access granted to <_> as ssh-user \"<username>\"` | __error__=\"\" [$__interval]))",
-                        "legendFormat": "{{ username }}",
-                        "queryType": "range"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "C"
                   }
                 }
               ],
