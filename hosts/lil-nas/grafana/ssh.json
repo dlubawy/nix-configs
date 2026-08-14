@@ -5,8 +5,8 @@
     "name": "OMEuTfqVk",
     "namespace": "default",
     "uid": "UBznVsV24O7Kf6agXBK3jL7WhzpmLqN9XEIfho6dES4X",
-    "resourceVersion": "1769678340000028",
-    "generation": 3,
+    "resourceVersion": "1786666752980992",
+    "generation": 5,
     "creationTimestamp": "2025-12-16T20:36:50Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "2"
@@ -15,11 +15,11 @@
       "grafana.app/createdBy": "provisioning:",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "my dashboards",
-      "grafana.app/sourceChecksum": "258b988c1667c9e61e13165f9727ba7c",
-      "grafana.app/sourcePath": "ssh.json",
-      "grafana.app/sourceTimestamp": "1",
-      "grafana.app/updatedBy": "provisioning:",
-      "grafana.app/updatedTimestamp": "2026-01-29T09:19:05Z",
+      "grafana.app/sourceChecksum": "25ab7e1cf514017952510cdf92f7d77f",
+      "grafana.app/sourcePath": "/etc/grafana/dashboards/ssh.json",
+      "grafana.app/sourceTimestamp": "1000",
+      "grafana.app/updatedBy": "access-policy:service",
+      "grafana.app/updatedTimestamp": "2026-08-14T00:19:12Z",
       "grafana.app/folder": ""
     }
   },
@@ -554,8 +554,8 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |=\": session opened for\" | pattern `<_> session opened for user <username>(` | username !~\".* by \" | __error__=\"\" [$__interval]))",
-                        "legendFormat": "{{ username }}",
+                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |= `: session opened for` | regexp `.* session opened for user (?P<username>[a-zA-Z0-9._-]+).*` | username !~ `(.* by | .*(uid=.*))` | __error__=`` [$__interval]))",
+                        "legendFormat": "sshd: {{ username }}",
                         "queryType": "range"
                       },
                       "version": "v0"
@@ -576,35 +576,13 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by (username) (count_over_time({host=~\"$host\", unit=~\"sshd.service\"} |=\": session opened for\" | pattern `<_> session opened for user <username> <_>` | username !~\".*(uid=.*)\" | __error__=\"\" [$__interval]))",
-                        "legendFormat": "{{ username }}",
+                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | pattern `ssh-session(sess-<_>): access granted to <_> as ssh-user \"<username>\"` | __error__=\"\" [$__interval]))",
+                        "legendFormat": "tailscale: {{ username }}",
                         "queryType": "range"
                       },
                       "version": "v0"
                     },
                     "refId": "B"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "73693469-0eab-4c69-a6d5-9b3fb6c9d929"
-                      },
-                      "group": "loki",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "direction": "backward",
-                        "editorMode": "code",
-                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | pattern `ssh-session(sess-<_>): access granted to <_> as ssh-user \"<username>\"` | __error__=\"\" [$__interval]))",
-                        "legendFormat": "{{ username }}",
-                        "queryType": "range"
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "C"
                   }
                 }
               ],
@@ -1020,7 +998,19 @@
                 }
               ],
               "queryOptions": {},
-              "transformations": []
+              "transformations": [
+                {
+                  "group": "reduce",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "reducers": [
+                        "sum"
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           },
           "description": "",
@@ -1396,13 +1386,6 @@
                   }
                 },
                 {
-                  "group": "merge",
-                  "kind": "Transformation",
-                  "spec": {
-                    "options": {}
-                  }
-                },
-                {
                   "group": "organize",
                   "kind": "Transformation",
                   "spec": {
@@ -1416,6 +1399,17 @@
                       "renameByName": {
                         "value": "IP"
                       }
+                    }
+                  }
+                },
+                {
+                  "group": "reduce",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "reducers": [
+                        "sum"
+                      ]
                     }
                   }
                 }
@@ -1936,10 +1930,14 @@
               "queryOptions": {},
               "transformations": [
                 {
-                  "group": "merge",
+                  "group": "reduce",
                   "kind": "Transformation",
                   "spec": {
-                    "options": {}
+                    "options": {
+                      "reducers": [
+                        "sum"
+                      ]
+                    }
                   }
                 }
               ]
@@ -2071,6 +2069,17 @@
                       "value": "host"
                     }
                   }
+                },
+                {
+                  "group": "reduce",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "reducers": [
+                        "sum"
+                      ]
+                    }
+                  }
                 }
               ]
             }
@@ -2193,6 +2202,17 @@
                   "spec": {
                     "options": {
                       "value": "host"
+                    }
+                  }
+                },
+                {
+                  "group": "reduce",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "reducers": [
+                        "sum"
+                      ]
                     }
                   }
                 }
