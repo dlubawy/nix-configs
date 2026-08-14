@@ -358,7 +358,7 @@ let
   };
 in
 {
-  config = mkIf (!config.minimal.enable) {
+  config = mkIf (!config.minimal) {
     home.packages = [
       (writeScriptBin "sedtris" ''
         #!/usr/bin/env bash

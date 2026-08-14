@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  modulesPath,
   ...
 }:
 let
@@ -50,6 +51,10 @@ let
   };
 in
 {
+  imports = [
+    "${modulesPath}/programs/bat.nix"
+  ];
+
   config = mkMerge [
     {
       programs = {
@@ -58,7 +63,7 @@ in
         };
       };
     }
-    (mkIf (!config.minimal.enable) {
+    (mkIf (!config.minimal) {
       home.file.".config/bat/syntaxes/just_sublime" =
         let
           batBin = config.programs.bat.package;

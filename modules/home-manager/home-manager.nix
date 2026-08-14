@@ -4,6 +4,7 @@
   config,
   vars,
   outputs,
+  modulesPath,
   ...
 }@args:
 let
@@ -13,18 +14,19 @@ let
     mkOption
     types
     optionals
-    mkEnableOption
     ;
   useGlobalPkgs = builtins.hasAttr "darwinConfig" args || builtins.hasAttr "nixosConfig" args;
 in
 {
   imports = [
+    "${modulesPath}/programs/home-manager.nix"
     ./agenix.nix
     ./alacritty.nix
     ./bat.nix
     ./git.nix
     ./gpg.nix
     ./kitty.nix
+    ./minimal.nix
     ./nixvim.nix
     ./scripts
     ./ssh.nix
@@ -38,11 +40,10 @@ in
 
   options = {
     gui.enable = mkOption {
-      default = !config.minimal.enable;
+      default = !config.minimal;
       type = types.bool;
       description = "Enable GUI applications";
     };
-    minimal.enable = mkEnableOption "Enable a minimal home configuration";
   };
 
   config = {
@@ -94,7 +95,7 @@ in
             zstd
             ;
         })
-        ++ (optionals (!config.minimal.enable) (
+        ++ (optionals (!config.minimal) (
           builtins.attrValues {
             inherit (pkgs)
               age-plugin-yubikey
@@ -147,7 +148,7 @@ in
       ripgrep.enable = true;
       zoxide.enable = true;
 
-      direnv = mkIf (!config.minimal.enable) {
+      direnv = mkIf (!config.minimal) {
         enable = true;
         enableZshIntegration = true;
         nix-direnv.enable = true;

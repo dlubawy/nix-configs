@@ -9,7 +9,7 @@ let
   inherit (pkgs) writeScriptBin;
 in
 {
-  config = mkIf (!config.minimal.enable) {
+  config = mkIf (!config.minimal) {
     home.packages = [
       (writeScriptBin "weather" ''
         #!/bin/bash

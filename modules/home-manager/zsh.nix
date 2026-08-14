@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 {
   home.packages = builtins.attrValues { inherit (pkgs) ruby; };
   programs.zsh = {

@@ -18,7 +18,7 @@ in
 {
   imports = [ inputs.agenix.homeManagerModules.default ];
   # TODO: Move these to user configurations
-  config = mkIf (!config.minimal.enable) {
+  config = mkIf (!config.minimal) {
     xdg.configFile."agenix/age-nano-identity.txt" = {
       enable = true;
       text = ''
