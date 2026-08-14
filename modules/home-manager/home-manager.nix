@@ -13,6 +13,7 @@ let
     mkOption
     types
     optionals
+    mkEnableOption
     ;
   useGlobalPkgs = builtins.hasAttr "darwinConfig" args || builtins.hasAttr "nixosConfig" args;
 in
@@ -37,10 +38,11 @@ in
 
   options = {
     gui.enable = mkOption {
-      default = true;
+      default = !config.minimal.enable;
       type = types.bool;
       description = "Enable GUI applications";
     };
+    minimal.enable = mkEnableOption "Enable a minimal home configuration";
   };
 
   config = {
@@ -80,15 +82,10 @@ in
       packages =
         (builtins.attrValues {
           inherit (pkgs)
-            age-plugin-yubikey
             gawk
             gnused
             gnutar
-            gopass
             p7zip
-            python3
-            rage
-            tig
             unzip
             wget
             which
@@ -97,6 +94,17 @@ in
             zstd
             ;
         })
+        ++ (optionals (!config.minimal.enable) (
+          builtins.attrValues {
+            inherit (pkgs)
+              age-plugin-yubikey
+              gopass
+              python3
+              rage
+              tig
+              ;
+          }
+        ))
         ++ (optionals (config.gui.enable) (
           builtins.attrValues {
             inherit (pkgs)
@@ -139,7 +147,7 @@ in
       ripgrep.enable = true;
       zoxide.enable = true;
 
-      direnv = {
+      direnv = mkIf (!config.minimal.enable) {
         enable = true;
         enableZshIntegration = true;
         nix-direnv.enable = true;

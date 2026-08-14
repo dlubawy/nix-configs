@@ -5,6 +5,7 @@
   ...
 }:
 let
+  inherit (lib) mkMerge mkIf;
   justSublime = pkgs.stdenv.mkDerivation {
     pname = "just-sublime-syntax";
     version = "unstable-2025";
@@ -49,33 +50,43 @@ let
   };
 in
 {
-  home.file.".config/bat/syntaxes/just_sublime" =
-    let
-      batBin = config.programs.bat.package;
-    in
+  config = mkMerge [
     {
-      enable = true;
-      recursive = true;
-      onChange = "${batBin}/bin/bat cache --build";
-      source = justSublime;
-    };
-  programs = {
-    bat = {
-      enable = true;
-      config = {
-        theme = "catppuccin-frappe";
-      };
-      themes = {
-        catppuccin-frappe = {
-          src = pkgs.fetchFromGitHub {
-            owner = "catppuccin";
-            repo = "bat";
-            rev = "82e7ca555f805b53d2b377390e4ab38c20282e83";
-            hash = "sha256-/Ob9iCVyjJDBCXlss9KwFQTuxybmSSzYRBZxOT10PZg=";
-          };
-          file = "./themes/Catppuccin Frappe.tmTheme";
+      programs = {
+        bat = {
+          enable = true;
         };
       };
-    };
-  };
+    }
+    (mkIf (!config.minimal.enable) {
+      home.file.".config/bat/syntaxes/just_sublime" =
+        let
+          batBin = config.programs.bat.package;
+        in
+        {
+          enable = true;
+          recursive = true;
+          onChange = "${batBin}/bin/bat cache --build";
+          source = justSublime;
+        };
+      programs = {
+        bat = {
+          config = {
+            theme = "catppuccin-frappe";
+          };
+          themes = {
+            catppuccin-frappe = {
+              src = pkgs.fetchFromGitHub {
+                owner = "catppuccin";
+                repo = "bat";
+                rev = "82e7ca555f805b53d2b377390e4ab38c20282e83";
+                hash = "sha256-/Ob9iCVyjJDBCXlss9KwFQTuxybmSSzYRBZxOT10PZg=";
+              };
+              file = "./themes/Catppuccin Frappe.tmTheme";
+            };
+          };
+        };
+      };
+    })
+  ];
 }
