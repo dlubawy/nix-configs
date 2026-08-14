@@ -13,6 +13,7 @@ in
       jellyfin-taildrive = mkIf config.services.tailscale.enable {
         description = "Tailscale drive service";
         after = [ "tailscale.service" ];
+        wantedBy = [ "jellyfin.service" ];
         serviceConfig = {
           User = "jellyfin";
           Group = "jellyfin";
