@@ -1,10 +1,15 @@
 {
+  pkgs,
   lib,
   inputs,
+  outputs,
+  vars,
   ...
 }:
 let
   inherit (lib) mkForce;
+  topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
+  inherit (topology.lib.helpers) getAddress;
 in
 {
   imports = [
@@ -79,6 +84,38 @@ in
           interval = "weekly";
         };
         autoSnapshot.enable = true;
+      };
+    };
+
+    systemd = {
+      timers = {
+        nixos-upgrade-pi = {
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            OnBootSec = "20m";
+            OnCalendar = "weekly";
+            Unit = "nixos-update-pi.service";
+          };
+        };
+      };
+      services = {
+        nixos-upgrade-pi =
+          let
+            piAddress = getAddress "pi" "enu1u1";
+          in
+          {
+            path = (builtins.attrValues { inherit (pkgs) nixos-rebuild-ng openssh; });
+            script = "nixos-rebuild switch --target-host root@${piAddress} --build-host root@${piAddress} --use-substitutes --flake ${vars.flake}#pi";
+            environment = {
+              NIX_SSHOPTS = "-p 2222 -i /etc/ssh/ssh_host_ed25519_key";
+            };
+            serviceConfig = {
+              NoNewPrivileges = true;
+              ProtectKernelLogs = true;
+              ProtectKernelModules = true;
+              ProtectKernelTunables = true;
+            };
+          };
       };
     };
   };
