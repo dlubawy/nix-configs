@@ -12,7 +12,7 @@ in
       jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
       jellyfin-taildrive = mkIf config.services.tailscale.enable {
         description = "Tailscale drive service";
-        after = [ "tailscale.service" ];
+        after = [ "tailscaled.service" ];
         wantedBy = [ "jellyfin.service" ];
         serviceConfig = {
           User = "jellyfin";
