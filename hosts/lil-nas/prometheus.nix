@@ -1,10 +1,12 @@
 {
   pkgs,
+  lib,
   config,
   outputs,
   ...
 }:
 let
+  inherit (lib) mkIf;
   topology = outputs.topology.${pkgs.stdenv.hostPlatform.system}.config;
   inherit (topology.lib.helpers) getAddress;
   cloudDomain = config.cloudDomain;
@@ -18,6 +20,10 @@ in
 
   networking.firewall.interfaces.enp5s0.allowedTCPPorts = [
     config.services.prometheus.port
+  ];
+
+  systemd.services.prometheus.after = mkIf (config.systemd.network.wait-online.enable) [
+    "systemd-networkd-wait-online.service"
   ];
 
   services.prometheus = {
