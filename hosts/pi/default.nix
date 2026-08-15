@@ -46,10 +46,10 @@ in
     };
     networking = {
       hostName = "pi";
-      networkmanager.enable = false;
+      networkmanager.enable = lib.mkForce false;
     };
 
-    home-manager.gui.enable = false;
+    home-manager.minimal = true;
 
     time.timeZone = "America/Los_Angeles";
     i18n.defaultLocale = "en_US.UTF-8";

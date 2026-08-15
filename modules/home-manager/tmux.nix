@@ -1,8 +1,17 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  modulesPath,
+  ...
+}:
 let
   inherit (lib) mkDefault;
 in
 {
+  imports = [
+    "${modulesPath}/programs/tmux.nix"
+  ];
+
   programs.tmux = {
     enable = true;
     extraConfig = ''

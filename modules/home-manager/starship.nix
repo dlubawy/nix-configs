@@ -1,5 +1,9 @@
-{ ... }:
+{ modulesPath, ... }:
 {
+  imports = [
+    "${modulesPath}/programs/starship.nix"
+  ];
+
   programs.starship = {
     enable = true;
     enableZshIntegration = true;

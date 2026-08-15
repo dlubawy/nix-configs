@@ -13,7 +13,7 @@ in
   options = {
     home-manager = {
       gui.enable = lib.mkOption {
-        default = true;
+        default = (!config.home-manager.minimal);
         type = lib.types.bool;
         description = "Enable GUI applications";
       };
@@ -31,6 +31,7 @@ in
             {
               nix-configs.users.${name} = value;
               gui.enable = lib.mkDefault config.home-manager.gui.enable;
+              minimal = lib.mkDefault config.home-manager.minimal;
             }
           ];
         }) nixConfigUsers

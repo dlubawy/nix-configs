@@ -79,7 +79,7 @@ in
       flake = "${vars.flake}#bpi";
     };
 
-    home-manager.gui.enable = false;
+    home-manager.minimal = true;
 
     networking = {
       hostName = "bpi";

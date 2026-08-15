@@ -3,14 +3,21 @@
   lib,
   config,
   inputs,
+  modulesPath,
   ...
 }:
+let
+  inherit (lib) mkIf;
+in
 {
-  imports = [ inputs.nixvim.homeModules.nixvim ];
+  imports = [
+    "${modulesPath}/programs/neovim"
+    inputs.nixvim.homeModules.nixvim
+  ];
 
   programs = {
     nixvim = lib.mkMerge [
-      (import ../nixvim)
+      (mkIf (!config.minimal) (import ../nixvim))
       {
         enable = true;
         defaultEditor = true;

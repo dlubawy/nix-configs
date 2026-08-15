@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  modulesPath,
   ...
 }:
 let
@@ -19,6 +20,11 @@ let
   inherit (config.programs.gpg) homedir;
 in
 {
+  imports = [
+    "${modulesPath}/programs/gpg.nix"
+    "${modulesPath}/services/gpg-agent.nix"
+  ];
+
   config = {
     programs.gpg = {
       enable = true;

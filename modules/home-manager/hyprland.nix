@@ -1,9 +1,18 @@
 # TODO: need to migrate old configs over
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  modulesPath,
+  ...
+}:
 let
   cfg = config.gui.programs.hyprland;
 in
 {
+  imports = [
+    "${modulesPath}/services/window-managers/hyprland.nix"
+  ];
+
   options = {
     gui.programs.hyprland.enable = lib.mkEnableOption "Enable Hyprland";
   };

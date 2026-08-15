@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  modulesPath,
   ...
 }:
 let
@@ -21,6 +22,10 @@ let
       );
 in
 {
+  imports = [
+    "${modulesPath}/programs/ssh.nix"
+  ];
+
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;

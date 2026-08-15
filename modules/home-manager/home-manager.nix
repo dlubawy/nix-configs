@@ -4,6 +4,7 @@
   config,
   vars,
   outputs,
+  modulesPath,
   ...
 }@args:
 let
@@ -18,12 +19,14 @@ let
 in
 {
   imports = [
+    "${modulesPath}/programs/home-manager.nix"
     ./agenix.nix
     ./alacritty.nix
     ./bat.nix
     ./git.nix
     ./gpg.nix
     ./kitty.nix
+    ./minimal.nix
     ./nixvim.nix
     ./scripts
     ./ssh.nix
@@ -37,7 +40,7 @@ in
 
   options = {
     gui.enable = mkOption {
-      default = true;
+      default = !config.minimal;
       type = types.bool;
       description = "Enable GUI applications";
     };
@@ -80,15 +83,10 @@ in
       packages =
         (builtins.attrValues {
           inherit (pkgs)
-            age-plugin-yubikey
             gawk
             gnused
             gnutar
-            gopass
             p7zip
-            python3
-            rage
-            tig
             unzip
             wget
             which
@@ -97,6 +95,17 @@ in
             zstd
             ;
         })
+        ++ (optionals (!config.minimal) (
+          builtins.attrValues {
+            inherit (pkgs)
+              age-plugin-yubikey
+              gopass
+              python3
+              rage
+              tig
+              ;
+          }
+        ))
         ++ (optionals (config.gui.enable) (
           builtins.attrValues {
             inherit (pkgs)
@@ -139,7 +148,7 @@ in
       ripgrep.enable = true;
       zoxide.enable = true;
 
-      direnv = {
+      direnv = mkIf (!config.minimal) {
         enable = true;
         enableZshIntegration = true;
         nix-direnv.enable = true;

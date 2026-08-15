@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  modulesPath,
   ...
 }:
 let
@@ -20,6 +21,10 @@ let
 
 in
 {
+  imports = [
+    "${modulesPath}/programs/alacritty.nix"
+  ];
+
   options = {
     gui.programs.alacritty.enable = lib.mkEnableOption "Enable Alacritty";
   };

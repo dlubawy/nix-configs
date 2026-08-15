@@ -1,9 +1,25 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  modulesPath,
+  ...
+}:
 let
   inherit (lib) mkIf;
   user = builtins.head (lib.attrValues config.nix-configs.users);
 in
 {
+  imports = [
+    "${modulesPath}/programs/delta.nix"
+    "${modulesPath}/programs/diff-highlight.nix"
+    "${modulesPath}/programs/diff-so-fancy.nix"
+    "${modulesPath}/programs/difftastic.nix"
+    "${modulesPath}/programs/git.nix"
+    "${modulesPath}/programs/jujutsu.nix"
+    "${modulesPath}/programs/patdiff.nix"
+    "${modulesPath}/programs/riff.nix"
+  ];
+
   programs.git = {
     enable = true;
     settings = {

@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  modulesPath,
   ...
 }:
 let
@@ -9,6 +10,10 @@ let
   cfg = config.gui.programs.kitty;
 in
 {
+  imports = [
+    "${modulesPath}/programs/kitty.nix"
+  ];
+
   options = {
     gui.programs.kitty.enable = mkEnableOption "Enable Kitty";
   };
