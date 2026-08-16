@@ -30,9 +30,27 @@ in
   };
 
   config = {
-    # NOTE: the Pi does not have enough memory to upgrade automatically
-    # TODO: Setup a push automation to update the Pi ISSUE(#293)
-    system.autoUpgrade.enable = lib.mkForce false;
+    # Conflict services in order to clear up memory for maintenance operations
+    systemd.services = {
+      nixos-upgrade = {
+        conflicts = [
+          "podman-homeassistant.service"
+          "nix-gc.service"
+        ];
+        onSuccess = [ "podman-homeassistant.service" ];
+        onFailure = [ "podman-homeassistant.service" ];
+      };
+      nix-gc = {
+        conflicts = [
+          "podman-homeassistant.service"
+          "nixos-upgrade.service"
+        ];
+        onSuccess = [ "podman-homeassistant.service" ];
+        onFailure = [ "podman-homeassistant.service" ];
+      };
+      # Need bluetooth service to restart when home-assistant does
+      bluetooth.requires = [ "podman-homeassistant.service" ];
+    };
     security.auditd.enable = true;
     swapDevices = [
       {
