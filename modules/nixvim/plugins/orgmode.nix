@@ -9,7 +9,7 @@ in
       directory = "~/Documents/org",
       extensions = {
         dailies = {
-          directory = "~/Documents/10-19 Life admin/11 🙋 Me & other living things/11.32 My thoughts, journalling, diaries, & other writing",
+          directory = "../10-19 Life admin/11 🙋 Me & other living things/11.32 My thoughts, journalling, diaries, & other writing",
           templates = {
             d = {
               description = "diary",
