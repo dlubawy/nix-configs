@@ -49,7 +49,10 @@ in
         onFailure = [ "podman-homeassistant.service" ];
       };
       # Need bluetooth service to restart when home-assistant does
-      bluetooth.requires = [ "podman-homeassistant.service" ];
+      bluetooth = {
+        before = [ "podman-homeassistant.service" ];
+        partOf = [ "podman-homeassistant.service" ];
+      };
     };
     security.auditd.enable = true;
     swapDevices = [
