@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption types mkForce;
 in
 {
   imports = [
@@ -30,9 +30,33 @@ in
   };
 
   config = {
-    # NOTE: the Pi does not have enough memory to upgrade automatically
-    # TODO: Setup a push automation to update the Pi ISSUE(#293)
-    system.autoUpgrade.enable = lib.mkForce false;
+    system.autoUpgrade.dates = mkForce "Sat *-*-* 02:00:00";
+    nix.gc.dates = mkForce "Sun *-*-* 02:00:00";
+    # Conflict services in order to clear up memory for maintenance operations
+    systemd.services = {
+      nixos-upgrade = {
+        conflicts = [
+          "podman-homeassistant.service"
+          "nix-gc.service"
+        ];
+        onSuccess = [ "podman-homeassistant.service" ];
+        onFailure = [ "podman-homeassistant.service" ];
+      };
+      nix-gc = {
+        conflicts = [
+          "podman-homeassistant.service"
+          "nixos-upgrade.service"
+        ];
+        onSuccess = [ "podman-homeassistant.service" ];
+        onFailure = [ "podman-homeassistant.service" ];
+      };
+      # Need bluetooth service to restart when home-assistant does
+      bluetooth = {
+        before = [ "podman-homeassistant.service" ];
+        partOf = [ "podman-homeassistant.service" ];
+        wantedBy = [ "podman-homeassistant.service" ];
+      };
+    };
     security.auditd.enable = true;
     swapDevices = [
       {
