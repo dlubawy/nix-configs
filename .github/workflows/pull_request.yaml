@@ -39,7 +39,7 @@ jobs:
               - "users/**/*.nix"
               - "**/*.age"
               - "homes/**/*.nix"
-              - "hosts/{bpi,kepler,lil-nas,syringa}/**/*.nix"
+              - "hosts/{bpi,kepler,lil-nas,syringa,pi}/**/*.nix"
               - "modules/nixos/**/*.nix"
   check:
     needs: detect-changes
