@@ -54,6 +54,7 @@ in
       bluetooth = {
         before = [ "podman-homeassistant.service" ];
         partOf = [ "podman-homeassistant.service" ];
+        wantedBy = [ "podman-homeassistant.service" ];
       };
     };
     security.auditd.enable = true;
