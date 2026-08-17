@@ -30,6 +30,8 @@ in
   };
 
   config = {
+    system.autoUpgrade.dates = "Sat *-*-* 02:00:00";
+    nix.gc.dates = "Sun *-*-* 02:00:00";
     # Conflict services in order to clear up memory for maintenance operations
     systemd.services = {
       nixos-upgrade = {
