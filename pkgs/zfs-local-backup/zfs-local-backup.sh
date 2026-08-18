@@ -70,6 +70,7 @@ log "Starting ZFS sync phase..."
 SNAPS_A=$(zfs list -t snapshot -H -o name -s creation -r "$SOURCE_POOL" 2>/dev/null | grep "@${SNAP_PATTERN}" || true)
 
 if [ -z "$SNAPS_A" ]; then
+    zfs list -H -o name "$SOURCE_POOL" >/dev/null 2>&1 || { log "ERROR: ${SOURCE_POOL} not available/imported."; exit 1; }
     log "No monthly snapshots found on ${SOURCE_POOL}. Exiting."
     exit 0
 fi
