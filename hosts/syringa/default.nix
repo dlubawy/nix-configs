@@ -7,7 +7,7 @@
 {
   imports = [
     inputs.nixos-wsl.nixosModules.default
-    ../../users
+    ../../users/drew.nix
   ];
 
   # NOTE: disable so WSL can work
@@ -15,6 +15,7 @@
   systemd.sysusers.enable = lib.mkForce false;
   system.etc.overlay.enable = lib.mkForce false;
   services.resolved.enable = false;
+  networking.wireless.enable = false;
 
   wsl =
     let
@@ -27,9 +28,5 @@
 
   home-manager = {
     gui.enable = false;
-    users = (
-      lib.concatMapAttrs (name: _: {
-      }) config.nix-configs.users
-    );
   };
 }
