@@ -30,6 +30,7 @@ in
     enable = true;
     extraFlags = [
       "--web.enable-remote-write-receiver"
+      "--storage.tsdb.retention.time=45d"
     ];
     listenAddress = (getAddress "lil-nas" "enp5s0");
     exporters = {
