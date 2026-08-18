@@ -128,6 +128,28 @@ in
       };
     };
 
+    systemd = {
+      services = {
+        zfs-local-backup = mkIf cfg.zfs.localBackup.enable {
+          path = [ (builtins.attrValues { inherit (pkgs) zfs-local-backup; }) ];
+          script = "zfs-local-backup ${if cfg.zfs.tank.enable then "tank" else "rpool"} backup";
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+          };
+        };
+      };
+      timers = {
+        zfs-local-backup = mkIf cfg.zfs.localBackup.enable {
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            OnCalendar = "monthly";
+            Unit = "zfs-local-backup.service";
+          };
+        };
+      };
+    };
+
     fileSystems."/persist" = mkIf cfg.persist.enable {
       neededForBoot = true;
     };
