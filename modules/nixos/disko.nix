@@ -132,6 +132,7 @@ in
       services = {
         zfs-local-backup = mkIf cfg.zfs.localBackup.enable {
           path = [ (builtins.attrValues { inherit (pkgs) zfs-local-backup; }) ];
+          # FIXME: add 0 to end of command to enable instead of dry-run
           script = "zfs-local-backup ${if cfg.zfs.tank.enable then "tank" else "rpool"} backup";
           serviceConfig = {
             Type = "oneshot";
