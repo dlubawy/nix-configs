@@ -23,6 +23,10 @@
           ]
         ];
       };
+      localBackup = {
+        enable = true;
+        device = config.disko.devices.disk.external.device;
+      };
       key.enable = true;
     };
     devices = {
@@ -86,6 +90,14 @@
           content = {
             type = "zfs";
             pool = "tank";
+          };
+        };
+        external = {
+          type = "disk";
+          device = "/dev/disk/by-id/ata-WDC_WD60EZAZ-00ZGHB0_WD-WX51D68DLVFJ";
+          content = {
+            type = "zfs";
+            pool = "backup";
           };
         };
       };

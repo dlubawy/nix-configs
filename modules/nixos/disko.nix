@@ -44,6 +44,13 @@ in
             type = types.listOf (types.listOf types.str);
           };
         };
+        localBackup = {
+          enable = mkEnableOption "Enable a local backup pool";
+          device = mkOption {
+            description = "Device being used for backup pool";
+            type = types.str;
+          };
+        };
         key = {
           enable = mkEnableOption "Enable using a device key for drive unlock";
           device = mkOption {
@@ -260,6 +267,28 @@ in
                 }
                 dynamicDatasets
               ];
+            };
+
+            backup = mkIf cfg.zfs.localBackup.enable {
+              type = "zpool";
+              mode = {
+                topology = {
+                  type = "topology";
+                  vdev = [
+                    { members = [ cfg.zfs.localBackup.device ]; }
+                  ];
+                };
+              };
+              rootFsOptions = {
+                encryption = "on";
+                keyformat = "passphrase";
+                keylocation = if cfg.zfs.key.enable then "file://${cfg.zfs.key.device}" else "prompt";
+                mountpoint = "none";
+                compression = "zstd";
+                acltype = "posixacl";
+                xattr = "sa";
+                "com.sun:auto-snapshot" = "false";
+              };
             };
           };
       };
