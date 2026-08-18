@@ -18,6 +18,7 @@ fi
 SOURCE_POOL="$1"
 TARGET_POOL="$2"
 DRY_RUN="${3:-1}"
+[ "$DRY_RUN" = "0" ] || [ "$DRY_RUN" = "1" ] || usage
 
 # ==========================================
 # CONFIGURATION
