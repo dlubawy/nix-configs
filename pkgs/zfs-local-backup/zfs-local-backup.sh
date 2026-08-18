@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
 # ==========================================
 # USAGE & ARGUMENTS
 # ==========================================
@@ -88,7 +85,7 @@ while IFS= read -r src_ds; do
     if [ "$src_ds" = "$SOURCE_POOL" ]; then
         tgt_ds="$TARGET_POOL"
     else
-        tgt_ds="${TARGET_POOL}${src_ds#$SOURCE_POOL}"
+        tgt_ds="${TARGET_POOL}${src_ds#"$SOURCE_POOL"}"
     fi
 
     log "Processing dataset: $src_ds"
@@ -138,7 +135,7 @@ while IFS= read -r full_snap_b; do
     [ -z "$full_snap_b" ] && continue
 
     # Strip the TARGET_POOL prefix to get the relative path
-    rel_snap="${full_snap_b#${TARGET_POOL}}"
+    rel_snap="${full_snap_b#"${TARGET_POOL}"}"
 
     # Reconstruct what the source snapshot string should look like
     expected_src_snap="${SOURCE_POOL}${rel_snap}"
