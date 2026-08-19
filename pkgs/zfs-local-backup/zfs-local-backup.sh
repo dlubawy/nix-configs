@@ -96,7 +96,8 @@ while IFS= read -r src_ds; do
     ds_snaps_A=$(echo "$SNAPS_A" | awk -F'@' -v ds="$src_ds" '$1 == ds {print $2}')
 
     # Check what snaps exist on THIS target dataset (suppressing error if target dataset isn't created yet)
-    ds_snaps_B=$(zfs list -t snapshot -H -o name -s creation -d 1 "$tgt_ds" 2>/dev/null | grep "@${SNAP_PATTERN}" | awk -F'@' '{print $2}' || true)
+    tgt_snaps_raw=$(zfs list -t snapshot -H -o name -s creation -r "$tgt_ds" 2>/dev/null | grep "@${SNAP_PATTERN}" || true)
+    ds_snaps_B=$(echo "$tgt_snaps_raw" | awk -F'@' -v ds="$tgt_ds" '$1 == ds {print $2}')
 
     PREV_SNAP=""
     for snap in $ds_snaps_A; do
