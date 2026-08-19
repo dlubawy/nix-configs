@@ -100,19 +100,20 @@ while IFS= read -r src_ds; do
     ds_snaps_B=$(echo "$tgt_snaps_raw" | awk -F'@' -v ds="$tgt_ds" '$1 == ds {print $2}')
 
     PREV_SNAP=""
+    started_sending=0
     for snap in $ds_snaps_A; do
-        if echo "$ds_snaps_B" | grep -qFx "$snap"; then
-            # Exists on target. We can use it as a base for the next incremental send.
+        # Only trust the initial target snapshot list until we start sending.
+        if [ "$started_sending" -eq 0 ] && echo "$ds_snaps_B" | grep -qFx "$snap"; then
             PREV_SNAP="$snap"
-        else
-            # Does not exist on target. Send it.
-            if [ -n "$PREV_SNAP" ]; then
-                run_send "incremental" "$src_ds" "$PREV_SNAP" "$snap"
-            else
-                run_send "full" "$src_ds" "" "$snap"
-            fi
-            PREV_SNAP="$snap"
+            continue
         fi
+        started_sending=1
+        if [ -n "$PREV_SNAP" ]; then
+            run_send "incremental" "$src_ds" "$PREV_SNAP" "$snap"
+        else
+            run_send "full" "$src_ds" "" "$snap"
+        fi
+        PREV_SNAP="$snap"
     done
 done <<< "$DATASETS"
 
