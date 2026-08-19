@@ -17,9 +17,11 @@ let
       prometheus-iwinfo = pkgs.callPackage ./prometheus-iwinfo { };
       prometheus-networkctl = pkgs.callPackage ./prometheus-networkctl { };
       nixos-password = pkgs.callPackage ./nixos-password { };
+      zfs-local-backup = pkgs.callPackage ./zfs-local-backup { };
     };
     x86_64-linux = pkgs: {
       nixos-password = pkgs.callPackage ./nixos-password { };
+      zfs-local-backup = pkgs.callPackage ./zfs-local-backup { };
     };
     wasm32-wasi = _: { };
   };
