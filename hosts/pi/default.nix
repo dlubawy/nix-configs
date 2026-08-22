@@ -33,6 +33,10 @@ in
     nix.gc.dates = mkForce "Sun *-*-* 02:00:00";
     # Conflict services in order to clear up memory for maintenance operations
     systemd.services = {
+      tailscaled.after = [
+        "network-online.target"
+        "systemd-resolved.service"
+      ];
       nixos-upgrade = {
         conflicts = [
           "podman-homeassistant.service"
