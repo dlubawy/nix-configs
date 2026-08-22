@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   inputs,
   modulesPath,
@@ -71,6 +70,8 @@ in
     networking = {
       hostName = "pi";
       networkmanager.enable = lib.mkForce false;
+      useDHCP = lib.mkForce false;
+      interfaces.enu1u1.useDHCP = true;
     };
 
     home-manager.minimal = true;
