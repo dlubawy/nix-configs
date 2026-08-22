@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   inputs,
   modulesPath,
@@ -34,6 +33,10 @@ in
     nix.gc.dates = mkForce "Sun *-*-* 02:00:00";
     # Conflict services in order to clear up memory for maintenance operations
     systemd.services = {
+      tailscaled.after = [
+        "network-online.target"
+        "systemd-resolved.service"
+      ];
       nixos-upgrade = {
         conflicts = [
           "podman-homeassistant.service"
@@ -71,6 +74,8 @@ in
     networking = {
       hostName = "pi";
       networkmanager.enable = lib.mkForce false;
+      useDHCP = lib.mkForce false;
+      interfaces.enu1u1.useDHCP = true;
     };
 
     home-manager.minimal = true;
