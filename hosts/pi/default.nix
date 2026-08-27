@@ -1,4 +1,5 @@
 {
+  pkgs,
   lib,
   inputs,
   modulesPath,
@@ -32,32 +33,53 @@ in
     system.autoUpgrade.dates = mkForce "Sat *-*-* 02:00:00";
     nix.gc.dates = mkForce "Sun *-*-* 02:00:00";
     # Conflict services in order to clear up memory for maintenance operations
-    systemd.services = {
-      tailscaled.after = [
-        "network-online.target"
-        "systemd-resolved.service"
-      ];
-      nixos-upgrade = {
-        conflicts = [
-          "podman-homeassistant.service"
-          "nix-gc.service"
-        ];
-        onSuccess = [ "podman-homeassistant.service" ];
-        onFailure = [ "podman-homeassistant.service" ];
+    systemd = {
+      timers = {
+        tailscale-resolved = {
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            OnCalendar = "*-*-* *:00/5:00";
+            Unit = "tailscale-resolved.service";
+          };
+        };
       };
-      nix-gc = {
-        conflicts = [
-          "podman-homeassistant.service"
-          "nixos-upgrade.service"
-        ];
-        onSuccess = [ "podman-homeassistant.service" ];
-        onFailure = [ "podman-homeassistant.service" ];
-      };
-      # Need bluetooth service to restart when home-assistant does
-      bluetooth = {
-        before = [ "podman-homeassistant.service" ];
-        partOf = [ "podman-homeassistant.service" ];
-        wantedBy = [ "podman-homeassistant.service" ];
+      services = {
+        tailscale-resolved = {
+          after = [ "tailscaled.service" ];
+          wants = [ "tailscaled.service" ];
+          path = (builtins.attrValues { inherit (pkgs) tailscale; });
+          script = ''
+            status=$(tailscale status | grep -o 'Tailscale failed to set the DNS configuration of your device' | tr -d ' ')
+            if [ -n "$status" ]; then
+              echo "Tailscale failed to set DNS. Restarting tailscale and systemd-resolved."
+              systemctl stop tailscaled.service
+              systemctl restart systemd-resolved.service || systemctl reboot
+              systemctl start tailscaled.service
+            fi
+          '';
+        };
+        nixos-upgrade = {
+          conflicts = [
+            "podman-homeassistant.service"
+            "nix-gc.service"
+          ];
+          onSuccess = [ "podman-homeassistant.service" ];
+          onFailure = [ "podman-homeassistant.service" ];
+        };
+        nix-gc = {
+          conflicts = [
+            "podman-homeassistant.service"
+            "nixos-upgrade.service"
+          ];
+          onSuccess = [ "podman-homeassistant.service" ];
+          onFailure = [ "podman-homeassistant.service" ];
+        };
+        # Need bluetooth service to restart when home-assistant does
+        bluetooth = {
+          before = [ "podman-homeassistant.service" ];
+          partOf = [ "podman-homeassistant.service" ];
+          wantedBy = [ "podman-homeassistant.service" ];
+        };
       };
     };
     security.auditd.enable = true;
