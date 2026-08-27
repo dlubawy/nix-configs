@@ -49,14 +49,16 @@ in
           wants = [ "tailscaled.service" ];
           path = (builtins.attrValues { inherit (pkgs) tailscale; });
           script = ''
-            status=$(tailscale status | grep -o 'Tailscale failed to set the DNS configuration of your device' | tr -d ' ')
-            if [ -n "$status" ]; then
+            if tailscale status 2>&1 | grep -qF "Tailscale failed to set the DNS configuration of your device"; then
               echo "Tailscale failed to set DNS. Restarting tailscale and systemd-resolved."
               systemctl stop tailscaled.service
               systemctl restart systemd-resolved.service || systemctl reboot
               systemctl start tailscaled.service
             fi
           '';
+          serviceConfig = {
+            Type = "oneshot";
+          };
         };
         nixos-upgrade = {
           conflicts = [
