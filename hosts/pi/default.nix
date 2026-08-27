@@ -38,7 +38,7 @@ in
         tailscale-resolved = {
           wantedBy = [ "timers.target" ];
           timerConfig = {
-            OnCalendar = "*-*-* *:00/5:00";
+            OnCalendar = "*-*-* *:0/5:00";
             Unit = "tailscale-resolved.service";
           };
         };
