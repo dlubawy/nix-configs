@@ -137,7 +137,7 @@ in
         tailscale-resolved = mkIf config.services.tailscale.enable {
           after = [ "tailscaled.service" ];
           wants = [ "tailscaled.service" ];
-          path = (builtins.attrValues { inherit (pkgs) tailscale; });
+          path = builtins.attrValues { inherit (pkgs) tailscale gnugrep; };
           script = ''
             if tailscale status 2>&1 | grep -qF "Tailscale failed to set the DNS configuration of your device"; then
               echo "Tailscale failed to set DNS. Restarting tailscale and systemd-resolved."
