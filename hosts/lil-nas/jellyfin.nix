@@ -24,7 +24,7 @@ in
           RemainAfterExit = true;
           ExecStart = "${config.services.tailscale.package}/bin/tailscale drive share jellyfin /srv/jellyfin";
           Restart = "on-failure";
-
+          RestartSec = "30s";
           ProtectHome = true;
           ProtectSystem = true;
           NoNewPrivileges = true;
