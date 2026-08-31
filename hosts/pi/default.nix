@@ -34,6 +34,11 @@ in
     nix.gc.dates = mkForce "Sun *-*-* 02:00:00";
     # Conflict services in order to clear up memory for maintenance operations
     systemd = {
+      settings.Manager = {
+        KExecWatchdogSec = "5min";
+        RebootWatchdogSec = "10min";
+        RuntimeWatchdogSec = "30s";
+      };
       services = {
         nixos-upgrade = {
           conflicts = [
