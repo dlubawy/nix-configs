@@ -83,6 +83,13 @@ in
           ++ (optionals config.boot.secure.enable [
             config.boot.lanzaboote.pkiBundle
           ])
+          ++ (optionals (builtins.length (builtins.attrNames config.security.acme.certs) > 0) [
+            {
+              directory = "/var/lib/acme";
+              group = config.security.acme.defaults.group;
+              user = if config.security.acme.useRoot then "root" else "acme";
+            }
+          ])
           ++ (optionals config.services.tailscale.enable [
             "/var/lib/tailscale"
           ])
