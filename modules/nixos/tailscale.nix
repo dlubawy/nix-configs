@@ -109,9 +109,22 @@ in
     };
 
     systemd = {
+      timers = {
+        tailscale-resolved = mkIf config.services.tailscale.enable {
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            OnCalendar = "*-*-* *:0/5:00";
+            Unit = "tailscale-resolved.service";
+          };
+        };
+      };
+
       services = {
         tailscaled = {
           after = mkIf (config.systemd.network.wait-online.enable) [
+            "systemd-networkd-wait-online.service"
+          ];
+          wants = mkIf (config.systemd.network.wait-online.enable) [
             "systemd-networkd-wait-online.service"
           ];
           serviceConfig.Environment = (
@@ -119,6 +132,23 @@ in
               "TS_DEBUG_FIREWALL_MODE=nftables"
             ]
           );
+        };
+
+        tailscale-resolved = mkIf config.services.tailscale.enable {
+          after = [ "tailscaled.service" ];
+          wants = [ "tailscaled.service" ];
+          path = builtins.attrValues { inherit (pkgs) tailscale gnugrep; };
+          script = ''
+            if tailscale status 2>&1 | grep -qF "Tailscale failed to set the DNS configuration of your device"; then
+              echo "Tailscale failed to set DNS. Restarting tailscale and systemd-resolved."
+              systemctl stop tailscaled.service
+              systemctl restart systemd-resolved.service || systemctl reboot
+              systemctl start tailscaled.service
+            fi
+          '';
+          serviceConfig = {
+            Type = "oneshot";
+          };
         };
 
         tailscale-funnel = mkIf config.services.tailscale.funnel.enable {

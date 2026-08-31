@@ -113,8 +113,8 @@ in
           "https://dns.quad9.net/dns-query"
           "tls://dns.quad9.net"
           "[/local/]127.0.0.53:53"
-          "[/ts.net/]100.100.100.100:53"
-          "[/100.in-addr.arpa/]100.100.100.100:53"
+          "[/ts.net/]100.100.100.100:53 fd7a:115c:a1e0::53"
+          "[/100.in-addr.arpa/]100.100.100.100:53 fd7a:115c:a1e0::53"
         ];
         upstream_mode = "parallel";
         fallback_dns = [
