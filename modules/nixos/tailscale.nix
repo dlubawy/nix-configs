@@ -111,10 +111,12 @@ in
     systemd = {
       targets = {
         tailscale = {
-          requires = [
+          after = [
             "tailscaled.service"
             "tailscale-resolved.service"
           ];
+          requires = [ "tailscaled.service" ];
+          wants = [ "tailscale-resolved.service" ];
           wantedBy = [
           ]
           ++ (optionals ((builtins.length (builtins.attrNames config.security.acme.certs)) > 0) [
