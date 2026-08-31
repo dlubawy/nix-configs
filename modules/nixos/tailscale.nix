@@ -115,6 +115,11 @@ in
             "tailscaled.service"
             "tailscale-resolved.service"
           ];
+          wantedBy = [
+          ]
+          ++ (optionals ((builtins.length (builtins.attrNames config.security.acme.certs)) > 0) [
+            "acme-setup.service"
+          ]);
         };
       };
 
