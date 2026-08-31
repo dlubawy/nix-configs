@@ -12,16 +12,19 @@ in
       jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
       jellyfin-taildrive = mkIf config.services.tailscale.enable {
         description = "Tailscale drive service";
-        after = [ "tailscaled.service" ];
-        wants = [ "tailscaled.service" ];
+        after = [ "tailscale.target" ];
+        wants = [ "tailscale.target" ];
         wantedBy = [ "jellyfin.service" ];
+        startLimitBurst = 10;
+        startLimitIntervalSec = 300;
         serviceConfig = {
           User = "jellyfin";
           Group = "jellyfin";
           Type = "oneshot";
           RemainAfterExit = true;
           ExecStart = "${config.services.tailscale.package}/bin/tailscale drive share jellyfin /srv/jellyfin";
-
+          Restart = "on-failure";
+          RestartSec = "30s";
           ProtectHome = true;
           ProtectSystem = true;
           NoNewPrivileges = true;

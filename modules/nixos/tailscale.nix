@@ -109,6 +109,22 @@ in
     };
 
     systemd = {
+      targets = {
+        tailscale = {
+          after = [
+            "tailscaled.service"
+            "tailscale-resolved.service"
+          ];
+          requires = [ "tailscaled.service" ];
+          wants = [ "tailscale-resolved.service" ];
+          wantedBy = [
+          ]
+          ++ (optionals ((builtins.length (builtins.attrNames config.security.acme.certs)) > 0) [
+            "acme-setup.service"
+          ]);
+        };
+      };
+
       timers = {
         tailscale-resolved = mkIf config.services.tailscale.enable {
           wantedBy = [ "timers.target" ];
@@ -154,9 +170,9 @@ in
         tailscale-funnel = mkIf config.services.tailscale.funnel.enable {
           description = "Funnels traffic to service over internet";
           after = [
-            "tailscaled.service"
+            "tailscale.target"
           ];
-          wants = [ "tailscaled.service" ];
+          wants = [ "tailscale.target" ];
           wantedBy = [ "multi-user.target" ];
           path = builtins.attrValues { inherit (pkgs) tailscale; };
           script = ''
@@ -177,11 +193,11 @@ in
           description = "Fetches OAuth token to authenticate tsidp service";
           after = [
             "tsidp.service"
-            "tailscaled.service"
+            "tailscale.target"
           ];
           wants = [
             "tsidp.service"
-            "tailscaled.service"
+            "tailscale.target"
           ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
