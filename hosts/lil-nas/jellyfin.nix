@@ -12,8 +12,8 @@ in
       jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
       jellyfin-taildrive = mkIf config.services.tailscale.enable {
         description = "Tailscale drive service";
-        after = [ "tailscaled.service" ];
-        wants = [ "tailscaled.service" ];
+        after = [ "tailscale.target" ];
+        wants = [ "tailscale.target" ];
         wantedBy = [ "jellyfin.service" ];
         startLimitBurst = 10;
         startLimitIntervalSec = 300;
