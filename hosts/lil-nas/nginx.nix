@@ -48,24 +48,6 @@ in
         proxyWebsockets = true;
       };
     };
-    "nextcloud.ts.net" = {
-      listen = [
-        {
-          addr = "127.0.0.1";
-          port = 8080;
-        }
-        {
-          addr = "127.0.0.1";
-          port = 8443;
-        }
-      ];
-      locations = {
-        "/" = {
-          proxyPass = "https://${config.services.nextcloud.hostName}";
-          recommendedProxySettings = true;
-        };
-      };
-    };
   };
 
   security = {
