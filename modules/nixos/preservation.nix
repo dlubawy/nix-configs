@@ -83,6 +83,9 @@ in
           ++ (optionals config.boot.secure.enable [
             config.boot.lanzaboote.pkiBundle
           ])
+          ++ (optionals (builtins.length (builtins.attrNames config.security.acme.certs) > 0) [
+            "/var/lib/acme"
+          ])
           ++ (optionals config.services.tailscale.enable [
             "/var/lib/tailscale"
           ])
