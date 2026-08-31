@@ -34,32 +34,7 @@ in
     nix.gc.dates = mkForce "Sun *-*-* 02:00:00";
     # Conflict services in order to clear up memory for maintenance operations
     systemd = {
-      timers = {
-        tailscale-resolved = {
-          wantedBy = [ "timers.target" ];
-          timerConfig = {
-            OnCalendar = "*-*-* *:0/5:00";
-            Unit = "tailscale-resolved.service";
-          };
-        };
-      };
       services = {
-        tailscale-resolved = {
-          after = [ "tailscaled.service" ];
-          wants = [ "tailscaled.service" ];
-          path = (builtins.attrValues { inherit (pkgs) tailscale; });
-          script = ''
-            if tailscale status 2>&1 | grep -qF "Tailscale failed to set the DNS configuration of your device"; then
-              echo "Tailscale failed to set DNS. Restarting tailscale and systemd-resolved."
-              systemctl stop tailscaled.service
-              systemctl restart systemd-resolved.service || systemctl reboot
-              systemctl start tailscaled.service
-            fi
-          '';
-          serviceConfig = {
-            Type = "oneshot";
-          };
-        };
         nixos-upgrade = {
           conflicts = [
             "podman-homeassistant.service"
