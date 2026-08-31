@@ -55,6 +55,12 @@ in
       identityPaths = [ "/persist/.rw-etc/upper/ssh/ssh_host_ed25519_key" ];
     };
 
+    systemd.settings.Manager = {
+      KExecWatchdogSec = "20min";
+      RebootWatchdogSec = "40min";
+      RuntimeWatchdogSec = "120s";
+    };
+
     services = {
       avahi = {
         enable = true;
