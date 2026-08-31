@@ -15,12 +15,15 @@ in
         after = [ "tailscaled.service" ];
         wants = [ "tailscaled.service" ];
         wantedBy = [ "jellyfin.service" ];
+        startLimitBurst = 10;
+        startLimitIntervalSec = 300;
         serviceConfig = {
           User = "jellyfin";
           Group = "jellyfin";
           Type = "oneshot";
           RemainAfterExit = true;
           ExecStart = "${config.services.tailscale.package}/bin/tailscale drive share jellyfin /srv/jellyfin";
+          Restart = "on-failure";
 
           ProtectHome = true;
           ProtectSystem = true;
