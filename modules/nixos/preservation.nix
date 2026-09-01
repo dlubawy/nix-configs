@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) optionals mkIf mkMerge;
+  inherit (lib)
+    optionals
+    mkIf
+    mkMerge
+    mkForce
+    ;
   hasPersist =
     (builtins.hasAttr "/persist" config.fileSystems && config.fileSystems."/persist".enable)
     || config.disko.persist.enable;
@@ -18,10 +23,6 @@ in
   config =
     let
       etcDir = if config.system.etc.overlay.enable then "/.rw-etc/upper" else "/etc";
-      invalidHomes = {
-        "/var/empty" = null;
-        "/run/dbus" = null;
-      };
     in
     mkIf config.preservation.enable {
       assertions = [
@@ -44,9 +45,14 @@ in
         })
       ];
 
-      systemd.tmpfiles.settings.preservation = mkMerge [
-        (lib.mapAttrs'
-          (
+      systemd = {
+        services."systemd-tmpfiles-resetup".serviceConfig =
+          mkIf (builtins.hasAttr "messagebus" config.users.users)
+            {
+              ExecStart = mkForce "systemd-tmpfiles --create --remove --exclude-prefix=/dev --exclude-prefix=${config.users.users.messagebus.home}";
+            };
+        tmpfiles.settings.preservation = mkMerge [
+          (lib.mapAttrs' (
             username: opts:
             lib.nameValuePair (toString opts.home) {
               Z = {
@@ -55,32 +61,27 @@ in
                 inherit (opts) group;
               };
             }
-          )
-          (
-            lib.filterAttrs (
-              _username: opts: opts.enable && (!builtins.hasAttr opts.home invalidHomes)
-            ) config.users.users
-          )
-        )
-        (mkIf config.services.jellyfin.enable {
-          "${config.services.jellyfin.cacheDir}" = {
-            Z = {
-              user = config.services.jellyfin.user;
-              group = config.services.jellyfin.group;
-              mode = config.users.users."${config.services.jellyfin.user}".homeMode;
+          ) (lib.filterAttrs (_username: opts: opts.enable && opts.home != "/var/empty") config.users.users))
+          (mkIf config.services.jellyfin.enable {
+            "${config.services.jellyfin.cacheDir}" = {
+              Z = {
+                user = config.services.jellyfin.user;
+                group = config.services.jellyfin.group;
+                mode = config.users.users."${config.services.jellyfin.user}".homeMode;
+              };
             };
-          };
-        })
-        (mkIf config.services.postgresql.enable {
-          "/var/lib/postgresql" = {
-            Z = {
-              user = config.users.users.postgres.name;
-              group = config.users.users.postgres.group;
-              mode = config.users.users.postgres.homeMode;
+          })
+          (mkIf config.services.postgresql.enable {
+            "/var/lib/postgresql" = {
+              Z = {
+                user = config.users.users.postgres.name;
+                group = config.users.users.postgres.group;
+                mode = config.users.users.postgres.homeMode;
+              };
             };
-          };
-        })
-      ];
+          })
+        ];
+      };
 
       preservation = {
         preserveAt."/persist" = {
