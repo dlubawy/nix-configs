@@ -109,32 +109,6 @@ in
     };
 
     systemd = {
-      targets = {
-        tailscale = {
-          after = [
-            "tailscaled.service"
-            "tailscale-resolved.service"
-          ];
-          requires = [ "tailscaled.service" ];
-          wants = [ "tailscale-resolved.service" ];
-          wantedBy = [
-          ]
-          ++ (optionals ((builtins.length (builtins.attrNames config.security.acme.certs)) > 0) [
-            "acme-setup.service"
-          ]);
-        };
-      };
-
-      timers = {
-        tailscale-resolved = mkIf config.services.tailscale.enable {
-          wantedBy = [ "timers.target" ];
-          timerConfig = {
-            OnCalendar = "*-*-* *:0/5:00";
-            Unit = "tailscale-resolved.service";
-          };
-        };
-      };
-
       services = {
         tailscaled = {
           after = mkIf (config.systemd.network.wait-online.enable) [
@@ -150,29 +124,12 @@ in
           );
         };
 
-        tailscale-resolved = mkIf config.services.tailscale.enable {
-          after = [ "tailscaled.service" ];
-          wants = [ "tailscaled.service" ];
-          path = builtins.attrValues { inherit (pkgs) tailscale gnugrep; };
-          script = ''
-            if tailscale status 2>&1 | grep -qF "Tailscale failed to set the DNS configuration of your device"; then
-              echo "Tailscale failed to set DNS. Restarting tailscale and systemd-resolved."
-              systemctl stop tailscaled.service
-              systemctl restart systemd-resolved.service || systemctl reboot
-              systemctl start tailscaled.service
-            fi
-          '';
-          serviceConfig = {
-            Type = "oneshot";
-          };
-        };
-
         tailscale-funnel = mkIf config.services.tailscale.funnel.enable {
           description = "Funnels traffic to service over internet";
           after = [
-            "tailscale.target"
+            "tailscaled.service"
           ];
-          wants = [ "tailscale.target" ];
+          wants = [ "tailscaled.service" ];
           wantedBy = [ "multi-user.target" ];
           path = builtins.attrValues { inherit (pkgs) tailscale; };
           script = ''
@@ -193,11 +150,11 @@ in
           description = "Fetches OAuth token to authenticate tsidp service";
           after = [
             "tsidp.service"
-            "tailscale.target"
+            "tailscaled.service"
           ];
           wants = [
             "tsidp.service"
-            "tailscale.target"
+            "tailscaled.service"
           ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
