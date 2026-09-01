@@ -25,6 +25,7 @@
       };
       localBackup = {
         enable = true;
+        dryRun = false;
         device = config.disko.devices.disk.external.device;
       };
       key.enable = true;
