@@ -38,6 +38,15 @@
           enable_api = true;
         };
 
+        compactor = {
+          working_directory = "${config.services.loki.dataDir}/retention";
+          compaction_interval = "10m";
+          retention_enabled = true;
+          retention_delete_delay = "2h";
+          retention_delete_worker_count = 150;
+          delete_request_store = "filesystem";
+        };
+
         schema_config = {
           configs = [
             {
@@ -55,7 +64,11 @@
 
         storage_config = {
           filesystem = {
-            directory = "/tmp/loki/chunks";
+            directory = "${config.services.loki.dataDir}/chunks";
+          };
+          tsdb_shipper = {
+            active_index_directory = "${config.services.loki.dataDir}/index";
+            cache_location = "${config.services.loki.dataDir}/index_cache";
           };
         };
       };
