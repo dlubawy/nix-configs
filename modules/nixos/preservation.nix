@@ -46,8 +46,11 @@ in
       ];
 
       systemd = {
-        services."systemd-tmpfiles-resetup".serviceConfig.ExecStart =
-          mkForce "systemd-tmpfiles --create --remove --exclude-prefix=/dev --exclude-prefix=${config.users.users.messagebus.home}";
+        services."systemd-tmpfiles-resetup".serviceConfig =
+          mkIf (builtins.hasAttr "messagebus" config.users.users)
+            {
+              ExecStart = mkForce "systemd-tmpfiles --create --remove --exclude-prefix=/dev --exclude-prefix=${config.users.users.messagebus.home}";
+            };
         tmpfiles.settings.preservation = mkMerge [
           (lib.mapAttrs' (
             username: opts:
