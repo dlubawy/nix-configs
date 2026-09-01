@@ -46,6 +46,12 @@ in
         };
         localBackup = {
           enable = mkEnableOption "Enable a local backup pool";
+          dryRun = mkOption {
+            description = "Controls whether to use a dry-run to see what may change";
+            type = types.bool;
+            default = true;
+            apply = (x: if x then "1" else "0");
+          };
           device = mkOption {
             description = "Device being used for backup pool";
             type = types.str;
@@ -87,6 +93,7 @@ in
     boot = {
       zfs = mkIf cfg.zfs.enable {
         forceImportRoot = false;
+        extraPools = [ ] ++ (optionals cfg.zfs.localBackup.enable [ "backup" ]);
       };
       loader = {
         efi.canTouchEfiVariables = true;
@@ -132,8 +139,9 @@ in
       services = {
         zfs-local-backup = mkIf cfg.zfs.localBackup.enable {
           path = (builtins.attrValues { inherit (pkgs) zfs-local-backup; });
-          # FIXME: add 0 to end of command to enable instead of dry-run
-          script = "zfs-local-backup ${if cfg.zfs.tank.enable then "tank" else "rpool"} backup";
+          script = "zfs-local-backup ${
+            if cfg.zfs.tank.enable then "tank" else "rpool"
+          } backup ${cfg.zfs.localBackup.dryRun}";
           serviceConfig = {
             Type = "oneshot";
             User = "root";
@@ -144,7 +152,8 @@ in
         zfs-local-backup = mkIf cfg.zfs.localBackup.enable {
           wantedBy = [ "timers.target" ];
           timerConfig = {
-            OnCalendar = "monthly";
+            # Every 2nd day of every month
+            OnCalendar = "*-*-02 00:00:00";
             Unit = "zfs-local-backup.service";
           };
         };
