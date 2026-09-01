@@ -5,8 +5,8 @@
     "name": "OMEuTfqVk",
     "namespace": "default",
     "uid": "UBznVsV24O7Kf6agXBK3jL7WhzpmLqN9XEIfho6dES4X",
-    "resourceVersion": "1786666752980992",
-    "generation": 5,
+    "resourceVersion": "1786694382156014",
+    "generation": 9,
     "creationTimestamp": "2025-12-16T20:36:50Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "2"
@@ -15,11 +15,11 @@
       "grafana.app/createdBy": "provisioning:",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "my dashboards",
-      "grafana.app/sourceChecksum": "25ab7e1cf514017952510cdf92f7d77f",
+      "grafana.app/sourceChecksum": "ae316509a275a335f92b48cdd64bce7c",
       "grafana.app/sourcePath": "/etc/grafana/dashboards/ssh.json",
       "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
-      "grafana.app/updatedTimestamp": "2026-08-14T00:19:12Z",
+      "grafana.app/updatedTimestamp": "2026-08-14T07:59:42Z",
       "grafana.app/folder": ""
     }
   },
@@ -116,7 +116,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "{host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*handling new SSH connection.*` | pattern `ssh-session(sess-<_>): handling new SSH connection from <_> (<_>) to ssh-user \"<username>\"` | __error__=\"\"",
+                        "expr": "{host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*handling new SSH connection from.* to ssh-user \"` | pattern `ssh-session(sess-<_>): handling new SSH connection from <_> (<_>) to ssh-user \"<username>\"` | __error__=\"\"",
                         "legendFormat": "",
                         "queryType": "range"
                       },
@@ -295,7 +295,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -530,7 +530,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -544,7 +544,7 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
-                    "hidden": false,
+                    "hidden": true,
                     "query": {
                       "datasource": {
                         "name": "73693469-0eab-4c69-a6d5-9b3fb6c9d929"
@@ -576,7 +576,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | pattern `ssh-session(sess-<_>): access granted to <_> as ssh-user \"<username>\"` | __error__=\"\" [$__interval]))",
+                        "expr": "sum by(username) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.* as ssh-user \"` | pattern `ssh-session(sess-<_>): access granted to <_> as ssh-user \"<username>\"` | __error__=\"\" [$__interval]))",
                         "legendFormat": "tailscale: {{ username }}",
                         "queryType": "range"
                       },
@@ -642,7 +642,7 @@
                 }
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -784,7 +784,7 @@
                 }
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -943,7 +943,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -988,7 +988,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "sum by(instance) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.*` | __error__=\"\" [$__interval]))",
+                        "expr": "sum by(instance) (count_over_time({host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*access granted to.* as ssh-user \"` | __error__=\"\" [$__interval]))",
                         "queryType": "range"
                       },
                       "version": "v0"
@@ -1069,7 +1069,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -1116,7 +1116,7 @@
                       "spec": {
                         "direction": "backward",
                         "editorMode": "code",
-                        "expr": "{host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*handling new SSH connection.*` | pattern `ssh-session(sess-<_>): handling new SSH connection from <_> (<ip>) to ssh-user \"<username>\"` | __error__=\"\"",
+                        "expr": "{host=~\"$host\", unit=\"tailscaled.service\"} |~ `ssh-session.*handling new SSH connection from.*to ssh-user \"` | pattern `ssh-session(sess-<_>): handling new SSH connection from <_> (<ip>) to ssh-user \"<username>\"` | __error__=\"\"",
                         "legendFormat": "{{ ip }} {{ username }}",
                         "queryType": "range"
                       },
@@ -1294,7 +1294,7 @@
                 "sortBy": []
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -1473,7 +1473,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -1605,7 +1605,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -1873,7 +1873,7 @@
                 "showHeader": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -2003,7 +2003,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -2140,7 +2140,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -2275,7 +2275,7 @@
                 "wideLayout": true
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       },
@@ -2363,7 +2363,7 @@
                 "wrapLogMessage": false
               }
             },
-            "version": "13.0.3"
+            "version": "13.0.7"
           }
         }
       }
