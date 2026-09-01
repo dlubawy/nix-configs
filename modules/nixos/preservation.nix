@@ -18,8 +18,12 @@ in
   config =
     let
       etcDir = if config.system.etc.overlay.enable then "/.rw-etc/upper" else "/etc";
+      invalidHomes = {
+        "/var/empty" = null;
+        "/run/dbus" = null;
+      };
     in
-    {
+    mkIf config.preservation.enable {
       assertions = [
         {
           assertion = config.preservation.enable -> (hasPersist);
@@ -41,16 +45,23 @@ in
       ];
 
       systemd.tmpfiles.settings.preservation = mkMerge [
-        (lib.mapAttrs' (
-          username: opts:
-          lib.nameValuePair (toString opts.home) {
-            Z = {
-              mode = opts.homeMode;
-              user = opts.name;
-              inherit (opts) group;
-            };
-          }
-        ) (lib.filterAttrs (_username: opts: opts.enable && opts.home != "/var/empty") config.users.users))
+        (lib.mapAttrs'
+          (
+            username: opts:
+            lib.nameValuePair (toString opts.home) {
+              Z = {
+                mode = opts.homeMode;
+                user = opts.name;
+                inherit (opts) group;
+              };
+            }
+          )
+          (
+            lib.filterAttrs (
+              _username: opts: opts.enable && (!builtins.hasAttr opts.home invalidHomes)
+            ) config.users.users
+          )
+        )
         (mkIf config.services.jellyfin.enable {
           "${config.services.jellyfin.cacheDir}" = {
             Z = {
