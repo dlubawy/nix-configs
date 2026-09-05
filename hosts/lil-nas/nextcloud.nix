@@ -30,7 +30,6 @@ in
       backend = "podman";
       containers.harp = {
         image = "ghcr.io/nextcloud/nextcloud-appapi-harp:release";
-        extraOptions = [ "--network=host" ];
         ports = [
           "8780:8780"
           "8782:8782"
