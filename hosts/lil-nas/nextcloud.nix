@@ -1,4 +1,6 @@
 {
+  pkgs,
+  lib,
   config,
   ...
 }:
@@ -29,8 +31,13 @@ in
       containers.harp = {
         image = "ghcr.io/nextcloud/nextcloud-appapi-harp:release";
         extraOptions = [ "--network=host" ];
+        ports = [
+          "8780:8780"
+          "8782:8782"
+        ];
         environment = {
           NC_INSTANCE_URL = "https://${cloudDomain}";
+          HP_TRUSTED_PROXY_IPS = "127.0.0.1,[::1]";
         };
         environmentFiles = [ config.age.secrets.nextcloud-harp-key.path ];
         # Mount Podman's Docker-compatible socket (enabled via dockerCompat = true)

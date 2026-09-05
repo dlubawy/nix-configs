@@ -29,6 +29,10 @@ in
       useACMEHost = "${cloudDomain}";
       listenAddresses = [ (getAddress "lil-nas" "enp5s0") ];
       locations = {
+        "/exapps/" = {
+          proxyPass = "http://127.0.0.1:8780/exapps/";
+          recommendedProxySettings = true;
+        };
         "/whiteboard/" = {
           proxyPass = "http://${config.services.nextcloud-whiteboard-server.settings.HOST}:${config.services.nextcloud-whiteboard-server.settings.PORT}";
           proxyWebsockets = true;
