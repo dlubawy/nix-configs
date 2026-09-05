@@ -22,6 +22,10 @@ in
 
   config =
     let
+      ignoredHomes = {
+        "/var/empty" = null;
+        "/run/dbus" = null;
+      };
       etcDir = if config.system.etc.overlay.enable then "/.rw-etc/upper" else "/etc";
     in
     mkIf config.preservation.enable {
@@ -46,22 +50,24 @@ in
       ];
 
       systemd = {
-        services."systemd-tmpfiles-resetup".serviceConfig =
-          mkIf (builtins.hasAttr "messagebus" config.users.users)
-            {
-              ExecStart = mkForce "systemd-tmpfiles --create --remove --exclude-prefix=/dev --exclude-prefix=${config.users.users.messagebus.home}";
-            };
         tmpfiles.settings.preservation = mkMerge [
-          (lib.mapAttrs' (
-            username: opts:
-            lib.nameValuePair (toString opts.home) {
-              Z = {
-                mode = opts.homeMode;
-                user = opts.name;
-                inherit (opts) group;
-              };
-            }
-          ) (lib.filterAttrs (_username: opts: opts.enable && opts.home != "/var/empty") config.users.users))
+          (lib.mapAttrs'
+            (
+              username: opts:
+              lib.nameValuePair (toString opts.home) {
+                Z = {
+                  mode = opts.homeMode;
+                  user = opts.name;
+                  inherit (opts) group;
+                };
+              }
+            )
+            (
+              lib.filterAttrs (
+                _username: opts: opts.enable && (!builtins.hasAttr opts.home ignoredHomes)
+              ) config.users.users
+            )
+          )
           (mkIf config.services.jellyfin.enable {
             "${config.services.jellyfin.cacheDir}" = {
               Z = {
