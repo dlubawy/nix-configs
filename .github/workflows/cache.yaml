@@ -35,8 +35,8 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25
-      - uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71
+      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa
+      - uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866
         with:
           name: dlubawy
           extraPullNames: nix-community
