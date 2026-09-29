@@ -122,7 +122,10 @@ in
     programs = {
       home-manager.enable = true;
       btop.enable = true;
-      firefox = mkIf config.gui.enable { enable = mkDefault true; };
+      firefox = mkIf config.gui.enable {
+        enable = mkDefault true;
+        configPath = "Library/Application Support/org.nixos.firefox";
+      };
       eza = {
         enable = true;
         icons = "auto";
