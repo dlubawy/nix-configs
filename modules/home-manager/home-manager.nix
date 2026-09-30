@@ -11,6 +11,7 @@ let
   inherit (lib)
     mkDefault
     mkIf
+    mkMerge
     mkOption
     types
     optionals
@@ -122,10 +123,19 @@ in
     programs = {
       home-manager.enable = true;
       btop.enable = true;
-      firefox = mkIf config.gui.enable {
-        enable = mkDefault true;
-        configPath = "Library/Application Support/org.nixos.firefox";
-      };
+      firefox = mkIf config.gui.enable (mkMerge [
+        {
+          enable = mkDefault true;
+        }
+        (
+          if pkgs.stdenv.hostPlatform.isDarwin then
+            {
+              configPath = "Library/Application Support/org.nixos.firefox";
+            }
+          else
+            { }
+        )
+      ]);
       eza = {
         enable = true;
         icons = "auto";
