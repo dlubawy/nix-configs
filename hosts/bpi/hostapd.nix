@@ -140,6 +140,7 @@
     in
     {
       enable = true;
+      package = pkgs.unstable.hostapd; # FIXME: can remove in 26.11
       radios = {
         wlan0 = {
           band = "2g";
