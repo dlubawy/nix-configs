@@ -53,9 +53,7 @@
           ntfs3g = prev.ntfs3g.overrideAttrs (_: (import ./ntfs3g { inherit prev final; }));
         }
       else
-        {
-          hostapd = prev.hostapd.overrideAttrs (_: (import ./hostapd { inherit prev final; }));
-        }
+        { }
     );
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
