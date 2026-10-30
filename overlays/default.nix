@@ -64,6 +64,7 @@
     };
     # TODO: Investigate why release 2.12 causes IoT network issues
     hostapd = unstable.hostapd.overrideAttrs (_: {
+      version = "2.12-devel";
       src = prev.fetchgit {
         url = "https://git.w1.fi/hostap.git";
         rev = "c1e8b1c6462b2f1361648e540a6374ed3f8f1902";
