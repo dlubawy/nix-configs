@@ -35,6 +35,9 @@ in
       bind-key x kill-pane
 
       set-option -g focus-events on
+
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
     '';
     escapeTime = 10;
     historyLimit = 10000;
