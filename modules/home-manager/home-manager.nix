@@ -100,6 +100,7 @@ in
           builtins.attrValues {
             inherit (pkgs)
               age-plugin-yubikey
+              ginger
               gopass
               python3
               rage

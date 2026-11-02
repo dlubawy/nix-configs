@@ -68,6 +68,15 @@ rec {
     preservation = {
       url = "github:nix-community/preservation/93416f4614ad2dfed5b0dcf12f27e57d27a5ab11";
     };
+
+    # Custom packages
+    ginger = {
+      url = "github:dlubawy/ginger/main";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-unstable.follows = "nixpkgs-unstable";
+      };
+    };
   };
 
   outputs =
