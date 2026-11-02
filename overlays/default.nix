@@ -54,6 +54,12 @@
         }
       else
         { }
+    )
+    // (
+      if (builtins.hasAttr prev.stdenv.hostPlatform.system inputs.ginger.packages) then
+        { ginger = inputs.ginger.packages.${prev.stdenv.hostPlatform.system}.default; }
+      else
+        { }
     );
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
