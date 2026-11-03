@@ -460,6 +460,10 @@ rec {
           path = ./templates/deno;
           description = "Deno development environment";
         };
+        node = {
+          path = ./templates/node;
+          description = "Node.js development environment";
+        };
         python = {
           path = ./templates/python;
           description = "Python development environment";

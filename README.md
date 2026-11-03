@@ -100,4 +100,4 @@ Development environment templates are available for quick project setup. Initial
 nix flake init --template github:dlubawy/nix-configs/main#[template]
 ```
 
-Available templates: `deno`, `go`, `latex`, `nix`, `python`, `rust`, `tofu`, and `empty`.
+Available templates: `deno`, `go`, `latex`, `nix`, `node`, `python`, `rust`, `tofu`, and `empty`.
