@@ -102,7 +102,11 @@
         );
       in
       {
-        systemd-networkd.restartTriggers = hostapdPreStart;
+        systemd-networkd = {
+          after = [ "hostapd.service" ];
+          bindsTo = [ "hostapd.service" ];
+          restartTriggers = hostapdPreStart;
+        };
         hostapd-roamer = {
           wantedBy = [ "multi-user.target" ];
           requires = [ "hostapd.service" ];
