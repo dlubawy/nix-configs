@@ -209,6 +209,7 @@
               settings = {
                 # Network
                 bridge = "br-lan";
+                ap_max_inactivity = 3600;
                 bss_load_update_period = 60;
                 chan_util_avg_period = 600;
                 preamble = 1;
