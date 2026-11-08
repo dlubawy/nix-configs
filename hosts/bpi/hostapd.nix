@@ -204,6 +204,7 @@
               ssid = "🎰 VivaLanVegas 🎰";
             };
             wlan0-1 = {
+              logLevel = 1;
               apIsolate = true;
               authentication = {
                 mode = "wpa2-sha1";
