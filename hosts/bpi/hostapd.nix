@@ -221,7 +221,6 @@
                 # Network
                 bridge = "br-lan";
                 wpa_key_mgmt = lib.mkForce "WPA-PSK WPA-PSK-SHA256 SAE";
-                sae_require_mfp = 0;
                 bss_load_update_period = 60;
                 chan_util_avg_period = 600;
                 preamble = 1;
