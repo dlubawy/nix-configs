@@ -51,18 +51,6 @@ in
         RebootWatchdogSec = "10min";
         RuntimeWatchdogSec = "30s";
       };
-
-      # FIXME: System seems unstable after 24h uptime so let's reboot everyday
-      # May not be needed with watchdog enabled. Revisit after confirming watchdog recovery behavior.
-      # timers = {
-      #   "scheduled-reboot" = {
-      #     wantedBy = [ "timers.target" ];
-      #     timerConfig = {
-      #       OnCalendar = "Mon..Fri,Sun *-*-* 04:00:00";
-      #       Unit = "reboot.target";
-      #     };
-      #   };
-      # };
     };
 
     nix = {
