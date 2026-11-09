@@ -20,6 +20,7 @@ in
   "adguardhome.age" = mkSecret [ systems.bpi ];
   "wifi-sae.age" = mkSecret [ systems.bpi ];
   "wifi-iot-psk.age" = mkSecret [ systems.bpi ];
+  "wifi-iot-sae.age" = mkSecret [ systems.bpi ];
   "wifi-shared-secret.age" = mkSecret [ systems.bpi ];
   "tailscale.age" = mkSecret [
     systems.bpi
