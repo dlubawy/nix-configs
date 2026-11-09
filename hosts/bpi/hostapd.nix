@@ -157,7 +157,6 @@
           countryCode = "US";
           networks = {
             wlan0 = {
-              logLevel = 1;
               apIsolate = true;
               authentication = {
                 mode = "wpa3-sae";
@@ -263,7 +262,6 @@
           countryCode = "US";
           networks = {
             wlan1 = {
-              logLevel = 1;
               apIsolate = true;
               authentication = {
                 mode = "wpa3-sae";
