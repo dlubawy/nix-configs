@@ -9,6 +9,7 @@
     secrets = {
       wifi-sae.file = ../../secrets/wifi-sae.age;
       wifi-iot-psk.file = ../../secrets/wifi-iot-psk.age;
+      wifi-iot-sae.file = ../../secrets/wifi-iot-sae.age;
       wifi-shared-secret.file = ../../secrets/wifi-shared-secret.age;
     };
   };
@@ -95,40 +96,48 @@
         };
       };
     };
-    services =
-      let
-        hostapdPreStart = (
-          lib.lists.flatten (builtins.split "\n" config.systemd.services.hostapd.preStart)
-        );
-      in
-      {
-        systemd-networkd.restartTriggers = hostapdPreStart;
-        hostapd-roamer = {
-          wantedBy = [ "multi-user.target" ];
-          requires = [ "hostapd.service" ];
-          after = [ "hostapd.service" ];
-          restartTriggers = hostapdPreStart;
-          preStart = "sleep 5";
-          script = "${pkgs.hostapd-roamer}/bin/main.py -i wlan0,wlan1";
-          startLimitIntervalSec = 60;
-          startLimitBurst = 5;
-          serviceConfig = {
-            Type = "simple";
-            User = "root";
+    services = {
+      hostapd = {
+        restartTriggers = [
+          config.age.secrets.wifi-sae.file
+          config.age.secrets.wifi-iot-psk.file
+          config.age.secrets.wifi-iot-sae.file
+          config.age.secrets.wifi-shared-secret.file
+        ];
+      };
+      systemd-networkd = {
+        restartTriggers = [
+          config.systemd.units."hostapd.service".unit
+        ];
+      };
+      hostapd-roamer = {
+        wantedBy = [ "multi-user.target" ];
+        requires = [ "hostapd.service" ];
+        after = [ "hostapd.service" ];
+        restartTriggers = [
+          config.systemd.units."hostapd.service".unit
+        ];
+        preStart = "sleep 5";
+        script = "${pkgs.hostapd-roamer}/bin/main.py -i wlan0,wlan1";
+        startLimitIntervalSec = 60;
+        startLimitBurst = 5;
+        serviceConfig = {
+          Type = "simple";
+          User = "root";
 
-            # Retry on failure
-            Restart = "on-failure";
-            RestartSec = "5s";
+          # Retry on failure
+          Restart = "on-failure";
+          RestartSec = "5s";
 
-            ProtectHome = true;
-            ProtectSystem = true;
-            NoNewPrivileges = true;
-            ProtectKernelLogs = true;
-            ProtectKernelModules = true;
-            ProtectKernelTunables = true;
-          };
+          ProtectHome = true;
+          ProtectSystem = true;
+          NoNewPrivileges = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
         };
       };
+    };
   };
   services.hostapd =
     let
@@ -140,7 +149,7 @@
     in
     {
       enable = true;
-      package = pkgs.hostapd;
+      package = pkgs.unstable.hostapd;
       radios = {
         wlan0 = {
           band = "2g";
@@ -148,7 +157,6 @@
           countryCode = "US";
           networks = {
             wlan0 = {
-              logLevel = 1;
               apIsolate = true;
               authentication = {
                 mode = "wpa3-sae";
@@ -200,15 +208,18 @@
               ssid = "🎰 VivaLanVegas 🎰";
             };
             wlan0-1 = {
+              logLevel = 1;
               apIsolate = true;
               authentication = {
-                mode = "wpa2-sha1";
+                mode = "wpa3-sae-transition";
                 wpaPskFile = config.age.secrets.wifi-iot-psk.path;
+                saePasswordsFile = config.age.secrets.wifi-iot-sae.path;
               };
               bssid = "92:df:d2:a2:29:a0";
               settings = {
                 # Network
                 bridge = "br-lan";
+                wpa_key_mgmt = lib.mkForce "WPA-PSK WPA-PSK-SHA256 SAE";
                 bss_load_update_period = 60;
                 chan_util_avg_period = 600;
                 preamble = 1;
@@ -251,7 +262,6 @@
           countryCode = "US";
           networks = {
             wlan1 = {
-              logLevel = 1;
               apIsolate = true;
               authentication = {
                 mode = "wpa3-sae";
