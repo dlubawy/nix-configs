@@ -127,7 +127,7 @@ in
       autoUpgrade = mkIf (builtins.hasAttr "flake" vars) {
         enable = lib.mkDefault true;
         flake = lib.mkDefault "${vars.flake}#${config.networking.hostName}";
-        dates = lib.mkDefault "Mon *-*-* 01:00:00";
+        dates = lib.mkDefault "Mon *-*-* 01:01:00";
         allowReboot = lib.mkDefault true;
         rebootWindow = lib.mkDefault {
           lower = "01:00";
