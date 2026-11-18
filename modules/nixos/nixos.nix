@@ -121,6 +121,7 @@ in
         enable = lib.mkDefault true;
         wait-online.enable = (config.systemd.network.enable && !config.networking.networkmanager.enable);
       };
+      sysupdate.reboot.enable = lib.mkDefault true;
     };
 
     system = {
