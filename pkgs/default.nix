@@ -8,7 +8,6 @@ let
       fuse-t = pkgs.callPackage ./fuse-t { };
       nixos-password = pkgs.callPackage ./nixos-password { };
     };
-    x86_64-darwin = pkgs: { };
     aarch64-linux = pkgs: {
       iwinfo-lite = pkgs.callPackage ./iwinfo-lite { };
       hostap-wpa3 = pkgs.callPackage ./hostap-wpa3 { };
