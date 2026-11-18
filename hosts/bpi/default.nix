@@ -73,7 +73,7 @@ in
     ];
 
     system.autoUpgrade = {
-      dates = "Sat *-*-* 00:00:00";
+      dates = "Sat *-*-* 01:01:00";
       flake = "${vars.flake}#bpi";
     };
 

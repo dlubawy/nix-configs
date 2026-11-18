@@ -30,7 +30,7 @@ in
   };
 
   config = {
-    system.autoUpgrade.dates = mkForce "Sat *-*-* 02:00:00";
+    system.autoUpgrade.dates = mkForce "Sat *-*-* 03:00:00";
     nix.gc.dates = mkForce "Sun *-*-* 02:00:00";
     # Conflict services in order to clear up memory for maintenance operations
     systemd = {

@@ -194,7 +194,6 @@ This template supports:
 
 - `x86_64-linux`
 - `aarch64-linux`
-- `x86_64-darwin` (macOS Intel)
 - `aarch64-darwin` (macOS Apple Silicon)
 
 ## Advanced Topics
