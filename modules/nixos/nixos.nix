@@ -121,14 +121,13 @@ in
         enable = lib.mkDefault true;
         wait-online.enable = (config.systemd.network.enable && !config.networking.networkmanager.enable);
       };
-      sysupdate.reboot.enable = lib.mkDefault true;
     };
 
     system = {
       autoUpgrade = mkIf (builtins.hasAttr "flake" vars) {
         enable = lib.mkDefault true;
         flake = lib.mkDefault "${vars.flake}#${config.networking.hostName}";
-        dates = lib.mkDefault "weekly";
+        dates = lib.mkDefault "Mon *-*-* 01:00:00";
         allowReboot = lib.mkDefault true;
         rebootWindow = lib.mkDefault {
           lower = "01:00";
